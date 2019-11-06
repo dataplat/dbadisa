@@ -1,18 +1,16 @@
 function Get-DbsStig {
     <#
 .SYNOPSIS
-    Retrieves raw configuration values by name.
+    Parses the U_MS_SQL_Server_2014_Database_STIG_V1R6_Manual-xccdf style XML files from DISA into PowerShell objects
 
 .DESCRIPTION
-    Retrieves raw configuration values by name.
+    Parses the U_MS_SQL_Server_2014_Database_STIG_V1R6_Manual-xccdf style XML files from DISA into PowerShell objects
 
-    Can be used to search the existing configuration list.
+.PARAMETER Path
+    The Path to the STIG xml file. Not required, as they've been included.
 
-.PARAMETER Name
-    Default: "*"
-
-    The name of the configuration element(s) to retrieve.
-    May be any string, supports wildcards.
+.PARAMETER Version
+    By default, SQL Server 2014 and above stigs are returned. This allows you to filter by version.
 
 .PARAMETER EnableException
     By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -20,12 +18,15 @@ function Get-DbsStig {
     Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
 .EXAMPLE
-    Get-DbsConfigValue app.sqlinstance
+    Get-DbsStig
 
-    Retrieves the raw value for the key "app.sqlinstance"
+    Return checklsits for database and instance for SQL Server 2014 and 2016
 
-.LINK
-https://dbadisa.readthedocs.io/en/latest/functions/Get-DbsConfig/
+.EXAMPLE
+    Get-DbsStig -Version 2014
+
+    Return checklsits for database and instance for SQL Server 2014 only
+
 #>
     [CmdletBinding()]
     param (

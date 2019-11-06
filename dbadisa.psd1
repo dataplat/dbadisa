@@ -28,19 +28,20 @@
     PowerShellVersion = '3.0'
 
     # Modules that must be imported into the global environment prior to importing this module
+    # @{ ModuleName = 'dbachecks'; ModuleVersion = '1.2.15' }
     RequiredModules   = @(
         @{ ModuleName = 'PSFramework'; ModuleVersion = '1.0.19' },
         @{ ModuleName = 'dbatools'; ModuleVersion = '1.0.61' }
-        @{ ModuleName = 'dbachecks'; ModuleVersion = '1.2.15' }
     )
 
     # Script module or binary module file associated with this manifest.
     RootModule        = 'dbadisa.psm1'
 
     FunctionsToExport = @(
-        'Install-DbaDisaStigAudit',
+        'Install-DbsAudit',
         'Get-DbsStig',
-        'Set-DbsAcl'
+        'Set-DbsAcl',
+        'New-DbsDocTemplate'
     )
 
     PrivateData       = @{
@@ -56,7 +57,7 @@
             Tags         = @('security', 'disa', 'stig', 'compliance')
 
             # The web address of an icon which can be used in galleries to represent this module
-            IconUri      = 'https://user-images.githubusercontent.com/8278033/68294422-6ea7c200-0090-11ea-851d-bbaf10dc4d96.png'
+            IconUri      = 'https://user-images.githubusercontent.com/8278033/68301405-31e3c700-00a0-11ea-9039-0437203a2b0b.png'
 
             # Indicates this is a pre-release/testing version of the module.
             IsPrerelease = 'False'
