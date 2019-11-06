@@ -56,7 +56,7 @@
             Tags         = @('security', 'disa', 'stig', 'compliance')
 
             # The web address of an icon which can be used in galleries to represent this module
-            IconUri      = ''
+            IconUri      = 'https://user-images.githubusercontent.com/8278033/68294422-6ea7c200-0090-11ea-851d-bbaf10dc4d96.png'
 
             # Indicates this is a pre-release/testing version of the module.
             IsPrerelease = 'False'

@@ -1,17 +1,17 @@
 function Set-DbsAcl {
     <#
     .SYNOPSIS
-        Automatically installs or updates sp_WhoisActive by Adam Machanic.
+        Sets the permissions required by DISA for SQL Server directories.
 
     .DESCRIPTION
-        This command downloads, extracts and installs sp_WhoisActive with Adam's permission. To read more about sp_WhoisActive, please visit http://whoisactive.com and http://sqlblog.com/blogs/adam_machanic/archive/tags/who+is+active/default.aspx
+        Sets the required permissions for SQL Server directories.
 
-        Please consider donating to Adam if you find this stored procedure helpful: http://tinyurl.com/WhoIsActiveDonate
+        By default, it will detect and secure the default Data, Log and Backup directories.
 
-        Note that you will be prompted a bunch of times to confirm an action.
+        Currently, this is accomplished using admin UNC shares so they should be available to your account.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2005 or higher.
+        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -19,6 +19,16 @@ function Set-DbsAcl {
         Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
 
         For MFA support, please use Connect-DbaInstance.
+
+    .PARAMETER Account
+        The account name or names that are to be granted permissions along with the service accounts.
+
+    .PARAMETER Path
+        By default, the ACLs on the paths to the data, log and backup files will be modified.
+
+        If you want to set permissions on a specific path, use this option.
+
+        Note that if your Backup directory is a UNC share, it will be skipped.
 
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
@@ -38,35 +48,21 @@ function Set-DbsAcl {
         Tags: DISA, STIG
         Author: Chrissy LeMaire (@cl), netnerds.net
 
-        Website: https://dbatools.io
-        Copyright: (c) 2018 by dbatools, licensed under MIT
-        License: MIT https://opensource.org/licenses/MIT
-
-    .LINK
-        https://dbatools.io/Install-DbaDisaStigAudit
+        Copyright: (c) 2010 by Chrissy LeMaire, licensed under MIT
+        License: MIT https://opensource.org/licenses/MITl
 
     .EXAMPLE
-        PS C:\> Install-DbaDisaStigAudit -SqlInstance sqlserver2014a -Database master
+        PS C:\> Set-DbsAcl -SqlInstance sql2017, sql2016, sql2012 -Account "AD\SQL Admins"
 
-        Downloads sp_WhoisActive from the internet and installs to sqlserver2014a's master database. Connects to SQL Server using Windows Authentication.
+        Sets permissions for the default data, log and backups on sql2017, sql2016, sql2012.
 
-    .EXAMPLE
-        PS C:\> Install-DbaDisaStigAudit -SqlInstance sqlserver2014a -SqlCredential $cred
-
-        Pops up a dialog box asking which database on sqlserver2014a you want to install the procedure into. Connects to SQL Server using SQL Authentication.
+        Adds appropriate permissions for the "AD\SQL Admins" group as well as the SQL Server service accounts.
 
     .EXAMPLE
-        PS C:\> Install-DbaDisaStigAudit -SqlInstance sqlserver2014a -Database master -LocalFile c:\SQLAdmin\whoisactive_install.sql
+        PS C:\> Get-DbaRegServer -SqlInstance sqlcentral | Set-DbsAcl -Account "AD\SQL Admins"
 
-        Installs sp_WhoisActive to sqlserver2014a's master database from the local file whoisactive_install.sql
-
-    .EXAMPLE
-        PS C:\> $instances = Get-DbaRegServer sqlserver
-        PS C:\> Install-DbaDisaStigAudit -SqlInstance $instances -Database master
-
-        Installs sp_WhoisActive to all servers within CMS
+        Sets the appropriate permissions for all SQL Servers stored in the sqlcentral registered server.
     #>
-
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline, Position = 0)]
@@ -111,7 +107,7 @@ function Set-DbsAcl {
                         try {
                             $acl = Get-Acl -Path $remote
                             $acl.SetAccessRuleProtection($true, $true)
-                            Set-Acl -Path $remote -AclObject $acl #Whatif
+                            $null = Set-Acl -Path $remote -AclObject $acl
                         } catch {
                             Stop-Function -Message "Issing setting file permissions on $remote" -ErrorRecord $_ -Continue
 
@@ -133,20 +129,18 @@ function Set-DbsAcl {
                             $acl.SetAccessRule($rule)
                         }
 
-                        Write-PesterMessage "$dbaccount is service account for $server"
                         $accountdisplay += $dbaccount
                         $permission = "$dbaccount", "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow"
                         $rule = New-Object System.Security.AccessControl.FileSystemAccessRule $permission
                         $acl.SetAccessRule($rule)
 
-                        if ($dbaccount -ne $agentaccount -and $server -notmatch 'AD') {
+                        if ($dbaccount -ne $agentaccount) {
                             $accountdisplay += $agentaccount
-                            Write-PesterMessage "$agentaccount is agent account for $server"
                             $permission = "$agentaccount", "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow"
                             $rule = New-Object System.Security.AccessControl.FileSystemAccessRule $permission
                             $acl.SetAccessRule($rule)
                         }
-                        Set-Acl -Path $remote -AclObject $acl #-WhatIf
+                        $null = Set-Acl -Path $remote -AclObject $acl
                     }
 
                     [PSCustomObject]@{
