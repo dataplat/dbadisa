@@ -7,10 +7,10 @@
 #
 @{
     # Version number of this module.
-    ModuleVersion     = '1.0.0'
+    ModuleVersion     = '0.1.1'
 
     # ID used to uniquely identify this module
-    GUID              = '27d3f90a-5220-4e78-8565-3b6c39f815a3'
+    GUID              = '4a160a6e-750b-4674-aefb-110e3ae046d5'
 
     # Author of this module
     Author            = 'Chrissy LeMaire'
@@ -44,6 +44,9 @@
         'New-DbsDocTemplate'
     )
 
+    CmdletsToExport   = @( )
+    AliasesToExport   = @( )
+
     PrivateData       = @{
         # PSData is module packaging and gallery metadata embedded in PrivateData
         # It's for rebuilding PowerShellGet (and PoshCode) NuGet-style packages
@@ -57,7 +60,7 @@
             Tags         = @('security', 'disa', 'stig', 'compliance')
 
             # The web address of an icon which can be used in galleries to represent this module
-            IconUri      = 'https://user-images.githubusercontent.com/8278033/68301405-31e3c700-00a0-11ea-9039-0437203a2b0b.png'
+            IconUri      = 'https://user-images.githubusercontent.com/8278033/68308152-a886c180-00ac-11ea-880c-ef6ff99f5cd4.png'
 
             # Indicates this is a pre-release/testing version of the module.
             IsPrerelease = 'False'
