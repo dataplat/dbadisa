@@ -1,4 +1,4 @@
-function Install-DbsAudit {
+function Set-DbsAcl {
     <#
     .SYNOPSIS
         Automatically installs or updates sp_WhoisActive by Adam Machanic.
@@ -72,14 +72,9 @@ function Install-DbsAudit {
         [parameter(Mandatory, ValueFromPipeline, Position = 0)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
-        [string]$Name = "DISA_STIG",
-        [string]$Path,
-        [string]$MaxSize = "10 MB",
-        [string]$MaxFiles = "50",
-        [string]$Reserve = "OFF",
-        [string]$QueueDelay = "1000",
-        [ValidateSet('FAIL_OPERATION', 'SHUTDOWN', 'CONTINUE')]
-        [string]$OnFailure = "SHUTDOWN",
+        [parameter(Mandatory)]
+        [string[]]$Account,
+        [string[]]$Path,
         [switch]$EnableException
     )
 
@@ -90,60 +85,81 @@ function Install-DbsAudit {
             } catch {
                 Stop-Function -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
             }
-            if ($PSCmdlet.ShouldProcess($instance, "Installing Audit")) {
+
+            if (-not $PSBoundParameters.Path) {
+                $defaults = Get-DbaDefaultPath -SqlInstance $server
+                $Path = $defaults.Data, $defaults.Log, $defaults.Backup | Where-Object { $_ -notmatch '\\\\' } | Select-Object -Unique
+            }
+
+            if ($PSCmdlet.ShouldProcess($instance, "Changing permissions for $Path for $instance")) {
                 try {
-                    switch ($server.VersionMajor) {
-                        11 {
-                            $sqlfile = "$script:ModuleRoot\bin\sql\Audit2012.sql"
-                        }
-                        12 {
-                            $sqlfile = "$script:ModuleRoot\bin\sql\Audit2014.sql"
-                        }
-                        default {
-                            $MaxSize = $MaxSize.Replace(" MB", "")
-                            $MaxSize = $MaxSize.Replace("MB", "")
-                            $sqlfile = "$script:ModuleRoot\bin\sql\Audit2016.sql"
-                        }
+                    $instancename = $instance.InstanceName
+                    $services = Get-DbaService -ComputerName $instance
+                    $dbengine = $services | Where-Object DisplayName -match "SQL Server \($instancename\)"
+                    $dbaccount = $dbengine.StartName
+                    $agentengine = $services | Where-Object DisplayName -match "SQL Server Agent \($instancename\)"
+                    $agentaccount = $agentengine.StartName
+
+                    if ($dbaccount.length -lt 2) {
+                        Stop-Function -Message "Couldn't get service information for $instance, moving on" -Continue
                     }
 
-                    if (-not $PSBoundParameters.Path) {
-                        $Path = (Get-DbaDefaultPath -SqlInstance $server).Data
-                        $Path = "$Path\STIG"
-                        if (-not (Test-DbaPath -SqlInstance $server -Path $Path)) {
-                            $null = New-DbaDirectory -SqlInstance $server -Path $Path -EnableException
+                    foreach ($folder in $Path) {
+                        Write-Message -Level Verbose -Message "Modifying $folder on $instance"
+                        $remote = Join-AdminUnc -Servername $server.ComputerName -FilePath $folder
+
+                        try {
+                            $acl = Get-Acl -Path $remote
+                            $acl.SetAccessRuleProtection($true, $true)
+                            Set-Acl -Path $remote -AclObject $acl #Whatif
+                        } catch {
+                            Stop-Function -Message "Issing setting file permissions on $remote" -ErrorRecord $_ -Continue
+
                         }
-                    }
 
-                    Write-Message -Level Verbose -Message "Using $sqlfile on $instance."
+                        $acl = Get-Acl -Path $remote
+                        $access = $acl.Access
 
-                    $sql = [IO.File]::ReadAllText($sqlfile)
-                    $sql = $sql -replace 'USE master', ''
-                    $sql = $sql -replace '--AUDITNAME--', $Name
-                    $sql = $sql -replace '--AUDITLOCATION--', $Path
-                    $sql = $sql -replace '--AUDITMAXSIZE--', $MaxSize
-                    $sql = $sql -replace '--AUDITMAXFILES--', $MaxFiles
-                    $sql = $sql -replace '--AUDITRESERVE--', $Reserve
-                    $sql = $sql -replace '--AUDITQUEUEDELAY--', $QueueDelay
-                    $sql = $sql -replace '--AUDITONFAILURE--', $OnFailure
-                    $sql = $sql -replace '<server audit spec name>', "$Name"
+                        foreach ($a in $access) {
+                            $null = $acl.RemoveAccessRule($a)
+                        }
 
-                    #return $sql
-                    $batches = $sql -split "\bGO\b"
+                        # Add local admin
+                        $accountdisplay = @()
+                        foreach ($username in $Account) {
+                            $accountdisplay += $username
+                            $permission = $username, "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow"
+                            $rule = New-Object System.Security.AccessControl.FileSystemAccessRule $permission
+                            $acl.SetAccessRule($rule)
+                        }
 
-                    foreach ($batch in $batches) {
-                        $server.Query($batch)
+                        Write-PesterMessage "$dbaccount is service account for $server"
+                        $accountdisplay += $dbaccount
+                        $permission = "$dbaccount", "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow"
+                        $rule = New-Object System.Security.AccessControl.FileSystemAccessRule $permission
+                        $acl.SetAccessRule($rule)
+
+                        if ($dbaccount -ne $agentaccount -and $server -notmatch 'AD') {
+                            $accountdisplay += $agentaccount
+                            Write-PesterMessage "$agentaccount is agent account for $server"
+                            $permission = "$agentaccount", "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow"
+                            $rule = New-Object System.Security.AccessControl.FileSystemAccessRule $permission
+                            $acl.SetAccessRule($rule)
+                        }
+                        Set-Acl -Path $remote -AclObject $acl #-WhatIf
                     }
 
                     [PSCustomObject]@{
-                        ComputerName = $server.ComputerName
-                        InstanceName = $server.ServiceName
-                        SqlInstance  = $server.DomainInstanceName
-                        Name         = "DISA STIG"
-                        Status       = "Success"
-                        Path         = $Path
+                        ComputerName        = $server.ComputerName
+                        InstanceName        = $server.ServiceName
+                        SqlInstance         = $server.DomainInstanceName
+                        Account             = $accountdisplay -join ", "
+                        Status              = "Success"
+                        Path                = $Path -join ", "
+                        PreviousPermissions = $access
                     }
                 } catch {
-                    Stop-Function -Message "Failed to install stored procedure." -ErrorRecord $_ -Continue -Target $instance
+                    Stop-Function -Message "Failed to set permissions on $instance" -ErrorRecord $_ -Continue -Target $instance
                 }
             }
         }

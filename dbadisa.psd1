@@ -39,7 +39,8 @@
 
     FunctionsToExport = @(
         'Install-DbaDisaStigAudit',
-        'Get-DbsStig'
+        'Get-DbsStig',
+        'Set-DbsAcl'
     )
 
     PrivateData       = @{
