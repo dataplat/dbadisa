@@ -32,6 +32,8 @@
     RequiredModules   = @(
         @{ ModuleName = 'PSFramework'; ModuleVersion = '1.0.19' },
         @{ ModuleName = 'dbatools'; ModuleVersion = '1.0.61' }
+        @{ ModuleName = 'dbachecks'; ModuleVersion = '1.2.22' }
+        @{ ModuleName = 'Pester'; ModuleVersion = '4.9.0' }
     )
 
     # Script module or binary module file associated with this manifest.

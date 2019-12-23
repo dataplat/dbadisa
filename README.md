@@ -52,7 +52,6 @@ Get-Help Install-DbsAudit -Detailed
 
 - dbatools - For working with SQL
 - PSFramework - For PowerShell goodness
-
-### Upcoming dependencies
 - dbachecks - For checking your work
 - Pester - Included in dbachecks
+
