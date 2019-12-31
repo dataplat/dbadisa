@@ -51,22 +51,20 @@ function Disable-DbsSaAccount {
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-SqlInstance -SqlInstance $instance -SqlCredential $sqlcredential -MinimumVersion 11
+                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $sqlcredential -MinimumVersion 11
             } catch {
                 Stop-Function -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
             }
 
             try {
-                if ($server.VersionMajor -ge 11) {
-                    $login = Get-DbaLogin -SqlInstance $server | Where-Object Id -eq 1
+                $login = Get-DbaLogin -SqlInstance $server | Where-Object Id -eq 1
 
-                    if ($login.Name -eq "sa") {
-                        Rename-DbaLogin -SqlInstance $server -Login $login -NewLogin $NewName
-                    }
+                if ($login.Name -eq "sa") {
+                    Rename-DbaLogin -SqlInstance $server -Login $login -NewLogin $NewName
+                }
 
-                    if ($login.IsDisabled -eq $false) {
-                        $login.Disable()
-                    }
+                if ($login.IsDisabled -eq $false) {
+                    $login.Disable()
                 }
             } catch {
                 Stop-Function -Message "Failed to rename sa account." -ErrorRecord $_ -Continue -Target $instance
