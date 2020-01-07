@@ -14,6 +14,12 @@ function Set-DbsAllowedProtocol {
     .PARAMETER Credential
         Credential object used to connect to the computer as a different user
 
+    .PARAMETER WhatIf
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+
+    .PARAMETER Confirm
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
         This avoids overwhelming you with "sea of red" exceptions, but is inconvenient because it basically disables advanced scripting.
@@ -30,8 +36,13 @@ function Set-DbsAllowedProtocol {
         PS C:\> Set-DbsAllowedProtocol -ComputerName sql01
 
         Disables all protocols except for tcp for all instances on sql01
+
+    .EXAMPLE
+        PS C:\> Set-DbsAllowedProtocol -ComputerName sql01 -Whatif
+
+        Shows what protocols on what instance would be disabled if the command would run
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(ValueFromPipeline)]
         [Alias("cn", "host", "Server")]
@@ -43,11 +54,13 @@ function Set-DbsAllowedProtocol {
         foreach ($computer in $ComputerName.ComputerName) {
             $protocols = Get-DbaInstanceProtocol -ComputerName $computer -Credential $Credential | Where-Object Name -ne Tcp
             foreach ($protocol in $protocols) {
-                $return = [bool](($protocol.Disable()).ReturnValue)
-                if ($return -eq 0) { $results = "True" } else { $results = "False" }
-                $protocol | Add-Member -NotePropertyName Disabled -NotePropertyValue $results
-                $protocol | Add-Member -NotePropertyName Notes -NotePropertyValue "Restart required" -PassThru |
-                Select-DefaultView -Property ComputerName, DisplayName, InstanceName, Disabled, Notes
+                if ($PSCmdlet.ShouldProcess($computer, "Disabling $($protocol.Name) for $($protocol.InstanceName)")) {
+                    $return = [bool](($protocol.Disable()).ReturnValue)
+                    if ($return -eq 0) { $results = "True" } else { $results = "False" }
+                    $protocol | Add-Member -NotePropertyName Disabled -NotePropertyValue $results
+                    $protocol | Add-Member -NotePropertyName Notes -NotePropertyValue "Restart required" -PassThru |
+                    Select-DefaultView -Property ComputerName, DisplayName, InstanceName, Disabled, Notes
+                }
             }
         }
     }
