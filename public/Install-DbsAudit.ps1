@@ -72,7 +72,7 @@ function Install-DbsAudit {
     .EXAMPLE
         PS C:\> Get-DbaRegServer -SqlInstance sqlcentral | Install-DbaDisaStigAudit
 
-        Installs sp_WhoisActive to all servers within CMS
+        Installs disa stig on all servers on the CMS
     #>
 
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
