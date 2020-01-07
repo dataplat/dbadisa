@@ -33,6 +33,8 @@ Function New-DbsDocTemplate {
         [Parameter(Mandatory)]
         [string]$FilePath,
         [int]$Version = 2016,
+        [ValidateSet("Description", "FixText", "Check")]
+        [string[]]$Include = @("Description", "FixText", "Check"),
         [switch]$EnableException
     )
     process {
@@ -41,12 +43,27 @@ Function New-DbsDocTemplate {
         foreach ($vuln in $vulns) {
             $vulnid = $vuln.VulnId
             $title = $vuln.Title
-            $fixtext = ($vuln.FixText).Replace('\�', '')
+            $fixtext = ($vuln.FixText).Replace('\�', '').Replace('\Â  ', ' ')
+            $description = ($vuln.Description).Replace('\�', '').Replace('\Â  ', ' ')
+            $check = ($vuln.Check).Replace('\�', '').Replace('\Â  ', ' ')
 
             Add-Content -Path $FilePath -Value "## $vulnid - $title"
             Add-Content -Path $FilePath -Value "`r`n"
-            Add-Content -Path $FilePath -Value $fixtext
-            Add-Content -Path $FilePath -Value "`r`n"
+            if ($Include -contains "Description") {
+                Add-Content -Path $FilePath -Value "### Description"
+                Add-Content -Path $FilePath -Value $description
+                Add-Content -Path $FilePath -Value "`r`n"
+            }
+            if ($Include -contains "FixText") {
+                Add-Content -Path $FilePath -Value "### Fix text"
+                Add-Content -Path $FilePath -Value $fixtext
+                Add-Content -Path $FilePath -Value "`r`n"
+            }
+            if ($Include -contains "Check") {
+                Add-Content -Path $FilePath -Value "### Check"
+                Add-Content -Path $FilePath -Value $check
+                Add-Content -Path $FilePath -Value "`r`n"
+            }
             Add-Content -Path $FilePath -Value "`r`n"
         }
         Get-ChildITem -Path $FilePath
