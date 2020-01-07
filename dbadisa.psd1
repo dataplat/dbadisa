@@ -43,7 +43,22 @@
         'Install-DbsAudit',
         'Get-DbsStig',
         'Set-DbsAcl',
-        'New-DbsDocTemplate'
+        'New-DbsDocTemplate',
+        'Disable-DbsSaAccount',
+        'Set-DbsAllowedProtocol',
+        'Disable-DbsBrowser',
+        'Test-DbsInstallPath',
+        'Test-DbsServiceAccount',
+        'Set-DbsConnectionLimit',
+        'New-DbsBaseline',
+        'Export-DbsDbAuthorizedUser',
+        'Compare-DbsStig',
+        'Export-DbsDbAuthorizedUser',
+        'Export-DbaUserPermission',
+        'Export-DbsComputerLogin',
+        'Export-DbsDbTrustworthy',
+        'Set-DbaDbAuditMaintainer',
+        'Export-DbsDbRecoveryModel'
     )
 
     CmdletsToExport   = @( )
