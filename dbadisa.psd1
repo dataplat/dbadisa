@@ -58,7 +58,8 @@
         'Export-DbsComputerLogin',
         'Export-DbsDbTrustworthy',
         'Set-DbaDbAuditMaintainer',
-        'Export-DbsDbRecoveryModel'
+        'Export-DbsDbRecoveryModel',
+        'Disable-DbsDbContainment'
     )
 
     CmdletsToExport   = @( )
