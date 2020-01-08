@@ -55,7 +55,7 @@
         'Compare-DbsStig',
         'Export-DbaUserPermission',
         'Get-DbsDbComputerUser',
-        'Export-DbsDbTrustworthy',
+        'Get-DbsDbTrustworthy',
         'Set-DbaDbAuditMaintainer',
         'Get-DbsDbRecoveryModel',
         'Disable-DbsDbContainment',
