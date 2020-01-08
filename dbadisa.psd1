@@ -59,7 +59,9 @@
         'Export-DbsDbTrustworthy',
         'Set-DbaDbAuditMaintainer',
         'Export-DbsDbRecoveryModel',
-        'Disable-DbsDbContainment'
+        'Disable-DbsDbContainment',
+        'Disable-DbsMixedMode',
+        'Get-DbsMixedMode'
     )
 
     CmdletsToExport   = @( )
