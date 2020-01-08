@@ -51,17 +51,18 @@
         'Test-DbsServiceAccount',
         'Set-DbsConnectionLimit',
         'New-DbsBaseline',
-        'Export-DbsDbAuthorizedUser',
+        'Get-DbsDbAuthorizedUser',
         'Compare-DbsStig',
-        'Export-DbsDbAuthorizedUser',
         'Export-DbaUserPermission',
         'Export-DbsComputerLogin',
         'Export-DbsDbTrustworthy',
         'Set-DbaDbAuditMaintainer',
-        'Export-DbsDbRecoveryModel',
+        'Get-DbsDbRecoveryModel',
         'Disable-DbsDbContainment',
         'Disable-DbsMixedMode',
-        'Get-DbsMixedMode'
+        'Get-DbsMixedMode',
+        'Get-DbsDbContainedUser',
+        'Set-DbsDbRecoveryModel'
     )
 
     CmdletsToExport   = @( )
