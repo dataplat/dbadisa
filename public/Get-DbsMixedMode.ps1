@@ -1,13 +1,13 @@
 function Get-DbsMixedMode {
     <#
     .SYNOPSIS
-        Gets mixed mode
+        Returns a list of any server that has mixed mode enabled
 
     .DESCRIPTION
-        Gets mixed mode
+        Returns a list of any server that has mixed mode enabled
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances.
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -31,7 +31,7 @@ function Get-DbsMixedMode {
     .EXAMPLE
         PS C:\> Get-DbsMixedMode -SqlInstance sql2017, sql2016, sql2012
 
-        Gets mixed mode on sql2017, sql2016 and sql2012
+        Returns a list of any server that has mixed mode enabled
     #>
 
     [CmdletBinding()]
@@ -44,9 +44,11 @@ function Get-DbsMixedMode {
     process {
         $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential -DisableException:$($EnableException -eq $false)
         foreach ($server in $servers) {
-            [pscustomobject]@{
-                SqlInstance = $server.Name
-                LoginMode   = $server.Settings.LoginMode
+            if ($server.Settings.LoginMode -ne 'Integrated') {
+                [pscustomobject]@{
+                    SqlInstance = $server.Name
+                    LoginMode   = $server.Settings.LoginMode
+                }
             }
         }
     }
