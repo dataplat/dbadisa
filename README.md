@@ -37,7 +37,7 @@ New-DbsDocTemplate -FilePath C:\temp\sql2016.md
 ## Examples - Get-DbsStig
 
 ```powershell
-# Parase DISA XML and return checklsits for database and instance for SQL Server 2014 and 2016
+# Parse DISA XML and return checklsits for database and instance for SQL Server 2014 and 2016
 Get-DbsStig
 ```
 
