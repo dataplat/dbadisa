@@ -47,7 +47,7 @@ function Get-DbsDbRecoveryModel {
         [switch]$EnableException
     )
     process {
-        $rec = Get-DbaDbRecoveryModel @PSBoundParameters | Where-Object RecoveryModel -ne Full
+        $rec = Get-DbaDbRecoveryModel @PSBoundParameters -ExcludeDatabase master, msdb, tempdb, model | Where-Object RecoveryModel -ne Full
         Select-DefaultView -InputObject $rec -Property SqlInstance, 'Name as Database', RecoveryModel
     }
 }
