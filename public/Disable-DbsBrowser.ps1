@@ -41,13 +41,27 @@ function Disable-DbsBrowser {
 
     process {
         foreach ($Computer in $ComputerName) {
+            $instanceNames = @()
+
             $instances = Get-DbaService -ComputerName $Computer -Type "Engine" -Credential $Crendential
 
-            $instanceNames = $instances | Where-Object InstanceName -ne "MSSQLSERVER"
+            ForEach ($instance in $instances) {
+                if ($instance.InstanceName -ne "MSSQLSERVER") {
+                    $instanceName = [pscustomobject] @{
+                        InstanceName = $instance.InstanceName
+                    }
+                    $instanceNames += $instanceName
+                }
+            }
 
-            if (@($instanceNames).Count -eq 0) {
+            if ($instances.Count -eq 0) {
                 Stop-DbaService -ComputerName $Computer -Type "Browser"
                 Set-Service -ComputerName $Computer -DisplayName "Browser" -StartupType "Disabled"
+            }
+            else {
+                ForEach ($name in $instanceNames) {
+                    Write-Message "The Browser was not disabled because instance $($name.InstanceName) exist."
+                }
             }
         }
     }
