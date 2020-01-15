@@ -54,7 +54,7 @@ function Disable-DbsBrowser {
                 }
             }
 
-            if ($instances.Count -eq 0) {
+            if ($instanceNames.Count -eq 0) {
                 Stop-DbaService -ComputerName $Computer -Type "Browser"
                 Set-Service -ComputerName $Computer -DisplayName "Browser" -StartupType "Disabled"
             }
