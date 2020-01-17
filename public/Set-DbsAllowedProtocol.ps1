@@ -1,10 +1,10 @@
 function Set-DbsAllowedProtocol {
     <#
     .SYNOPSIS
-        Disables all non-tcp protocols for all instances on a computer
+        Disables all non-tcp protocols for all instances on a computer, enables TCP
 
     .DESCRIPTION
-        Disables all non-tcp protocols for all instances on a computer
+        Disables all non-tcp protocols for all instances on a computer, enables TCP
 
         Settings go into effect after the SQL Service has been restarted
 
