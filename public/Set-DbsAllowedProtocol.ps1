@@ -52,14 +52,24 @@ function Set-DbsAllowedProtocol {
     )
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            $protocols = Get-DbaInstanceProtocol -ComputerName $computer -Credential $Credential | Where-Object Name -ne Tcp
+            $protocols = Get-DbaInstanceProtocol -ComputerName $computer -Credential $Credential
             foreach ($protocol in $protocols) {
-                if ($PSCmdlet.ShouldProcess($computer, "Disabling $($protocol.Name) for $($protocol.InstanceName)")) {
-                    $return = [bool](($protocol.Disable()).ReturnValue)
-                    if ($return -eq 0) { $results = "True" } else { $results = "False" }
-                    $protocol | Add-Member -NotePropertyName Disabled -NotePropertyValue $results
-                    $protocol | Add-Member -NotePropertyName Notes -NotePropertyValue "Restart required" -PassThru |
-                    Select-DefaultView -Property ComputerName, DisplayName, InstanceName, Disabled, Notes
+                if ($protocol.Name -eq 'Tcp') {
+                    if ($PSCmdlet.ShouldProcess($computer, "Enabling $($protocol.Name) for $($protocol.InstanceName)")) {
+                        $return = [bool](($protocol.Enable()).ReturnValue)
+                        if ($return -eq 0) { $results = "False" } else { $results = "True" }
+                        $protocol | Add-Member -NotePropertyName Disabled -NotePropertyValue $results
+                        $protocol | Add-Member -NotePropertyName Notes -NotePropertyValue "Restart required" -PassThru |
+                        Select-DefaultView -Property ComputerName, DisplayName, InstanceName, Disabled, Notes
+                    }
+                } else {
+                    if ($PSCmdlet.ShouldProcess($computer, "Disabling $($protocol.Name) for $($protocol.InstanceName)")) {
+                        $return = [bool](($protocol.Disable()).ReturnValue)
+                        if ($return -eq 0) { $results = "True" } else { $results = "False" }
+                        $protocol | Add-Member -NotePropertyName Disabled -NotePropertyValue $results
+                        $protocol | Add-Member -NotePropertyName Notes -NotePropertyValue "Restart required" -PassThru |
+                        Select-DefaultView -Property ComputerName, DisplayName, InstanceName, Disabled, Notes
+                    }
                 }
             }
         }
