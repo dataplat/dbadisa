@@ -38,30 +38,33 @@ function Disable-DbsBrowser {
         [PSCredential]$Credential,
         [switch]$EnableException
     )
-
     process {
-        foreach ($Computer in $ComputerName) {
-            $instanceNames = @()
+        foreach ($computer in $ComputerName) {
+            $allports = Get-DbaTcpPort -SqlInstance $Computer -Credential $Crendential -All -EnableException:$EnableException
+            $ports = $allports | Where-Object Port -ne 1433
 
-            $instances = Get-DbaService -ComputerName $Computer -Type Engine -Credential $Crendential
-
-            ForEach ($instance in $instances) {
-                if ($instance.InstanceName -ne "MSSQLSERVER") {
-                    $instanceName = [pscustomobject] @{
-                        InstanceName = $instance.InstanceName
-                    }
-                    $instanceNames += $instanceName
+            foreach ($port in $allports) {
+                Write-Message -Level Verbose -Message "Found instance $($port.InstanceName) on $($port.ComputerName) with IP $($port.IPAddress) on port $($port.Port)"
+            }
+            if ($ports) {
+                $disabled = $false
+                $notes = "SQL services found on ports other than 1433"
+            } else {
+                try {
+                    $browser = Get-DbaService -ComputerName $Computer -Type Browser -EnableException:$EnableException
+                    $null = $browser | Stop-DbaService -EnableException:$EnableException
+                    $null = $browser | Set-Service -StartupType Disabled
+                    $disabled = $true
+                    $notes = "No SQL services found on ports other than 1433"
+                } catch {
+                    Stop-Function -EnableException:$EnableException -Message "Error setting services on $computer" -ErrorRecord $_
                 }
             }
 
-            if ($instanceNames.Count -eq 0) {
-                $null = Stop-DbaService -ComputerName $Computer -Type Browser
-                $null = Set-Service -ComputerName $Computer -DisplayName Browser -StartupType Disabled
-
-            } else {
-                foreach ($name in $instanceNames) {
-                    Write-Message -Level Verbose -Message "The Browser was not disabled on $computer because instance $($name.InstanceName) exist."
-                }
+            [pscustomobject]@{
+                ComputerName    = $computer
+                BrowserDisabled = $disabled
+                Notes           = $notes
             }
         }
     }
