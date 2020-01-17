@@ -42,7 +42,7 @@ function Set-DbsDbRecoveryModel {
         [switch]$EnableException
     )
     process {
-        $null = Get-DbaDatabase @PSBoundParameters -ExcludeSystem | Set-DbaDbRecoveryModel -RecoveryModel Full
+        $null = Get-DbaDatabase @PSBoundParameters -ExcludeSystem | Where-Object IsAccessible | Set-DbaDbRecoveryModel -RecoveryModel Full
         $rec = Get-DbaDatabase @PSBoundParameters -ExcludeSystem
         Select-DefaultView -InputObject $rec -Property SqlInstance, 'Name as Database', RecoveryModel
     }
