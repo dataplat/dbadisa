@@ -73,7 +73,9 @@
         'Get-DbsPermission',
         'Get-DbsFeature',
         'Get-DbsAudit',
-        'Get-DbsAuditOnFailure'
+        'Get-DbsAuditOnFailure',
+        'Disable-DbsXPCmdShell',
+        'Get-DbsXPCmdShell'
     )
 
     CmdletsToExport   = @( )
