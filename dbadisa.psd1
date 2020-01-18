@@ -63,7 +63,8 @@
         'Get-DbsMixedMode',
         'Get-DbsDbContainedUser',
         'Set-DbsDbRecoveryModel',
-        'Set-DbsDbFileSize'
+        'Set-DbsDbFileSize',
+        'Get-DbsDbExecuteAs'
     )
 
     CmdletsToExport   = @( )
