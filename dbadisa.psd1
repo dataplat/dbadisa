@@ -65,7 +65,9 @@
         'Set-DbsDbRecoveryModel',
         'Set-DbsDbFileSize',
         'Get-DbsDbExecuteAs',
-        'Get-DbsDbProhibitedKeyAlgorithm'
+        'Get-DbsDbProhibitedKeyAlgorithm',
+        'Get-DbsFips',
+        'Disable-DbsFips'
     )
 
     CmdletsToExport   = @( )
