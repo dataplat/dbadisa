@@ -67,7 +67,9 @@
         'Get-DbsDbExecuteAs',
         'Get-DbsDbProhibitedKeyAlgorithm',
         'Get-DbsFips',
-        'Disable-DbsFips'
+        'Disable-DbsFips',
+        'Get-DbsDbPermission',
+        'Test-DbsSpn'
     )
 
     CmdletsToExport   = @( )
