@@ -69,7 +69,8 @@
         'Get-DbsFips',
         'Disable-DbsFips',
         'Get-DbsDbPermission',
-        'Test-DbsSpn'
+        'Test-DbsSpn',
+        'Get-DbsPermission'
     )
 
     CmdletsToExport   = @( )
