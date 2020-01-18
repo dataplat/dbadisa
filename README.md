@@ -3,6 +3,8 @@
 # dbadisa
 DISA STIG automation module for SQL Server
 
+Add a lil info about how most of the returns are non-compliant reports
+
 ## Install
 
 ```powershell

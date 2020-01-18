@@ -1,10 +1,10 @@
 function Get-DbsFips {
     <#
     .SYNOPSIS
-        Gets FIPS disabled state
+        Returns a list of computers that are not FIPS compliant
 
     .DESCRIPTION
-        Gets FIPS disabled state
+        Returns a list of computers that are not FIPS compliant
 
     .PARAMETER ComputerName
         The SQL Server (or server in general) that you're connecting to.
@@ -28,6 +28,7 @@ function Get-DbsFips {
 
     .EXAMPLE
         PS C:\> Get-DbsFips -ComputerName sql2016, sql2017, sql2012
+
         Gets FIPS disabled state from sql2016, sql2017 and sql2012
 #>
 
@@ -44,9 +45,11 @@ function Get-DbsFips {
                 $enabled = Invoke-Command2 -ComputerName $computer -Credential $credential -ScriptBlock {
                     Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy | Select-Object -ExpandProperty Enabled
                 } -Raw
-                [pscustomobject]@{
-                    ComputerName = $computer
-                    FipsDisabled = $($enabled -eq $false)
+                if ($enabled) {
+                    [pscustomobject]@{
+                        ComputerName = $computer
+                        FipsDisabled = $($enabled -eq $false)
+                    }
                 }
             } catch {
                 Stop-Function -Message "Failure" -ErrorRecord $_ -Continue -EnableException:$EnableException
