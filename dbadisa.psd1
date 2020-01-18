@@ -75,7 +75,8 @@
         'Get-DbsAudit',
         'Get-DbsAuditOnFailure',
         'Disable-DbsXPCmdShell',
-        'Get-DbsXPCmdShell'
+        'Get-DbsXPCmdShell',
+        'Get-DbsTcpPort'
     )
 
     CmdletsToExport   = @( )
