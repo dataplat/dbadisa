@@ -72,7 +72,8 @@
         'Test-DbsSpn',
         'Get-DbsPermission',
         'Get-DbsFeature',
-        'Get-DbsAudit'
+        'Get-DbsAudit',
+        'Get-DbsAuditOnFailure'
     )
 
     CmdletsToExport   = @( )
