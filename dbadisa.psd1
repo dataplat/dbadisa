@@ -64,7 +64,8 @@
         'Get-DbsDbContainedUser',
         'Set-DbsDbRecoveryModel',
         'Set-DbsDbFileSize',
-        'Get-DbsDbExecuteAs'
+        'Get-DbsDbExecuteAs',
+        'Get-DbsDbProhibitedKeyAlgorithm'
     )
 
     CmdletsToExport   = @( )
