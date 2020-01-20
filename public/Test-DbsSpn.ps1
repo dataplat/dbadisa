@@ -19,12 +19,9 @@ function Test-DbsSpn {
 
     .NOTES
         Tags: DISA, STIG
-        AAuthor: Chrissy LeMaire (@cl), netnerds.net
+        Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
-        License: MIT https://opensource.org/licenses/MITl
-
-    .LINK
-        https://dbadisa.readthedocs.io/en/latest/functions/Test-DbsSpn
+        License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
         PS C:\> Test-DbsSpn -ComputerName sql2016, sql2017, sql2012
@@ -35,7 +32,7 @@ function Test-DbsSpn {
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
-        [string[]]$ComputerName,
+        [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,
         [switch]$EnableException
     )

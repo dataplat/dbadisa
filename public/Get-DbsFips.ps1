@@ -19,9 +19,9 @@ function Get-DbsFips {
 
     .NOTES
         Tags: DISA, STIG
-        AAuthor: Chrissy LeMaire (@cl), netnerds.net
+        Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
-        License: MIT https://opensource.org/licenses/MITl
+        License: MIT https://opensource.org/licenses/MIT
 
     .LINK
         https://dbadisa.readthedocs.io/en/latest/functions/Get-DbsFips
@@ -35,12 +35,12 @@ function Get-DbsFips {
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
-        [string[]]$ComputerName,
+        [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,
         [switch]$EnableException
     )
     process {
-        foreach ($computer in $ComputerName) {
+        foreach ($computer in $ComputerName.ComputerName) {
             try {
                 $enabled = Invoke-Command2 -ComputerName $computer -Credential $credential -ScriptBlock {
                     Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy | Select-Object -ExpandProperty Enabled

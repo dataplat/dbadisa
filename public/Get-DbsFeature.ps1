@@ -35,7 +35,7 @@ function Get-DbsFeature {
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
-        [string[]]$ComputerName,
+        [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,
         [switch]$EnableException
     )

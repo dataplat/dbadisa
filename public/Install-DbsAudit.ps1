@@ -55,8 +55,8 @@ function Install-DbsAudit {
         Tags: DISA, STIG
         Author: Chrissy LeMaire (@cl), netnerds.net
 
-        Copyright: (c) 2010 by Chrissy LeMaire, licensed under MIT
-        License: MIT https://opensource.org/licenses/MITl
+        Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
+        License: MIT https://opensource.org/licenses/MIT
 
 
     .EXAMPLE

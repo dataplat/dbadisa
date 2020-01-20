@@ -48,8 +48,8 @@ function Set-DbsAcl {
         Tags: DISA, STIG
         Author: Chrissy LeMaire (@cl), netnerds.net
 
-        Copyright: (c) 2010 by Chrissy LeMaire, licensed under MIT
-        License: MIT https://opensource.org/licenses/MITl
+        Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
+        License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
         PS C:\> Set-DbsAcl -SqlInstance sql2017, sql2016, sql2012 -Account "AD\SQL Admins"
@@ -65,7 +65,7 @@ function Set-DbsAcl {
     #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
-        [parameter(Mandatory, ValueFromPipeline, Position = 0)]
+        [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
         [parameter(Mandatory)]

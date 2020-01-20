@@ -24,14 +24,15 @@ function Disable-DbsFips {
         This avoids overwhelming you with "sea of red" exceptions, but is inconvenient because it basically disables advanced scripting.
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
-    .NOTES
-        Tags: DISA, STIG
-        AAuthor: Chrissy LeMaire (@cl), netnerds.net
-        Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
-        License: MIT https://opensource.org/licenses/MITl
-
     .LINK
         https://dbadisa.readthedocs.io/en/latest/functions/Disable-DbsFips
+
+    .NOTES
+        Tags: DISA, STIG
+        Author: Chrissy LeMaire (@cl), netnerds.net
+        Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
+        License: MIT https://opensource.org/licenses/MIT
+
     .EXAMPLE
         PS C:\> Disable-DbsFips -ComputerName sql2016, sql2017, sql2012
         Disables FIPS on sql2016, sql2017 and sql2012
@@ -40,12 +41,12 @@ function Disable-DbsFips {
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
-        [string[]]$ComputerName,
+        [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,
         [switch]$EnableException
     )
     process {
-        foreach ($computer in $ComputerName) {
+        foreach ($computer in $ComputerName.ComputerName) {
             if ($PSCmdlet.ShouldProcess($computer, "Disabling FIPS")) {
                 try {
                     $null = Invoke-Command2 -ComputerName $computer -Credential $credential -ScriptBlock { New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy -name Enabled -value 0 -Force }
