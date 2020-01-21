@@ -77,7 +77,9 @@
         'Disable-DbsXPCmdShell',
         'Get-DbsXPCmdShell',
         'Get-DbsTcpPort',
-        'Get-DbsSetupAccount'
+        'Get-DbsSetupAccount',
+        'Get-DbsSqlClr',
+        'Disable-DbsSqlClr'
     )
 
     CmdletsToExport   = @( )
