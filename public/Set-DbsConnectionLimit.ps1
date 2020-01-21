@@ -7,7 +7,7 @@ function Set-DbsConnectionLimit {
         Sets the max number of UserConnections to comply with V-79119. Note you still need to document this method.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances.
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

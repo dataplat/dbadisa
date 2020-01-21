@@ -9,7 +9,7 @@ function Get-DbsPermission {
         Uses the Instance permissions assignments to logins and roles.sql file provided by DISA.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances.
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
