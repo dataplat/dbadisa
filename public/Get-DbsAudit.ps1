@@ -66,7 +66,6 @@ function Get-DbsAudit {
             Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
         }
 
-        return $results
         foreach ($result in $results) {
             [pscustomobject]@{
                 SqlInstance    = $server.Name
