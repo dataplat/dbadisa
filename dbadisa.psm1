@@ -74,3 +74,5 @@ if ($IsLinux) {
     Set-PSFConfig -Module dbadisa -Name app.localapp -Value "$env:localappdata\dbadisa" -Initialize -Description "Persisted files live here"
     Set-PSFConfig -Module dbadisa -Name app.maildirectory -Value "$env:localappdata\dbadisa\dbadisa.mail" -Initialize -Description "Files for mail are stored here"
 }
+
+$script:allnumbers = @(90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200)
