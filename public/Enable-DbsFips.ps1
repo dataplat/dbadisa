@@ -1,4 +1,4 @@
-function Disable-DbsFips {
+function Enable-DbsFips {
     <#
     .SYNOPSIS
         Disables FIPS
@@ -25,16 +25,16 @@ function Disable-DbsFips {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .LINK
-        https://dbadisa.readthedocs.io/en/latest/functions/Disable-DbsFips
+        https://dbadisa.readthedocs.io/en/latest/functions/Enable-DbsFips
 
     .NOTES
-        Tags: V-79199
+        Tags: V-67871, V-79113, V-79197, V-79199, V-79203, V-79305, V-79307, V-79309
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Disable-DbsFips -ComputerName sql2016, sql2017, sql2012
+        PS C:\> Enable-DbsFips -ComputerName sql2016, sql2017, sql2012
         Disables FIPS on sql2016, sql2017 and sql2012
 #>
 
