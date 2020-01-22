@@ -79,7 +79,9 @@
         'Get-DbsTcpPort',
         'Get-DbsSetupAccount',
         'Get-DbsSqlClr',
-        'Disable-DbsSqlClr'
+        'Disable-DbsSqlClr',
+        'Get-DbsLoginProperty',
+        'Set-DbsLoginProperty'
     )
 
     CmdletsToExport   = @( )
