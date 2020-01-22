@@ -1,10 +1,10 @@
 function Enable-DbsFips {
     <#
     .SYNOPSIS
-        Disables FIPS
+        Enables FIPS
 
     .DESCRIPTION
-        Disables FIPS
+        Enables FIPS
 
     .PARAMETER ComputerName
         The SQL Server (or server in general) that you're connecting to.
@@ -35,7 +35,8 @@ function Enable-DbsFips {
 
     .EXAMPLE
         PS C:\> Enable-DbsFips -ComputerName sql2016, sql2017, sql2012
-        Disables FIPS on sql2016, sql2017 and sql2012
+
+        Enables FIPS on sql2016, sql2017 and sql2012
 #>
 
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
@@ -47,12 +48,12 @@ function Enable-DbsFips {
     )
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            if ($PSCmdlet.ShouldProcess($computer, "Disabling FIPS")) {
+            if ($PSCmdlet.ShouldProcess($computer, "Enabling FIPS")) {
                 try {
                     $null = Invoke-Command2 -ComputerName $computer -Credential $credential -ScriptBlock { New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy -name Enabled -value 0 -Force }
                     [pscustomobject]@{
                         ComputerName = $computer
-                        FipsDisabled = $true
+                        FipsEnabled  = $true
                     }
                 } catch {
                     Stop-Function -Message "Failure" -ErrorRecord $_ -Continue -EnableException:$EnableException
