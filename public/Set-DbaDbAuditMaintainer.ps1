@@ -71,21 +71,26 @@ function Set-DbaDbAuditMaintainer {
                 Write-Message -Level Verbose -Message $sql
                 $db.Query($sql)
 
-                $dbusers = Get-DbaDbUser -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $db
-                foreach ($dbuser in $dbusers) {
-                    $sql = "REVOKE DATABASE AUDIT FROM $($dbuser)"
+                $databaseusers = Get-DbaDbUser -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $db.Name
+                foreach ($databaseuser in $databaseusers) {
+                    $sql = "REVOKE ALTER ANY DATABASE AUDIT FROM $($databaseuser.Name)"
                     Write-Message -Level Verbose -Message $sql
                     $db.Query($sql)
 
-                    $sql = "REVOKE CONTROL DATABASE FROM $($dbuser)"
+                    $sql = "REVOKE CONTROL FROM $($databaseuser.Name)"
                     Write-Message -Level Verbose -Message $sql
                     $db.Query($sql)
                 }
 
                 foreach ($dbuser in $user) {
-                    $sql = "IF DATABASE_PRINCIPAL_ID('$($dbuser)') IS NOT NULL ALTER ROLE $($AuditRoleName) ADD MEMBER [$($dbuser)]"
-                    Write-Message -Level Verbose -Message $sql
-                    $db.Query($sql)
+                    if (@(Get-DbaDbUser -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $db.Name | Where-Object { $_.Name -eq $dbuser }).Count -gt 0) {
+                        $sql = "ALTER ROLE $($AuditRoleName) ADD MEMBER [$($dbuser)]"
+                        Write-Message -Level Verbose -Message $sql
+                        $db.Query($sql)
+                    }
+                    else {
+                        Write-Warning "User $($dbuser) does not exist in database $($db) to add to audit role"
+                    }
                 }
             }
             catch {
