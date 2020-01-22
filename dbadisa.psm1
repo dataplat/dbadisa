@@ -49,10 +49,10 @@ if (-not $script:compcollection) {
 }
 
 # Register autocompleters
-Register-PSFTeppScriptblock -Name Architecture -ScriptBlock { "x64", "x86", "ia64", "ARM" }
+Register-PSFTeppScriptblock -Name Version -ScriptBlock { "2008", "2012", "2014", "2016" }
 
 # Register the actual auto completer
-Register-PSFTeppArgumentCompleter -Command Get-dbadisa, Save-dbadisa -Parameter Language -Name Language
+Register-PSFTeppArgumentCompleter -Command Get-DbsStig -Parameter Version -Name Version
 
 Set-Alias -Name Stop-Function -Value Stop-PSFFunction
 Set-Alias -Name Write-Message -Value Write-PSFMessage
