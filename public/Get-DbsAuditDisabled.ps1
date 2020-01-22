@@ -1,10 +1,10 @@
-function Get-DbsAudit {
+function Get-DbsAuditDisabled {
     <#
     .SYNOPSIS
-        Gets a list of audit actions.
+        Gets a list of non-compliant audit states.
 
     .DESCRIPTION
-        Gets a list of audit actions.
+        Gets a list of non-compliant audit states.
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
@@ -29,19 +29,19 @@ function Get-DbsAudit {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsAudit -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsAuditDisabled -SqlInstance sql2017, sql2016, sql2012
 
-        Gets a list of instance permissions for all databases on sql2017, sql2016 and sql2012
-
-    .EXAMPLE
-        PS C:\> Get-DbsAudit -SqlInstance sql2017, sql2016, sql2012
-
-        Gets a list of instance permissions for all databases on sql2017, sql2016 and sql2012
+        Gets a list of non-compliant audit states on sql2017, sql2016 and sql2012
 
     .EXAMPLE
-        PS C:\> Get-DbsAudit -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\instanceperms.csv -NoTypeInformation
+        PS C:\> Get-DbsAuditDisabled -SqlInstance sql2017, sql2016, sql2012
 
-        Exports a list of instance permissions for all databases on sql2017, sql2016 and sql2012 to D:\disa\instanceperms.csv
+        Gets a list of non-compliant audit states on sql2017, sql2016 and sql2012
+
+    .EXAMPLE
+        PS C:\> Get-DbsAuditDisabled -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\auditstates.csv -NoTypeInformation
+
+        Gets a list of non-compliant audit states sql2017, sql2016 and sql2012 to D:\disa\auditstates.csv
     #>
     [CmdletBinding()]
     param (
@@ -51,19 +51,20 @@ function Get-DbsAudit {
         [switch]$EnableException
     )
     process {
-        $server = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
-
-        try {
-            $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
+        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
+        foreach ($server in $servers) {
+            try {
+                $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
                                     s.name AS 'SpecName',
                                     d.audit_action_name AS 'ActionName',
                                     d.audited_result AS 'Result'
                                     FROM sys.server_audit_specifications s
                                     JOIN sys.server_audits a ON s.audit_guid = a.audit_guid
                                     JOIN sys.server_audit_specification_details d ON s.server_specification_id = d.server_specification_id
-                                    WHERE a.is_state_enabled = 1")
-        } catch {
-            Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                                    WHERE a.is_state_enabled = 0")
+            } catch {
+                Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+            }
         }
     }
 }

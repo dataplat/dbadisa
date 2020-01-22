@@ -16,13 +16,16 @@ function Get-DbsAuditOnFailure {
 
         For MFA support, please use Connect-DbaInstance.
 
+    .PARAMETER Audit
+       The name of the DISA Audit. DISA_STIG by default.
+
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
         This avoids overwhelming you with "sea of red" exceptions, but is inconvenient because it basically disables advanced scripting.
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags:
+        Tags: V-79147
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -43,9 +46,26 @@ function Get-DbsAuditOnFailure {
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
+        [string]$Audit = 'DISA_STIG',
         [switch]$EnableException
     )
+    begin {
+        $params = @{
+            SqlCredential   = $SqlCredential
+            EnableException = $EnableException
+            Audit           = $Audit
+        }
+        $params = $MyInvocation.MyCommand.ParameterSets.Where( { $_.Name -eq $PSCmdlet.ParameterSetName }).Parameters
+    }
     process {
-        Get-DbaInstanceAudit @PSBoundParameters | Where-Object OnFailure -ne 'Shutdown'
+        return $params
+        foreach ($instance in $SqlInstance) {
+            $stigaudit = Get-DbaInstanceAudit -SqlInstance $instance @params | Where-Object OnFailure -ne 'Shutdown'
+            if (-not $stigaudit) {
+                Stop-Function -Message "Audit $Audit not found on $instance" -Continue
+            } else {
+                $stigaudit | Select-DefaultView -Property SqlInstance, Name, Onfailure, Enabled
+            }
+        }
     }
 }

@@ -72,7 +72,7 @@
         'Test-DbsSpn',
         'Get-DbsPermission',
         'Get-DbsFeature',
-        'Get-DbsAudit',
+        'Get-DbsAuditDisabled',
         'Get-DbsAuditOnFailure',
         'Disable-DbsXPCmdShell',
         'Get-DbsXPCmdShell',

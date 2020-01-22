@@ -22,7 +22,7 @@ function Get-DbsDbTrustworthy {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags:
+        Tags: V-79071
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -46,8 +46,26 @@ function Get-DbsDbTrustworthy {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        $sql = "SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database], SUSER_SNAME(d.owner_sid) AS Owner,
+                CASE
+                WHEN d.is_trustworthy_on = 0 THEN 'False'
+                WHEN d.is_trustworthy_on = 1 THEN 'True'
+                END AS Trustworthy,
+                CASE
+                WHEN role.name IN ('sysadmin','securityadmin')
+                OR permission.permission_name = 'CONTROL SERVER'
+                THEN 'True'
+                ELSE 'False'
+                END AS 'PrivilegedOwner'
+                FROM sys.databases d
+                LEFT JOIN sys.server_principals login ON d.owner_sid = login.sid
+                LEFT JOIN sys.server_role_members rm ON login.principal_id = rm.member_principal_id
+                LEFT JOIN sys.server_principals role ON rm.role_principal_id = role.principal_id
+                LEFT JOIN sys.server_permissions permission ON login.principal_id = permission.grantee_principal_id
+                WHERE d.name = DB_NAME()"
+    }
     process {
-        $rec = Get-DbaDatabase @PSBoundParameters | Where-Object Trustworthy
-        Select-DefaultView -InputObject $rec -Property SqlInstance, 'Name as Database', Trustworthy
+        Get-DbaDatabase @PSBoundParameters -ExcludeDatabase msdb | Invoke-DbaQuery -Query $sql
     }
 }
