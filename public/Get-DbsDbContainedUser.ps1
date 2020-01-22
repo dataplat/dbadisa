@@ -22,7 +22,7 @@ function Get-DbsDbContainedUser {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags:
+        Tags: V-79193
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -47,15 +47,12 @@ function Get-DbsDbContainedUser {
         [switch]$EnableException
     )
     process {
-        $databases = Get-DbaDatabase @PSBoundParameters
-        foreach ($db in $databases) {
-            $contained = $db.Query("SELECT Name FROM sys.database_principals WHERE type_desc = 'SQL_USER' AND authentication_type_desc = 'DATABASE';")
-            foreach ($user in $contained) {
-                [pscustomobject]@{
-                    SqlInstance   = $db.Parent.Name
-                    Database      = $db.Name
-                    ContainedUser = $contained.Name
-                }
+        $dbs = Get-DbaDatabase @PSBoundParameters | Where-Object ContainmentType
+        foreach ($db in $dbs) {
+            try {
+                $db.Query("SELECT distinct @@SERVERNAME as SqlInstance, DB_NAME() as [Database], Name as ContainedUser FROM sys.database_principals WHERE type_desc = 'SQL_USER' AND authentication_type_desc = 'DATABASE'")
+            } catch {
+                Stop-Function -Message "Failure on $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue
             }
         }
     }
