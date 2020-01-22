@@ -68,7 +68,7 @@
         'Get-DbsDbExecuteAs',
         'Get-DbsDbProhibitedKeyAlgorithm',
         'Get-DbsFips',
-        'Disable-DbsFips',
+        'Enable-DbsFips',
         'Get-DbsDbPermission',
         'Test-DbsSpn',
         'Get-DbsPermission',
@@ -83,7 +83,8 @@
         'Disable-DbsSqlClr',
         'Get-DbsLoginProperty',
         'Set-DbsLoginProperty',
-        'Get-DbsAuditSchemaAccessGroup'
+        'Get-DbsAuditSchemaAccessGroup',
+        'Get-DbsSampleDatabase'
     )
 
     CmdletsToExport   = @( )
