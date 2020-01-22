@@ -21,7 +21,7 @@ function Disable-DbsBrowser {
         https://dbadisa.readthedocs.io/en/latest/functions/Disable-DbsBrowser/
 
     .NOTES
-        Tags: DISA, STIG
+        Tags:
         Author: Tracy Boggiano (@TracyBoggiano), databasesuperhero.com
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT

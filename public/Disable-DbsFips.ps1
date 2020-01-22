@@ -28,7 +28,7 @@ function Disable-DbsFips {
         https://dbadisa.readthedocs.io/en/latest/functions/Disable-DbsFips
 
     .NOTES
-        Tags: DISA, STIG
+        Tags:
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT

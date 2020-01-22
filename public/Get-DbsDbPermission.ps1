@@ -9,7 +9,7 @@ function Get-DbsDbPermission {
         Uses the Database permission assignments to users and roles.sql file provided by DISA.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher. Server version must be SQL Server version 2012 or higher. Server version must be SQL Server version 2012 or higher. Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -24,7 +24,7 @@ function Get-DbsDbPermission {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: DISA, STIG
+        Tags: V-79125
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT

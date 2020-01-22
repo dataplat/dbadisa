@@ -6,6 +6,8 @@ function Set-DbsConnectionLimit {
     .DESCRIPTION
         Sets the max number of UserConnections to comply with V-79119. Note you still need to document this method.
 
+        "If a mechanism other than a logon trigger is used, verify its correct operation by the appropriate means."
+
     .PARAMETER SqlInstance
         The target SQL Server instance or instances.
 
@@ -31,7 +33,7 @@ function Set-DbsConnectionLimit {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: DISA, STIG
+        Tags: V-79119
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT

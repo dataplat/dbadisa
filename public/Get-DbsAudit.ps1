@@ -22,7 +22,7 @@ function Get-DbsAudit {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: DISA, STIG
+        Tags: V-79133
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -54,7 +54,7 @@ function Get-DbsAudit {
         $server = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
 
         try {
-            $results = $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
+            $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
                                     s.name AS 'SpecName',
                                     d.audit_action_name AS 'ActionName',
                                     d.audited_result AS 'Result'
@@ -64,20 +64,6 @@ function Get-DbsAudit {
                                     WHERE a.is_state_enabled = 1")
         } catch {
             Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
-        }
-
-        foreach ($result in $results) {
-            [pscustomobject]@{
-                SqlInstance    = $server.Name
-                SecurableClass = $result.'Securable Class'
-                Securable      = $result.Securable
-                Grantee        = $result.Grantee
-                GranteeType    = $result.'Grantee Type'
-                Permission     = $result.Permission
-                State          = $result.State
-                Grantor        = $result.Grantor
-                GrantorType    = $result.'Grantor Type'
-            }
         }
     }
 }
