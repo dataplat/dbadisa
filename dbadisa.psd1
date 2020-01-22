@@ -81,7 +81,8 @@
         'Get-DbsSqlClr',
         'Disable-DbsSqlClr',
         'Get-DbsLoginProperty',
-        'Set-DbsLoginProperty'
+        'Set-DbsLoginProperty',
+        'Get-DbsAuditSchemaAccessGroup'
     )
 
     CmdletsToExport   = @( )
