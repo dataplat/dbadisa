@@ -84,7 +84,9 @@
         'Get-DbsLoginProperty',
         'Set-DbsLoginProperty',
         'Get-DbsAuditSchemaAccessGroup',
-        'Get-DbsSampleDatabase'
+        'Get-DbsSampleDatabase',
+        'Get-DbsC2Disabled',
+        'Enable-DbsC2'
     )
 
     CmdletsToExport   = @( )
