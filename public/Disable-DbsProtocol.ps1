@@ -1,4 +1,4 @@
-function Set-DbsAllowedProtocol {
+function Disable-DbsProtocol {
     <#
     .SYNOPSIS
         Disables all non-tcp protocols for all instances on a computer, enables TCP
@@ -33,12 +33,12 @@ function Set-DbsAllowedProtocol {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Set-DbsAllowedProtocol -ComputerName sql01
+        PS C:\> Disable-DbsProtocol -ComputerName sql01
 
         Disables all protocols except for tcp for all instances on sql01
 
     .EXAMPLE
-        PS C:\> Set-DbsAllowedProtocol -ComputerName sql01 -Whatif
+        PS C:\> Disable-DbsProtocol -ComputerName sql01 -Whatif
 
         Shows what protocols on what instance would be disabled if the command would run
     #>

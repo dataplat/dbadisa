@@ -43,23 +43,17 @@ function Get-DbsDbProhibitedKeyAlgorithm {
         [switch]$EnableException
     )
     process {
-        $databases = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential | Get-DbaDatabase
-        foreach ($db in $databases) {
+        $dbs = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential | Get-DbaDatabase
+        foreach ($db in $dbs) {
             try {
-                $results = $db.Query("SELECT DISTINCT name, algorithm_desc
+                Write-Message -Level Verbose -Message "Processing $($db.Name)"
+                $db.Query("SELECT DISTINCT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],
+                Name, algorithm_desc as Description
                 FROM sys.symmetric_keys
                 WHERE key_algorithm NOT IN ('D3','A3')
                 ORDER BY name")
             } catch {
                 Stop-Function -Message "Failure for $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
-            }
-            foreach ($result in $results) {
-                [pscustomobject]@{
-                    SqlInstance = $db.Parent.Name
-                    Database    = $db.Name
-                    Name        = $results.Name
-                    Description = $results.algorithm_desc
-                }
             }
         }
     }
