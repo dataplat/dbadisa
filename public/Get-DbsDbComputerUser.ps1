@@ -22,7 +22,7 @@ function Get-DbsDbComputerUser {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: DISA, STIG
+        Tags: V-79131
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -47,7 +47,25 @@ function Get-DbsDbComputerUser {
         [switch]$EnableException
     )
     process {
-        $user = Get-DbaDbUser @PSBoundParameters | Where-Object Name -like '*$'
-        Select-DefaultView -InputObject $user -Property SqlInstance, Database, Name
+        $users = Get-DbaDbUser @PSBoundParameters | Where-Object Name -like '*$' | Sort-Object -Unique SqlInstance, Database, Login
+
+        foreach ($user in $users) {
+            # parse ad\user
+            if ($user.Name -match "\\") {
+                $username = $user.Name.Split("\")[1]
+            } elseif ($user.Name -match "\@") {
+                # or parse user@ad.local
+                $username = $user.Name.Split("@")[0]
+            } else {
+                $username = $user.Name
+            }
+
+            $username = $username.TrimEnd('$')
+            $found = ([ADSISearcher]"(&(ObjectCategory=Computer)(Name=$($username)))").FindAll()
+
+            if ($found.Path) {
+                Select-DefaultView -InputObject $user -Property SqlInstance, Database, Name
+            }
+        }
     }
 }
