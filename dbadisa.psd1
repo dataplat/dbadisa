@@ -86,7 +86,8 @@
         'Get-DbsAuditSchemaAccessGroup',
         'Get-DbsSampleDatabase',
         'Get-DbsC2Disabled',
-        'Enable-DbsC2'
+        'Enable-DbsC2',
+        'Get-DbsIFI'
     )
 
     CmdletsToExport   = @( )
