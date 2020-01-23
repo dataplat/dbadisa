@@ -87,7 +87,9 @@
         'Get-DbsSampleDatabase',
         'Get-DbsC2Disabled',
         'Enable-DbsC2',
-        'Get-DbsIFI'
+        'Get-DbsIFI',
+        'Get-DbsAuditStartupState',
+        'Set-DbsAuditStartupState'
     )
 
     CmdletsToExport   = @( )
