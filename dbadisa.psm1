@@ -75,4 +75,7 @@ if ($IsLinux) {
     Set-PSFConfig -Module dbadisa -Name app.maildirectory -Value "$env:localappdata\dbadisa\dbadisa.mail" -Initialize -Description "Files for mail are stored here"
 }
 
+Set-PSFConfig -Module dbadisa -Name app.auditname -Value "DISA_STIG" -Initialize -Description "The standardized name of your DISA STIG Audit. Defaults to DISA_STIG."
+
+
 $script:allnumbers = @(90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200)

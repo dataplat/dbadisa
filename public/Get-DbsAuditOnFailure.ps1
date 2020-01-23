@@ -17,7 +17,7 @@ function Get-DbsAuditOnFailure {
         For MFA support, please use Connect-DbaInstance.
 
     .PARAMETER Audit
-       The name of the DISA Audit. DISA_STIG by default.
+       The name of the DISA Audit.
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -46,7 +46,7 @@ function Get-DbsAuditOnFailure {
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
-        [string]$Audit = 'DISA_STIG',
+        [string[]]$Audit = (Get-PSFConfigValue -FullName dbadisa.app.auditname),
         [switch]$EnableException
     )
     begin {
@@ -55,10 +55,8 @@ function Get-DbsAuditOnFailure {
             EnableException = $EnableException
             Audit           = $Audit
         }
-        $params = $MyInvocation.MyCommand.ParameterSets.Where( { $_.Name -eq $PSCmdlet.ParameterSetName }).Parameters
     }
     process {
-        return $params
         foreach ($instance in $SqlInstance) {
             $stigaudit = Get-DbaInstanceAudit -SqlInstance $instance @params | Where-Object OnFailure -ne 'Shutdown'
             if (-not $stigaudit) {

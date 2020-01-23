@@ -16,6 +16,9 @@ function Get-DbsAuditDisabled {
 
         For MFA support, please use Connect-DbaInstance.
 
+    .PARAMETER Audit
+       The name of the DISA Audit.
+
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
         This avoids overwhelming you with "sea of red" exceptions, but is inconvenient because it basically disables advanced scripting.
@@ -47,6 +50,7 @@ function Get-DbsAuditDisabled {
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
+        [string[]]$Audit = (Get-PSFConfigValue -FullName dbadisa.app.auditname),
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
