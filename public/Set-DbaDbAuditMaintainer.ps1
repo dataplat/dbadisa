@@ -16,11 +16,11 @@ function Set-DbaDbAuditMaintainer {
 
         For MFA support, please use Connect-DbaInstance.
 
-    .PARAMETER AuditRoleName
+    .PARAMETER Role
         Name to be given the audit maintainer role.
 
     .PARAMETER User
-        The login or logins that are to be granted permissions.
+        The login or logins that are to be granted permissions. This should be a Windows Group or you may violate another STIG.
 
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
@@ -38,17 +38,21 @@ function Set-DbaDbAuditMaintainer {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Set-DbaDbAuditMaintainer -SqlInstance sql2017, sql2016, sql2012 -Database "Prod" -AuditRoleName "DATABASE_AUDIT_MAINTAINERS" -User "AD\SQL Admins"
+        PS C:\> Set-DbaDbAuditMaintainer -SqlInstance sql2017, sql2016, sql2012 -User "AD\SQL Admins"
 
         Set permissions for the DATABASE_AUDIT_MAINTAINERS role on sql2017, sql2016, sql2012 for user AD\SQL Admins on Prod database.
+
+    .EXAMPLE
+        PS C:\> Set-DbaDbAuditMaintainer -SqlInstance sql2017, sql2016, sql2012 -Role auditmaintainers -User "AD\SQL Admins"
+
+        Set permissions for the auditmaintainers role on sql2017, sql2016, sql2012 for user AD\SQL Admins on Prod database.
     #>
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
-        [parameter(Mandatory)]
-        [string]$AuditRoleName,
+        [string]$Role = "DATABASE_AUDIT_MAINTAINERS",
         [parameter(Mandatory)]
         [string[]]$User,
         [parameter(ValueFromPipeline)]
@@ -62,38 +66,59 @@ function Set-DbaDbAuditMaintainer {
         }
 
         foreach ($db in $InputObject) {
+            # chek to see if dbowner too
+            # New-DbaDbUser -SqlInstance sql2012 -Database blah -Login base\ctrlb
+            # check to ensure that they are using domain\user or user@domain
             try {
-                $sql = "IF DATABASE_PRINCIPAL_ID('$($AuditRoleName)') IS NULL CREATE ROLE $($AuditRoleName)"
-                Write-Message -Level Verbose -Message $sql
+                $sql = "IF DATABASE_PRINCIPAL_ID('$($Role)') IS NULL CREATE ROLE [$($Role)]"
+                Write-PSFMessage -Level Verbose -Message $sql
                 $db.Query($sql)
 
-                $sql = "GRANT ALTER ANY DATABASE AUDIT TO $($AuditRoleName)"
-                Write-Message -Level Verbose -Message $sql
+                $sql = "GRANT ALTER ANY DATABASE AUDIT TO [$($Role)]"
+                Write-PSFMessage -Level Verbose -Message $sql
                 $db.Query($sql)
 
-                $databaseusers = Get-DbaDbUser -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $db.Name
-                foreach ($databaseuser in $databaseusers) {
-                    $sql = "REVOKE ALTER ANY DATABASE AUDIT FROM $($databaseuser.Name)"
-                    Write-Message -Level Verbose -Message $sql
+                foreach ($databaseuser in $db.Users) {
+                    $sql = "REVOKE ALTER ANY DATABASE AUDIT FROM [$($databaseuser.Name)]"
+                    Write-PSFMessage -Level Verbose -Message $sql
                     $db.Query($sql)
 
-                    $sql = "REVOKE CONTROL FROM $($databaseuser.Name)"
-                    Write-Message -Level Verbose -Message $sql
+                    $sql = "REVOKE CONTROL FROM [$($databaseuser.Name)]"
+                    Write-PSFMessage -Level Verbose -Message $sql
                     $db.Query($sql)
                 }
 
                 foreach ($dbuser in $user) {
-                    if (@(Get-DbaDbUser -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $db.Name | Where-Object { $_.Name -eq $dbuser }).Count -gt 0) {
-                        $sql = "ALTER ROLE $($AuditRoleName) ADD MEMBER [$($dbuser)]"
-                        Write-Message -Level Verbose -Message $sql
+                    $loginexists = $db.Parent.Logins | Where-Object Name -eq $dbuser
+                    if (-not $loginexists) {
+                        if ($dbuser -notmatch '\\' -and $dbuser -notmatch '@') {
+                            Stop-PSFFunction -Message "The only way we can create a new user is if it's Windows. Please either use a Windows account or add the user manually." -Continue
+                        }
+                        $null = New-DbaLogin -SqlInstance $db.Parent -Login $dbuser
+                    }
+
+                    $userexists = $db.Users | Where-Object Name -eq $dbuser
+
+                    if (-not $userexists) {
+                        $sql = "CREATE USER [$dbuser] FOR LOGIN [$dbuser]"
+                        Write-PSFMessage -Level Verbose -Message $sql
                         $db.Query($sql)
                     }
-                    else {
-                        Write-Warning "User $($dbuser) does not exist in database $($db) to add to audit role"
+
+                    $casedname = Get-DbaDbUser  -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $db.Name | Where-Object Name -eq $dbuser | Select-Object -ExpandProperty Name
+                    $sql = "ALTER ROLE [$($Role)] ADD MEMBER [$($casedname)]"
+                    Write-PSFMessage -Level Verbose -Message $sql
+                    $db.Refresh()
+                    $db.Query($sql)
+
+                    [pscustomobject]@{
+                        SqlInstance = $db.SqlInstance
+                        Database    = $db.Name
+                        User        = $dbuser
+                        Status      = "Successfully added to $Role"
                     }
                 }
-            }
-            catch {
+            } catch {
                 Stop-Function -EnableException:$EnableException -Message "Could not modify $db on $($db.Parent.Name)" -ErrorRecord $_ -Continue
             }
         }
