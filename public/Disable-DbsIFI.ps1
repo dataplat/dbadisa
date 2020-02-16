@@ -1,10 +1,10 @@
 function Disable-DbsIFI {
     <#
     .SYNOPSIS
-        Disables Instant FIle Initialization (IFI) on a remote target.
+        Disables Instant File Initialization (IFI) on a remote target.
 
     .DESCRIPTION
-        Disables Instant FIle Initialization (IFI) on a remote target.
+        Disables Instant File Initialization (IFI) on a remote target.
 
     .PARAMETER ComputerName
         The target SQL Server
