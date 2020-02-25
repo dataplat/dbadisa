@@ -79,7 +79,11 @@ function Get-DbsDbAlterPermission {
         }
 
         foreach ($db in $InputObject) {
-            $db.Query($sql)
+            try {
+                $db.Query($sql)
+            } catch {
+                Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)"
+            }
         }
     }
 }
