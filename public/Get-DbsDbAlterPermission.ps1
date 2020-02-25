@@ -25,7 +25,7 @@ function Get-DbsDbAlterPermission {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79095
+        Tags: V-79109
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -80,9 +80,10 @@ function Get-DbsDbAlterPermission {
 
         foreach ($db in $InputObject) {
             try {
-                $db.Query($sql)
+                $db.Query($sql) | Select-Object -Property SqlInstance, Database, ObjectName, PrincipalName, PrincipalType, TypeDescription, SecurableName, StateDescription, PermissionName, @{ Name = 'db'; Expression = { $db } } |
+                Select-DefaultView -Property SqlInstance, Database, ObjectName, PrincipalName, PrincipalType, TypeDescription, SecurableName, StateDescription, PermissionName
             } catch {
-                Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)"
+                Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
             }
         }
     }
