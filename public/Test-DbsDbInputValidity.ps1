@@ -51,13 +51,18 @@ function Test-DbsDbInputValidity {
         }
 
         foreach ($db in $InputObject) {
-            $totaltables = ($db.Query("select count(*) as [Count] from sys.tables tab")).Count
-            $checks = $db | Get-DbsDbInputValidity
-            [pscustomobject]@{
-                SqlInstance = $db.SqlInstance
-                Database    = $db.Name
-                TotalTables = $totaltables
-                TotalChecks = @($checks).Count
+            try {
+                Write-PSFMessage -Level Verbose -Message "Processing $($db.Name) on $($db.Parent.Name)"
+                $totaltables = ($db.Query("select count(*) as [Count] from sys.tables tab")).Count
+                $checks = $db | Get-DbsDbInputValidity
+                [pscustomobject]@{
+                    SqlInstance = $db.SqlInstance
+                    Database    = $db.Name
+                    TotalTables = $totaltables
+                    TotalChecks = @($checks).Count
+                }
+            } catch {
+                Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

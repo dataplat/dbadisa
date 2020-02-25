@@ -129,8 +129,12 @@ function Get-DbsDbInputValidity {
         }
 
         foreach ($db in $InputObject) {
-            Write-PSFMessage -Level Verbose -Message "Processing $($db.Name) on $($db.Parent.Name)"
-            $db.Query($constraintsql)
+            try {
+                Write-PSFMessage -Level Verbose -Message "Processing $($db.Name) on $($db.Parent.Name)"
+                $db.Query($constraintsql)
+            } catch {
+                Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
+            }
         }
     }
 }
