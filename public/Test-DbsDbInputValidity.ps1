@@ -1,10 +1,10 @@
 function Test-DbsDbInputValidity {
     <#
     .SYNOPSIS
-        Returns a list of all input validations
+        Tests a db to see if it's got contraints
 
     .DESCRIPTION
-        Returns a list of all input validations
+        Tests a db to see if it's got contraints
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances.
@@ -34,12 +34,7 @@ function Test-DbsDbInputValidity {
     .EXAMPLE
         PS C:\> Test-DbsDbInputValidity -SqlInstance sql2017, sql2016, sql2012
 
-        Returns a list of all input validations
-
-    .EXAMPLE
-        PS C:\> Test-DbsDbInputValidity -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\checks.csv -NoTypeInformation
-
-        Exports input validation for all databases on sql2017, sql2016 and sql2012 to D:\disa\checks.csv
+        Tests a db to see if it's got contraints on sql2017, sql2016 and sql2012
     #>
     [CmdletBinding()]
     param (
@@ -56,12 +51,12 @@ function Test-DbsDbInputValidity {
         }
 
         foreach ($db in $InputObject) {
+            $totaltables = ($db.Query("select count(*) as [Count] from sys.tables tab")).Count
             $checks = $db | Get-DbsDbInputValidity
-            $total = $checks | Select-Object -ExpandProperty TableCount -First 1
             [pscustomobject]@{
                 SqlInstance = $db.SqlInstance
                 Database    = $db.Name
-                TotalTables = $total
+                TotalTables = $totaltables
                 TotalChecks = @($checks).Count
             }
         }
