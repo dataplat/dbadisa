@@ -92,7 +92,9 @@
         'Set-DbsAuditStartupState',
         'Get-DbsModuleAccess',
         'Get-DbsSystemPermission',
-        'Remove-DbsSystsemPermission'
+        'Remove-DbsSystsemPermission',
+        'Get-DbsDbInputValidity',
+        'Test-DbsDbInputValidity'
     )
 
     CmdletsToExport   = @( )
