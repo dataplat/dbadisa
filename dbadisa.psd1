@@ -89,7 +89,10 @@
         'Enable-DbsC2',
         'Get-DbsIFI',
         'Get-DbsAuditStartupState',
-        'Set-DbsAuditStartupState'
+        'Set-DbsAuditStartupState',
+        'Get-DbsModuleAccess',
+        'Get-DbsSystemPermission',
+        'Remove-DbsSystsemPermission'
     )
 
     CmdletsToExport   = @( )
