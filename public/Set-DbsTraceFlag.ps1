@@ -9,12 +9,14 @@ function Set-DbsTraceFlag {
     .PARAMETER SqlInstance
         The target SQL Server instance or instances.
 
-    .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Set-Credential).
+    .PARAMETER Credential
+        Login to the target _Windows Server_ instance using alternative credentials. Accepts PowerShell credentials (Set-Credential).
 
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
+    .PARAMETER WhatIf
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
 
-        For MFA support, please use Connect-DbaInstance.
+    .PARAMETER Confirm
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -31,29 +33,21 @@ function Set-DbsTraceFlag {
     .EXAMPLE
         PS C:\> Set-DbsTraceFlag -SqlInstance sql2017, sql2016, sql2012
 
-        Sets trace flag on servers.
+        Sets the 3625 trace flag on sql2017, sql2016, and sql2012
 
+    .EXAMPLE
+        PS C:\> Set-DbsTraceFlag -SqlInstance sql2017, sql2016, sql2012 -Confirm:$false
+
+        Sets the 3625 trace flag on sql2017, sql2016, and sql2012 without confirmation prompts
     #>
-
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
-        [PsCredential]$SqlCredential,
+        [PsCredential]$Credential,
         [switch]$EnableException
     )
     process {
-        $parameters = Get-DbaStartupParameter -SQLInstance @PSBoundParameters
-        $traceflags = $parameters.TraceFlags.Split(",")
-
-        if (@(Get-DbaTraceFlag -SQLInstance @PSBoundParameters -TraceFlag 3625).Count -eq 1) {
-            Get-DbaTraceFlag -SQLInstance @PSBoundParameters -TraceFlag 3625
-        } elseif ($traceflags -match 3625) {
-            Write-Message -Level Output -Message "Startup parameter for trace flag 3625 has been set, SQL needs to be restarted for it to take effect."
-        } elseif ($traceflags -notmatch 3625) {
-            Set-DbaStartupParameter -SqlInstance @PSBoundParameters -TraceFlag 3625
-        } else {
-            Write-Message -Level Output -MessageWrite-Host "Startup parameter for trace flag 3625 has already been set"
-        }
+        Set-DbaStartupParameter @PSBoundParameters -TraceFlag 3625 | Select-Object SqlInstance, TraceFlags
     }
 }

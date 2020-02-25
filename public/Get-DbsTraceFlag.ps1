@@ -1,7 +1,7 @@
 function Get-DbsTraceFlag {
     <#
     .SYNOPSIS
-        Checks to see if trace flag 3625 is set.
+        Checks both startup params and trace flags to see if trace flag 3625 is set. Returns non-compliant computers.
 
     .DESCRIPTION
         Checks to see if trace flag 3625 to hide system information form non-sysadmins in error messages.
@@ -10,11 +10,10 @@ function Get-DbsTraceFlag {
         The target SQL Server instance or instances.
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Set-Credential).
+        Login to the target _SQL Server_ instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
 
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+    .PARAMETER Credential
+         Login to the target _Windows Server_ using alternative credentials. Accepts PowerShell credentials (Get-Credential).
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -31,28 +30,36 @@ function Get-DbsTraceFlag {
     .EXAMPLE
         PS C:\> Get-DbsTraceFlag -SqlInstance sql2017, sql2016, sql2012
 
-        Sets trace flag on servers.
-
+        Gets trace flag on servers.
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
+        [PsCredential]$Credential,
         [switch]$EnableException
     )
     process {
-        $parameters = Get-DbaStartupParameter -SQLInstance @PSBoundParameters
-        $traceflags = $parameters.TraceFlags.Split(",")
+        foreach ($instance in $SqlInstance) {
+            try {
+                $startupflags = (Get-DbaStartupParameter -SqlInstance $instance -Credential $Credential -EnableException).TraceFlags.Split(",")
+                $startupflag = $startupflags -contains 3625
+                $traceflags = Get-DbaTraceFlag -TraceFlag 3625 -SqlInstance $instance -SqlCredential $SqlCredential -EnableException *>$null
 
-        # Theory it should be set as a startup parameter or not be correct
-        if (@(Get-DbaTraceFlag @PSBoundParameters -TraceFlag 3625).Count -eq 1 -and $traceflags -notmatch 3625) {
-            Get-DbaTraceFlag @PSBoundParameters -TraceFlag 3625
-        } elseif ($traceflags -match 3625) {
-            Write-Message -Level Output -Message "Startup parameter for trace flag 3625 has already been set, SQL needs to be restarted for it to take effect."
-        } else {
-            Write-Message -Level Output -Message "Startup parameter for trace flag 3625 has not been set, run Set-DbsTraceFlag."
+                if ($startupflag -and -not $traceflags) {
+                    Write-PSFMessage -Level Warning -Message "Startup parameter for trace flag 3625 has already been set in $instance, but the SQL service needs to be restarted for it to take effect"
+                }
+
+                if (-not $traceflags -and -not $startupflag) {
+                    [PSCustomObject]@{
+                        SqlInstance = $instance
+                        Compliant   = $false
+                    }
+                }
+            } catch {
+                Stop-PSFFunction -Message "Failure on $instance" -ErrorRecord $_ -Continue -EnableException:$EnableException
+            }
         }
     }
 }
