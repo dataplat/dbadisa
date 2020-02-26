@@ -1,13 +1,13 @@
 function Revoke-DbsDbAlterPermission {
     <#
     .SYNOPSIS
-        Gets non-compliant alter permissions
+        Removes non-compliant alter permissions
 
     .DESCRIPTION
-        Gets non-compliant alter permissions
+        Removes non-compliant alter permissions
 
     .PARAMETER InputObject
-        Allows databases to be piped in from Get-DbaDatabase
+        Allows databases to be piped in from Get-DbsDbAlterPermission
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -24,9 +24,14 @@ function Revoke-DbsDbAlterPermission {
     .EXAMPLE
         PS C:\> Get-DbsDbAlterPermission -SqlInstance sql2017, sql2016, sql2012 | Revoke-DbsDbAlterPermission
 
-        Revokes stuff
+        Revokes non-compliant alter permissions on sql2017, sql2016, sql2012
+
+    .EXAMPLE
+        PS C:\> Get-DbsDbAlterPermission -SqlInstance sql2017, sql2016, sql2012 | Out-GridView -Passthru | Revoke-DbsDbAlterPermission -Confirm:$false
+
+        Revokes _selected_ non-compliant alter permissions on sql2017, sql2016, sql2012, does not prompt
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
     param (
         [parameter(ValueFromPipeline)]
         [pscustomobject[]]$InputObject,
