@@ -97,7 +97,10 @@
         'Test-DbsDbInputValidity',
         'Get-DbsDbOwnerFixedServerRole',
         'Remove-DbsDbOwnerFixedServerRole',
-        'Get-DbsDbSchemaOwner'
+        'Get-DbsDbSchemaOwner',
+        'Set-DbsDbSchemaOwner',
+        'Get-DbsDbAlterPermission',
+        'Revoke-DbsDbAlterPermission'
     )
 
     CmdletsToExport   = @( )
