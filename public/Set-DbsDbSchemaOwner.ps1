@@ -32,7 +32,7 @@ function Set-DbsDbSchemaOwner {
         Sets a schema owner for schemas per db on sql2017, sql2016, sql2012
 
     .EXAMPLE
-        PS C:\> Get-DbsDbSchemaOwner -SqlInstance sql2017, sql2016, sql2012 | Out-GridView -Passthru | Set-DbsDbSchemaOwner -Owner base\ctrlb -Confirm:$false
+        PS C:\> Get-DbsDbSchemaOwner -SqlInstance sql2017, sql2016, sql2012 | Out-GridView -Passthru | Set-DbsDbSchemaOwner -Owner ad\dbschemaowner -Confirm:$false
 
         Sets a schema owner for _selected_ schemas on sql2017, sql2016, sql2012, does not prompt
     #>
@@ -46,10 +46,12 @@ function Set-DbsDbSchemaOwner {
     process {
         foreach ($result in $InputObject) {
             $db = $result.db
-            if ($PSCmdlet.ShouldProcess($instance, "Altering authorization on $object to $owner on $($db.Name)")) {
-                $object = $result.SchemaName
+            $object = $result.SchemaName
+            if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Altering authorization on $object to $Owner on $($db.Name)")) {
+
                 try {
                     $sql = "ALTER AUTHORIZATION ON SCHEMA::[$object] TO [$Owner]"
+                    Write-PSFMessage -Level Verbose -Message $sql
                     $db.Query($sql)
                     [pscustomobject]@{
                         SqlInstance = $result.SqlInstance
@@ -59,7 +61,11 @@ function Set-DbsDbSchemaOwner {
                         Success     = $true
                     }
                 } catch {
-                    Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
+                    $message = $_.Exception.InnerException.InnerException.InnerException.InnerException.Message
+                    if (-not $message) {
+                        $message = $_
+                    }
+                    Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name) | $message" -ErrorRecord $_ -Continue
                 }
             }
         }
