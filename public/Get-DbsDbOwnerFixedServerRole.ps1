@@ -48,28 +48,6 @@ function Get-DbsDbOwnerFixedServerRole {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
-    begin {
-        $sql = "SELECT
-            @@SERVERNAME as SqlInstance, D.name as [Database], SUSER_SNAME(D.owner_sid) AS [Owner],
-            CASE FRM.is_fixed_role_member
-            WHEN 0 THEN 'False'
-            WHEN 1 THEN 'True'
-            END AS FixedRoleMember
-            FROM sys.databases D
-            OUTER APPLY (
-            SELECT MAX(fixed_role_member) AS is_fixed_role_member
-            FROM (
-            SELECT IS_SRVROLEMEMBER(R.name, SUSER_SNAME(D.owner_sid)) AS fixed_role_member
-            FROM sys.server_principals R
-            WHERE is_fixed_role = 1
-            ) A
-            ) FRM
-            WHERE (D.database_id > 4
-            AND (FRM.is_fixed_role_member = 1
-            OR FRM.is_fixed_role_member IS NULL))
-            and FRM.is_fixed_role_member = 1
-            ORDER BY [Database]"
-    }
     process {
         try {
             $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential -MinimumVersion 11
@@ -79,17 +57,19 @@ function Get-DbsDbOwnerFixedServerRole {
 
         foreach ($server in $servers) {
             try {
-                $dbs = Get-DbaDatabase -SqlInstance $server
-                $results = $server.Query($sql)
-
-                foreach ($result in $results) {
-                    [PSCustomObject]@{
-                        SqlInstance     = $result.SqlInstance
-                        Database        = $result.Database
-                        Owner           = $result.Owner
-                        FixedRoleMember = $result.FixedRoleMember
-                        db              = ($dbs | Where-Object Name -eq $result.Database)
-                    } | Select-DefaultView -Property SqlInstance, Database, Owner, FixedRoleMember
+                $dbs = Get-DbaDatabase -SqlInstance $server -ExcludeSystem
+                foreach ($db in $dbs) {
+                    $roles = Get-DbaDbRole -SqlInstance $server -Database $db.Name | Where-Object IsFixedRole | Get-DbaDbRoleMember
+                    $fixedrolesmatch = $roles | Where-Object Login -contains $db.Owner
+                    foreach ($match in $fixedrolesmatch) {
+                        [PSCustomObject]@{
+                            SqlInstance = $db.SqlInstance
+                            Database    = $db.Name
+                            Owner       = $db.Owner
+                            FixedRole   = $match.Role
+                            db          = $db
+                        } | Select-DefaultView -Property SqlInstance, Database, Owner, FixedRole
+                    }
                 }
             } catch {
                 Stop-PSFFunction -Message "Failure on $($server.Name)" -ErrorRecord $_ -Continue
