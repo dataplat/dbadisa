@@ -31,7 +31,7 @@ function Set-DbaDbAuditMaintainer {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: DISA, STIG
+        Tags: V-79073
         Author: Tracy Boggiano (@TracyBoggiano), databasesuperhero.com
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
