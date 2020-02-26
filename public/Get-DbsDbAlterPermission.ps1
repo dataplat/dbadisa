@@ -25,7 +25,7 @@ function Get-DbsDbAlterPermission {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79109, V-79075
+        Tags: V-79109, V-79075, V-79081
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -69,7 +69,7 @@ function Get-DbsDbAlterPermission {
                 FROM sys.database_principals R
                 JOIN sys.database_role_members DRM ON R.principal_id = DRM.role_principal_id
                 JOIN sys.database_principals M ON DRM.member_principal_id = M.principal_id
-                WHERE R.name IN ('db ddladmin','db_owner')
+                WHERE R.name IN ('db_ddladmin','db_owner')
                 AND M.name != 'dbo'"
     }
     process {

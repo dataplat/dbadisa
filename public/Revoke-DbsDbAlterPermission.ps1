@@ -15,7 +15,7 @@ function Revoke-DbsDbAlterPermission {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79109, V-79075
+        Tags: V-79109, V-79075, V-79081
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
