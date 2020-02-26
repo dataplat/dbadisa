@@ -51,7 +51,7 @@ function Get-DbsDbSchemaOwner {
         [switch]$EnableException
     )
     begin {
-        $sql = "SELECT @@SERVERNAME as SqlInstace, DB_NAME() as [Database], S.name AS SchemaName, P.name AS OwningPrincipal
+        $sql = "SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database], S.name AS SchemaName, P.name AS OwningPrincipal
                         FROM sys.schemas S
                         JOIN sys.database_principals P ON S.principal_id = P.principal_id
                         ORDER BY S.name"
@@ -62,9 +62,19 @@ function Get-DbsDbSchemaOwner {
         }
 
         foreach ($db in $InputObject) {
+            $dbs = $db.Parent.Databases
             try {
                 Write-PSFMessage -Level Verbose -Message "Processing $($db.Name) on $($db.Parent.Name)"
-                $db.Query($sql)
+                $results = $db.Query($sql)
+                foreach ($result in $results) {
+                    [PSCustomObject]@{
+                        SqlInstance     = $result.SqlInstance
+                        Database        = $result.Database
+                        SchemaName      = $result.SchemaName
+                        OwningPrincipal = $result.OwningPrincipal
+                        db              = ($dbs | Where-Object Name -eq $result.Database)
+                    } | Select-DefaultView -Property SqlInstance, Database, SchemaName, OwningPrincipal
+                }
             } catch {
                 Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
             }
