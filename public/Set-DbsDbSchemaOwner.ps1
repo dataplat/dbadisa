@@ -32,7 +32,7 @@ function Set-DbsDbSchemaOwner {
         Sets a schema owner for schemas per db on sql2017, sql2016, sql2012
 
     .EXAMPLE
-        PS C:\> Get-DbsDbSchemaOwner -SqlInstance sql2017, sql2016, sql2012 | Out-GridView -Passthru | Set-DbsDbSchemaOwner -Confirm:$false
+        PS C:\> Get-DbsDbSchemaOwner -SqlInstance sql2017, sql2016, sql2012 | Out-GridView -Passthru | Set-DbsDbSchemaOwner -Owner base\ctrlb -Confirm:$false
 
         Sets a schema owner for _selected_ schemas on sql2017, sql2016, sql2012, does not prompt
     #>
