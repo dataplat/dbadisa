@@ -71,18 +71,17 @@ function Repair-DbsDbOwnerFixedServerRole {
         foreach ($fixedrole in $InputObject) {
             $db = $fixedrole.db
             $role = $fixedrole.FixedRole
-            $dbuser = $fixedrole.UserName
+            $login = $fixedrole.Owner
             if ($Type -contains "RemoveRoleMember") {
-                if ($PSCmdlet.ShouldProcess($server.Name, "Removing $dbuser from $role on $($db.Parent.Name)")) {
+                if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Removing $login from $role")) {
                     try {
-                        $sql = "ALTER ROLE [$role] DROP MEMBER [$dbuser]"
+                        $sql = "ALTER SERVER ROLE [$role] DROP MEMBER [$login]"
                         Write-PSFMessage -Level Verbose -Message $sql
                         $db.Query($sql)
                         [pscustomobject]@{
                             SqlInstance = $fixedrole.SqlInstance
                             Database    = $fixedrole.Database
-                            Owner       = $fixedrole.Owner
-                            Role        = $role
+                            Account     = $fixedrole.Owner
                             Repaired    = $true
                         }
                     } catch {
@@ -91,7 +90,7 @@ function Repair-DbsDbOwnerFixedServerRole {
                 }
             }
             if ($Type -contains "SetOwner") {
-                if ($PSCmdlet.ShouldProcess($server.Name, "Altering owner for $($fixedrole.Database), changing to $NewOwner")) {
+                if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Altering owner for $($fixedrole.Database), changing to $NewOwner")) {
                     try {
                         $sql = "ALTER AUTHORIZATION ON database::[$($fixedrole.Database)] TO [$NewOwner]"
                         Write-PSFMessage -Level Verbose -Message $sql
@@ -99,8 +98,7 @@ function Repair-DbsDbOwnerFixedServerRole {
                         [pscustomobject]@{
                             SqlInstance = $fixedrole.SqlInstance
                             Database    = $fixedrole.Database
-                            Owner       = $owner
-                            Role        = $role
+                            Account     = $fixedrole.Owner
                             Repaired    = $true
                         }
                     } catch {

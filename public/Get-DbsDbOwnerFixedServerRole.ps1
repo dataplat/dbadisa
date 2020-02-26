@@ -57,9 +57,10 @@ function Get-DbsDbOwnerFixedServerRole {
 
         foreach ($server in $servers) {
             try {
+                $roles = Get-DbaServerRole -SqlInstance $server | Where-Object IsFixedRole
                 $dbs = Get-DbaDatabase -SqlInstance $server -ExcludeSystem
                 foreach ($db in $dbs) {
-                    $roles = Get-DbaDbRole -SqlInstance $server -Database $db.Name | Where-Object IsFixedRole | Get-DbaDbRoleMember
+
                     $fixedrolesmatch = $roles | Where-Object Login -contains $db.Owner
                     foreach ($match in $fixedrolesmatch) {
                         [PSCustomObject]@{
