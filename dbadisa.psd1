@@ -96,7 +96,7 @@
         'Get-DbsDbInputValidity',
         'Test-DbsDbInputValidity',
         'Get-DbsDbOwnerFixedServerRole',
-        'Remove-DbsDbOwnerFixedServerRole',
+        'Repair-DbsDbOwnerFixedServerRole',
         'Get-DbsDbSchemaOwner',
         'Set-DbsDbSchemaOwner',
         'Get-DbsDbAlterPermission',
