@@ -52,7 +52,7 @@
         'Test-DbsServiceAccount',
         'Set-DbsConnectionLimit',
         'New-DbsBaseline',
-        'Get-DbsDbAuthorizedUser',
+        'Get-DbsDbUser',
         'Compare-DbsStig',
         'Export-DbaUserPermission',
         'Get-DbsDbComputerUser',
@@ -101,7 +101,8 @@
         'Set-DbsDbSchemaOwner',
         'Get-DbsDbAlterPermission',
         'Revoke-DbsDbAlterPermission',
-        'Get-DbsDbTemporalTable'
+        'Get-DbsDbTemporalTable',
+        'Get-DbsDbObjectOwner'
     )
 
     CmdletsToExport   = @( )

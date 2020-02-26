@@ -1,4 +1,4 @@
-function Get-DbsDbAuthorizedUser {
+function Get-DbsDbUser {
     <#
     .SYNOPSIS
         Returns a list of all users for a database. These users are presumed to be authorized.
@@ -29,12 +29,12 @@ function Get-DbsDbAuthorizedUser {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsDbAuthorizedUser -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsDbUser -SqlInstance sql2017, sql2016, sql2012
 
         Returns a list of all users for a database. These users are presumed to be authorized.
 
     .EXAMPLE
-        PS C:\> Get-DbsDbAuthorizedUser -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\authorized.csv -NoTypeInformation
+        PS C:\> Get-DbsDbUser -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\authorized.csv -NoTypeInformation
 
         Exports authorized users for all databases on sql2017, sql2016 and sql2012 to D:\disa\authorized.csv
     #>
