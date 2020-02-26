@@ -48,8 +48,11 @@ function Set-DbsDbSchemaOwner {
             $db = $result.db
             $object = $result.SchemaName
             if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Altering authorization on $object to $Owner on $($db.Name)")) {
-
                 try {
+                    if ($object -in 'dbo', 'guest', 'INFORMATION_SCHEMA', 'sys') {
+                        Stop-PSFFunction -Message "Cannot alter system schema $object for $($result.Database) on $($result.SqlInstance)" -Continue
+                    }
+
                     $sql = "ALTER AUTHORIZATION ON SCHEMA::[$object] TO [$Owner]"
                     Write-PSFMessage -Level Verbose -Message $sql
                     $db.Query($sql)
