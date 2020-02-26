@@ -1,10 +1,10 @@
 function Get-DbsDbOwnerFixedServerRole {
     <#
     .SYNOPSIS
-        Gets non-compliant alter permissions
+        Gets a listing of user databases whose owner is a member of a fixed server role
 
     .DESCRIPTION
-        Gets non-compliant alter permissions
+        Gets a listing of user databases whose owner is a member of a fixed server role
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances.
@@ -25,7 +25,7 @@ function Get-DbsDbOwnerFixedServerRole {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79109
+        Tags: V-79111
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -34,12 +34,12 @@ function Get-DbsDbOwnerFixedServerRole {
     .EXAMPLE
         PS C:\> Get-DbsDbOwnerFixedServerRole -SqlInstance sql2017, sql2016, sql2012
 
-        Gets non-compliant alter permissions on sql2017, sql2016 and sql2012
+        Gets a listing of user databases whose owner is a member of a fixed server role for all databases on sql2017, sql2016 and sql2012
 
     .EXAMPLE
-        PS C:\> Get-DbsDbOwnerFixedServerRole -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\alter.csv -NoTypeInformation
+        PS C:\> Get-DbsDbOwnerFixedServerRole -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\fixedserverrole.csv -NoTypeInformation
 
-        Exports all non-compliant alter permissions for all databases on sql2017, sql2016 and sql2012 to D:\disa\alter.csv
+        Exports a list of user databases whose owner is a member of a fixed server role for all databases on sql2017, sql2016 and sql2012 to D:\disa\fixedserverrole.csv
     #>
     [CmdletBinding()]
     param (
