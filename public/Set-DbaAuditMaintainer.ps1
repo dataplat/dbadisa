@@ -115,12 +115,11 @@ function Set-DbaAuditMaintainer {
                         Write-PSFMessage -Level Verbose -Message $sql
                         $server.Refresh()
                         $server.Query($sql)
-                    }
-
-                    [pscustomobject]@{
-                        SqlInstance = $instance
-                        Login       = $loginname
-                        Status      = "Successfully added to $Role"
+                        [pscustomobject]@{
+                            SqlInstance = $instance
+                            Login       = $loginname
+                            Status      = "Successfully added to $Role"
+                        }
                     }
                 }
             } catch {
