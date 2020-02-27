@@ -106,7 +106,9 @@
         'Get-DbsDbAccessControl',
         'Get-DbsDbTde',
         'Get-DbsDbKeyNotEncryptedByServer',
-        'Get-DbsDbKeyEncryptedByPassword'
+        'Get-DbsDbKeyEncryptedByPassword',
+        'Get-DbsReplicationXp',
+        'Disable-DbsReplicationXp'
     )
 
     CmdletsToExport   = @( )
