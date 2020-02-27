@@ -114,7 +114,9 @@
         'Get-DbsRemoteDataArchive',
         'Disable-DbsRemoteDataArchive',
         'Get-DbsAllowPolybaseExport',
-        'Disable-DbsAllowPolybaseExport'
+        'Disable-DbsAllowPolybaseExport',
+        'Get-DbsHadoopConnectivity',
+        'Disable-DbsHadoopConnectivity'
     )
 
     CmdletsToExport   = @( )
