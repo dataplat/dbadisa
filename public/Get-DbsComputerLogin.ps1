@@ -1,10 +1,10 @@
-function Get-DbsDbComputerUser {
+function Get-DbsComputerLogin {
     <#
     .SYNOPSIS
-        Returns a list of all database user accounts that are computers.
+        Returns a list of all server logins that are computers.
 
     .DESCRIPTION
-        Returns a list of all database user accounts that are computers.
+        Returns a list of all server logins that are computers.
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances.
@@ -22,21 +22,21 @@ function Get-DbsDbComputerUser {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79067
+        Tags: V-79131
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsDbComputerUser -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsComputerLogin -SqlInstance sql2017, sql2016, sql2012
 
-        Returns a list of all database user accounts that are computers for sql2017, sql2016, and sql2012
+        Returns a list of all server logins that are computers for sql2017, sql2016, and sql2012
 
     .EXAMPLE
-        PS C:\> Get-DbsDbComputerUser -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\computeruser.csv -NoTypeInformation
+        PS C:\> Get-DbsComputerLogin -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\computeruser.csv -NoTypeInformation
 
-        Exports a list of all database user accounts that are computers to D:\disa\computeruser.csv
+        Exports a list of all server logins that are computers to D:\disa\computeruser.csv
     #>
 
     [CmdletBinding()]
@@ -47,24 +47,24 @@ function Get-DbsDbComputerUser {
         [switch]$EnableException
     )
     process {
-        $users = Get-DbaDbUser @PSBoundParameters | Where-Object Name -like '*$' | Sort-Object -Unique SqlInstance, Database, Login
+        $logins = Get-DbaLogin @PSBoundParameters | Where-Object Name -like '*$' | Sort-Object -Unique SqlInstance, Database, Login
 
-        foreach ($user in $users) {
+        foreach ($login in $logins) {
             # parse ad\user
-            if ($user.Login -match "\\") {
-                $username = $user.Login.Split("\")[1]
-            } elseif ($user.Login -match "\@") {
+            if ($login.Name -match "\\") {
+                $loginname = $login.Name.Split("\")[1]
+            } elseif ($login.Name -match "\@") {
                 # or parse user@ad.local
-                $username = $user.Login.Split("@")[0]
+                $loginname = $login.Name.Split("@")[0]
             } else {
-                $username = $user.Login
+                $loginname = $login.Name
             }
 
-            $username = $username.TrimEnd('$')
-            $found = ([ADSISearcher]"(&(ObjectCategory=Computer)(Name=$($username)))").FindAll()
+            $loginname = $loginname.TrimEnd('$')
+            $found = ([ADSISearcher]"(&(ObjectCategory=Computer)(Name=$($loginname)))").FindAll()
 
             if ($found.Path) {
-                Select-DefaultView -InputObject $user -Property SqlInstance, Database, Name
+                Select-DefaultView -InputObject $login -Property SqlInstance, Database, Name
             }
         }
     }
