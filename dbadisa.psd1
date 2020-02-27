@@ -118,7 +118,9 @@
         'Get-DbsHadoopConnectivity',
         'Disable-DbsHadoopConnectivity',
         'Get-DbsRemoteAccess',
-        'Disable-DbsRemoteAccess'
+        'Disable-DbsRemoteAccess',
+        'Get-DbsUserOptions',
+        'Disable-DbsUserOptions'
     )
 
     CmdletsToExport   = @( )
