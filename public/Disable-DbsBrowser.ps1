@@ -17,17 +17,15 @@ function Disable-DbsBrowser {
         This avoids overwhelming you with "sea of red" exceptions, but is inconvenient because it basically disables advanced scripting.
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
-    .LINK
-        https://dbadisa.readthedocs.io/en/latest/functions/Disable-DbsBrowser/
-
     .NOTES
-        Tags:
+        Tags:V-79353, V-79349
         Author: Tracy Boggiano (@TracyBoggiano), databasesuperhero.com
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
         PS C:\> Disable-DbsBrowser -ComputerName Sql2016
+
         Disables and stops Browser service is not named instances exist
 #>
 
