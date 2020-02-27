@@ -55,7 +55,7 @@ function Set-DbaDbAuditMaintainer {
 
         Set permissions for the auditmaintainers role on sql2017, sql2016, sql2012 for user AD\SQL Admins on Prod database.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
@@ -80,20 +80,28 @@ function Set-DbaDbAuditMaintainer {
             try {
                 $sql = "IF DATABASE_PRINCIPAL_ID('$($Role)') IS NULL CREATE ROLE [$($Role)]"
                 Write-PSFMessage -Level Verbose -Message $sql
-                $db.Query($sql)
+                if ($PSCmdlet.ShouldProcess($instance, "Create role $Role")) {
+                    $db.Query($sql)
+                }
 
                 $sql = "GRANT ALTER ANY DATABASE AUDIT TO [$($Role)]"
                 Write-PSFMessage -Level Verbose -Message $sql
-                $db.Query($sql)
+                if ($PSCmdlet.ShouldProcess($instance, "Granting ALTER ANY DATABASE AUDIT to $Role")) {
+                    $db.Query($sql)
+                }
 
                 foreach ($databaseuser in $db.Users) {
                     $sql = "REVOKE ALTER ANY DATABASE AUDIT FROM [$($databaseuser.Name)]"
                     Write-PSFMessage -Level Verbose -Message $sql
-                    $db.Query($sql)
+                    if ($PSCmdlet.ShouldProcess($instance, "Revoking ALTER ANY DATABASE AUDIT from role $Role")) {
+                        $db.Query($sql)
+                    }
 
                     $sql = "REVOKE CONTROL FROM [$($databaseuser.Name)]"
                     Write-PSFMessage -Level Verbose -Message $sql
-                    $db.Query($sql)
+                    if ($PSCmdlet.ShouldProcess($instance, "Revoking CONTROL from role $Role")) {
+                        $db.Query($sql)
+                    }
                 }
 
                 foreach ($dbuser in $user) {
@@ -102,7 +110,10 @@ function Set-DbaDbAuditMaintainer {
                         if ($dbuser -notmatch '\\' -and $dbuser -notmatch '@') {
                             Stop-PSFFunction -Message "The only way we can create a new user is if it's Windows. Please either use a Windows account or add the user manually." -Continue
                         }
-                        $null = New-DbaLogin -SqlInstance $db.Parent -Login $dbuser
+
+                        if ($PSCmdlet.ShouldProcess($instance, "Creating login for $dbuser")) {
+                            $null = New-DbaLogin -SqlInstance $db.Parent -Login $dbuser
+                        }
                     }
 
                     $userexists = $db.Users | Where-Object Name -eq $dbuser
@@ -110,20 +121,25 @@ function Set-DbaDbAuditMaintainer {
                     if (-not $userexists) {
                         $sql = "CREATE USER [$dbuser] FOR LOGIN [$dbuser]"
                         Write-PSFMessage -Level Verbose -Message $sql
-                        $db.Query($sql)
+                        if ($PSCmdlet.ShouldProcess($instance, "Create user for login $dbuser")) {
+                            $db.Query($sql)
+                        }
                     }
 
                     $casedname = Get-DbaDbUser  -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $db.Name | Where-Object Name -eq $dbuser | Select-Object -ExpandProperty Name
                     $sql = "ALTER ROLE [$($Role)] ADD MEMBER [$($casedname)]"
                     Write-PSFMessage -Level Verbose -Message $sql
-                    $db.Refresh()
-                    $db.Query($sql)
 
-                    [pscustomobject]@{
-                        SqlInstance = $db.SqlInstance
-                        Database    = $db.Name
-                        User        = $dbuser
-                        Status      = "Successfully added to $Role"
+                    if ($PSCmdlet.ShouldProcess($instance, "Adding member $casedname to role $Role")) {
+                        $db.Refresh()
+                        $db.Query($sql)
+
+                        [pscustomobject]@{
+                            SqlInstance = $db.SqlInstance
+                            Database    = $db.Name
+                            User        = $dbuser
+                            Status      = "Successfully added to $Role"
+                        }
                     }
                 }
             } catch {
