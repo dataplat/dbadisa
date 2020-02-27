@@ -80,26 +80,26 @@ function Set-DbaDbAuditMaintainer {
             try {
                 $sql = "IF DATABASE_PRINCIPAL_ID('$($Role)') IS NULL CREATE ROLE [$($Role)]"
                 Write-PSFMessage -Level Verbose -Message $sql
-                if ($PSCmdlet.ShouldProcess($instance, "Create role $Role")) {
+                if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Create role $Role")) {
                     $db.Query($sql)
                 }
 
                 $sql = "GRANT ALTER ANY DATABASE AUDIT TO [$($Role)]"
                 Write-PSFMessage -Level Verbose -Message $sql
-                if ($PSCmdlet.ShouldProcess($instance, "Granting ALTER ANY DATABASE AUDIT to $Role")) {
+                if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Granting ALTER ANY DATABASE AUDIT to $Role")) {
                     $db.Query($sql)
                 }
 
                 foreach ($databaseuser in $db.Users) {
                     $sql = "REVOKE ALTER ANY DATABASE AUDIT FROM [$($databaseuser.Name)]"
                     Write-PSFMessage -Level Verbose -Message $sql
-                    if ($PSCmdlet.ShouldProcess($instance, "Revoking ALTER ANY DATABASE AUDIT from role $Role")) {
+                    if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Revoking ALTER ANY DATABASE AUDIT from role $Role")) {
                         $db.Query($sql)
                     }
 
                     $sql = "REVOKE CONTROL FROM [$($databaseuser.Name)]"
                     Write-PSFMessage -Level Verbose -Message $sql
-                    if ($PSCmdlet.ShouldProcess($instance, "Revoking CONTROL from role $Role")) {
+                    if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Revoking CONTROL from role $Role")) {
                         $db.Query($sql)
                     }
                 }
@@ -111,7 +111,7 @@ function Set-DbaDbAuditMaintainer {
                             Stop-PSFFunction -Message "The only way we can create a new user is if it's Windows. Please either use a Windows account or add the user manually." -Continue
                         }
 
-                        if ($PSCmdlet.ShouldProcess($instance, "Creating login for $dbuser")) {
+                        if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Creating login for $dbuser")) {
                             $null = New-DbaLogin -SqlInstance $db.Parent -Login $dbuser
                         }
                     }
@@ -121,7 +121,7 @@ function Set-DbaDbAuditMaintainer {
                     if (-not $userexists) {
                         $sql = "CREATE USER [$dbuser] FOR LOGIN [$dbuser]"
                         Write-PSFMessage -Level Verbose -Message $sql
-                        if ($PSCmdlet.ShouldProcess($instance, "Create user for login $dbuser")) {
+                        if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Create user for login $dbuser")) {
                             $db.Query($sql)
                         }
                     }
@@ -130,7 +130,7 @@ function Set-DbaDbAuditMaintainer {
                     $sql = "ALTER ROLE [$($Role)] ADD MEMBER [$($casedname)]"
                     Write-PSFMessage -Level Verbose -Message $sql
 
-                    if ($PSCmdlet.ShouldProcess($instance, "Adding member $casedname to role $Role")) {
+                    if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Adding member $casedname to role $Role")) {
                         $db.Refresh()
                         $db.Query($sql)
 
