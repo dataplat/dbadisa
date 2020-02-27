@@ -51,13 +51,24 @@ function Get-DbsDbObjectOwner {
         [switch]$EnableException
     )
     begin {
-        $sql = "SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],
-        SCHEMA_NAME(T.schema_id) AS [Schema], T.name AS [Table],
-        T.temporal_type_desc as TemporalTypeDescription, SCHEMA_NAME(H.schema_id) as HistorySchema,
-        H.name AS HistoryTable FROM sys.tables T
-        JOIN sys.tables H ON T.history_table_id = H.object_id
-        WHERE T.temporal_type != 0
-        ORDER BY [Schema], [Table]"
+        $sql = ";with objects_cte as
+                (SELECT
+                o.Name, o.type_desc as Type,
+                CASE
+                WHEN o.principal_id is null then s.principal_id
+                ELSE o.principal_id
+                END as principal_id
+                FROM sys.objects o
+                INNER JOIN sys.schemas s
+                ON o.schema_id = s.schema_id
+                WHERE o.is_ms_shipped = 0
+                )
+                SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],
+                cte.Name, dp.name as Owner, cte.Type
+                FROM objects_cte cte
+                INNER JOIN sys.database_principals dp
+                ON cte.principal_id = dp.principal_id
+                ORDER BY dp.Name, cte.Type"
     }
     process {
         if ($SqlInstance) {
@@ -66,8 +77,7 @@ function Get-DbsDbObjectOwner {
 
         foreach ($db in $InputObject) {
             try {
-                $db.Query($sql) | Select-Object -Property SqlInstance, Database, Schema, Table, TemporalTypeDescription, HistorySchema, HistoryTable, @{ Name = 'db'; Expression = { $db } } |
-                Select-DefaultView -Property SqlInstance, Database, Schema, Table, TemporalTypeDescription, HistorySchema, HistoryTable
+                $db.Query($sql)
             } catch {
                 Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
             }
