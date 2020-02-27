@@ -108,7 +108,9 @@
         'Get-DbsDbKeyNotEncryptedByServer',
         'Get-DbsDbKeyEncryptedByPassword',
         'Get-DbsReplicationXp',
-        'Disable-DbsReplicationXp'
+        'Disable-DbsReplicationXp',
+        'Get-DbsExternalScripts',
+        'Disable-DbsExternalScripts'
     )
 
     CmdletsToExport   = @( )
