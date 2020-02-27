@@ -120,7 +120,9 @@
         'Get-DbsRemoteAccess',
         'Disable-DbsRemoteAccess',
         'Get-DbsUserOptions',
-        'Disable-DbsUserOptions'
+        'Disable-DbsUserOptions',
+        'Get-DbsOleAutomationProcedures',
+        'Disable-DbsOleAutomationProcedures'
     )
 
     CmdletsToExport   = @( )
