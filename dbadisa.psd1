@@ -112,7 +112,9 @@
         'Get-DbsExternalScripts',
         'Disable-DbsExternalScripts',
         'Get-DbsRemoteDataArchive',
-        'Disable-DbsRemoteDataArchive'
+        'Disable-DbsRemoteDataArchive',
+        'Get-DbsAllowPolybaseExport',
+        'Disable-DbsAllowPolybaseExport'
     )
 
     CmdletsToExport   = @( )
