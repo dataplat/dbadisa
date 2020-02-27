@@ -1,10 +1,10 @@
 function Disable-DbsSaAccount {
     <#
     .SYNOPSIS
-        Disable and rename sa account
+        Disable and/or rename sa account
 
     .DESCRIPTION
-        Disable and rename sa account
+        Disable and/or rename sa account
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances.
@@ -24,30 +24,26 @@ function Disable-DbsSaAccount {
         This avoids overwhelming you with "sea of red" exceptions, but is inconvenient because it basically disables advanced scripting.
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
-    .LINK
-        https://dbadisa.readthedocs.io/en/latest/functions/Disable-DbsSaAccount/
-
     .NOTES
-        Tags: V-79319
+        Tags: V-79319, V-79317
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
         PS C:\> Disable-DbsSaAccount -SqlInstance Sql2016 -NewName newsa
+
         Disables and renames sa account
 #>
 
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
-        [parameter(Mandatory, ValueFromPipeline, Position = 0)]
+        [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
-        [parameter(Mandatory)]
         [string]$NewName,
         [switch]$EnableException
     )
-
     process {
         foreach ($instance in $SqlInstance) {
             try {
@@ -59,7 +55,7 @@ function Disable-DbsSaAccount {
             try {
                 $login = Get-DbaLogin -SqlInstance $server | Where-Object Id -eq 1
 
-                if ($login.Name -eq "sa") {
+                if ($NewName) {
                     Rename-DbaLogin -SqlInstance $server -Login $login -NewLogin $NewName
                 }
 
