@@ -102,7 +102,8 @@
         'Get-DbsDbAlterPermission',
         'Revoke-DbsDbAlterPermission',
         'Get-DbsDbTemporalTable',
-        'Get-DbsDbObjectOwner'
+        'Get-DbsDbObjectOwner',
+        'Get-DbsDbAccessControl'
     )
 
     CmdletsToExport   = @( )
