@@ -1,4 +1,4 @@
-function Get-DbsAllowPolybaseExport {
+function Get-DbsPolybaseExport {
     <#
     .SYNOPSIS
         Gets non-compliant Allow Polybase Export settings.
@@ -29,7 +29,7 @@ function Get-DbsAllowPolybaseExport {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsAllowPolybaseExport -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsPolybaseExport -SqlInstance sql2017, sql2016, sql2012
 
         Only returns non-compliant Allow Polybase Export settings from sql2017, sql2016 and sql2012
     #>

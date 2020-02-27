@@ -1,4 +1,4 @@
-function Disable-DbsDbsAllowPolybaseExport {
+function Disable-DbsDbsPolybaseExport {
     <#
     .SYNOPSIS
         Disables non-compliant Allow Polybase Export settings.
@@ -35,12 +35,12 @@ function Disable-DbsDbsAllowPolybaseExport {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Disable-DbsAllowPolybaseExport -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Disable-DbsPolybaseExport -SqlInstance sql2017, sql2016, sql2012
 
         Disables Allow Polybase Export on sql2017, sql2016 and sql2012
 
     .EXAMPLE
-        PS C:\> Disable-DbsAllowPolybaseExport -SqlInstance sql2017, sql2016, sql2012 -WhatIf
+        PS C:\> Disable-DbsPolybaseExport -SqlInstance sql2017, sql2016, sql2012 -WhatIf
 
         Shows what would happen if the command would run
     #>

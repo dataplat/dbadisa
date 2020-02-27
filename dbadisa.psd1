@@ -113,8 +113,8 @@
         'Disable-DbsExternalScripts',
         'Get-DbsRemoteDataArchive',
         'Disable-DbsRemoteDataArchive',
-        'Get-DbsAllowPolybaseExport',
-        'Disable-DbsAllowPolybaseExport',
+        'Get-DbsPolybaseExport',
+        'Disable-DbsPolybaseExport',
         'Get-DbsHadoopConnectivity',
         'Disable-DbsHadoopConnectivity'
     )
