@@ -1,10 +1,12 @@
 function Set-DbaDbAuditMaintainer {
     <#
     .SYNOPSIS
-        Sets the audit maintainer role.
+        Creates the database audit maintainer role, sets the permissions for the role, and adds logins.
+
+        NOTE! This command revokes permz.
 
     .DESCRIPTION
-        Create the audit maintainer role, sets the permissions for the role, and adds logins.
+        Creates the database audit maintainer role, sets the permissions for the role, and adds logins.
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
@@ -15,6 +17,9 @@ function Set-DbaDbAuditMaintainer {
         Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
 
         For MFA support, please use Connect-DbaInstance.
+
+    .PARAMETER Database
+        Allows databases to be piped in from Get-DbaDatabase.
 
     .PARAMETER Role
         Name to be given the audit maintainer role.
