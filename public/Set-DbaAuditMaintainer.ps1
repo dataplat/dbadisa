@@ -27,6 +27,9 @@ function Set-DbaAuditMaintainer {
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
 
+    .PARAMETER Confirm
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
         This avoids overwhelming you with "sea of red" exceptions, but is inconvenient because it basically disables advanced scripting.
@@ -49,7 +52,7 @@ function Set-DbaAuditMaintainer {
 
         Set permissions for the auditmaintainers role on sql2017, sql2016, sql2012 for user AD\SQL Admins on Prod database.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
@@ -66,24 +69,34 @@ function Set-DbaAuditMaintainer {
 
                 $sql = "IF NOT EXISTS(SELECT name FROM sys.server_principals WHERE type = 'R' AND name='[$Role]') CREATE SERVER ROLE [$($Role)]" # CREATE  ROLE SERVER_AUDIT_MAINTAINERS;
                 Write-PSFMessage -Level Verbose -Message $sql
-                $server.Query($sql)
+                if ($PSCmdlet.ShouldProcess($instance, "Create role $role")) {
+                    $server.Query($sql)
+                }
 
                 $sql = "GRANT ALTER ANY SERVER AUDIT TO [$($Role)]"
-                Write-PSFMessage -Level Verbose -Message $sql
-                $server.Query($sql)
+                if ($PSCmdlet.ShouldProcess($instance, "Grant alter any server audit to role $role")) {
+                    Write-PSFMessage -Level Verbose -Message $sql
+                    $server.Query($sql)
+                }
 
-                foreach ($login in $server.Logins) {
+                foreach ($serverlogin in $server.Logins) {
                     # Not so sure about this!
                     # CONTROL SERVER, ALTER ANY DATABASE and CREATE ANY DATABASE
-                    $sql = "REVOKE ALTER ANY DATABASE FROM [$($login.Name)]"
-                    Write-PSFMessage -Level Verbose -Message $sql
-                    $server.Query($sql)
-                    $sql = "REVOKE CONTROL SERVER FROM [$($login.Name)]"
-                    Write-PSFMessage -Level Verbose -Message $sql
-                    $server.Query($sql)
-                    $sql = "REVOKE CREATE ANY DATABASE FROM [$($login.Name)]"
-                    Write-PSFMessage -Level Verbose -Message $sql
-                    $server.Query($sql)
+                    $sql = "REVOKE ALTER ANY DATABASE FROM [$($serverlogin.Name)]"
+                    if ($PSCmdlet.ShouldProcess($instance, "WARNING: Revoking ALTER ANY DATABASE from $serverlogin")) {
+                        Write-PSFMessage -Level Verbose -Message $sql
+                        $server.Query($sql)
+                    }
+                    $sql = "REVOKE CONTROL SERVER FROM [$($serverlogin.Name)]"
+                    if ($PSCmdlet.ShouldProcess($instance, "WARNING: Revoking CONTROL SERVER from $serverlogin")) {
+                        Write-PSFMessage -Level Verbose -Message $sql
+                        $server.Query($sql)
+                    }
+                    $sql = "REVOKE CREATE ANY DATABASE FROM [$($serverlogin.Name)]"
+                    if ($PSCmdlet.ShouldProcess($instance, "WARNING: Revoking CREATE ANY DATABASE from $serverlogin")) {
+                        Write-PSFMessage -Level Verbose -Message $sql
+                        $server.Query($sql)
+                    }
                 }
 
                 foreach ($loginname in $Login) {
@@ -92,13 +105,17 @@ function Set-DbaAuditMaintainer {
                         if ($loginname -notmatch '\\' -and $loginname -notmatch '@') {
                             Stop-PSFFunction -Message "The only way we can create a new user is if it's Windows. Please either use a Windows account or add the user manually." -Continue
                         }
-                        $serverlogin = New-DbaLogin -SqlInstance $server -Login $loginname
+                        if ($PSCmdlet.ShouldProcess($instance, "Create new login for $loginname")) {
+                            $serverlogin = New-DbaLogin -SqlInstance $server -Login $loginname
+                        }
                     }
 
                     $sql = "ALTER ROLE [$($Role)] ADD MEMBER $serverlogin"
-                    Write-PSFMessage -Level Verbose -Message $sql
-                    $server.Refresh()
-                    $server.Query($sql)
+                    if ($PSCmdlet.ShouldProcess($instance, "Adding $loginname to $role")) {
+                        Write-PSFMessage -Level Verbose -Message $sql
+                        $server.Refresh()
+                        $server.Query($sql)
+                    }
 
                     [pscustomobject]@{
                         SqlInstance = $instance
