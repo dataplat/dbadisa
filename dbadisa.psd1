@@ -126,7 +126,8 @@
         'Get-DbsFilestreamAccess',
         'Disable-DbsFilestreamAccess',
         'Get-DbsSaAccount',
-        'Disable-DbsSaAccount'
+        'Disable-DbsSaAccount',
+        'Get-DbsAuditSuccessfulLoginGroup'
     )
 
     CmdletsToExport   = @( )
