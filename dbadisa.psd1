@@ -105,7 +105,8 @@
         'Get-DbsDbObjectOwner',
         'Get-DbsDbAccessControl',
         'Get-DbsDbTde',
-        'Get-DbsDbKeyEncryptedByServer'
+        'Get-DbsDbKeyNotEncryptedByServer',
+        'Get-DbsDbKeyEncryptedByPassword'
     )
 
     CmdletsToExport   = @( )

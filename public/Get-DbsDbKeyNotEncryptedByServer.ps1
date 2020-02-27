@@ -1,4 +1,4 @@
-function Get-DbsDbKeyEncryptedByServer {
+function Get-DbsDbKeyNotEncryptedByServer {
     <#
     .SYNOPSIS
        Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key
@@ -32,12 +32,12 @@ function Get-DbsDbKeyEncryptedByServer {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsDbKeyEncryptedByServer -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsDbKeyNotEncryptedByServer -SqlInstance sql2017, sql2016, sql2012
 
        Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key for all databases on sql2017, sql2016 and sql2012
 
     .EXAMPLE
-        PS C:\> Get-DbsDbKeyEncryptedByServer -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\access.csv -NoTypeInformation
+        PS C:\> Get-DbsDbKeyNotEncryptedByServer -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\access.csv -NoTypeInformation
 
        Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key for all databases on sql2017, sql2016 and sql2012 to D:\disa\access.csv
     #>

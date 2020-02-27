@@ -1,10 +1,10 @@
-function Get-DbsDbTde {
+function Get-DbsDbKeyEncryptedByPassword {
     <#
     .SYNOPSIS
-       Returns a list of non-compliant (unencrypted) databases
+       Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key
 
     .DESCRIPTION
-       Returns a list of non-compliant (unencrypted) databases
+       Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances.
@@ -25,21 +25,21 @@ function Get-DbsDbTde {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79115, V-79117
+        Tags: V-79085
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsDbTde -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsDbKeyEncryptedByPassword -SqlInstance sql2017, sql2016, sql2012
 
-        Returns a list of non-compliant (unencrypted) databases for all databases on sql2017, sql2016 and sql2012
+       Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key for all databases on sql2017, sql2016 and sql2012
 
     .EXAMPLE
-        PS C:\> Get-DbsDbTde -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\access.csv -NoTypeInformation
+        PS C:\> Get-DbsDbKeyEncryptedByPassword -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\access.csv -NoTypeInformation
 
-        Returns a list of non-compliant (unencrypted) databases for all databases on sql2017, sql2016 and sql2012 to D:\disa\access.csv
+       Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key for all databases on sql2017, sql2016 and sql2012 to D:\disa\access.csv
     #>
     [CmdletBinding()]
     param (
@@ -50,6 +50,13 @@ function Get-DbsDbTde {
         [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
         [switch]$EnableException
     )
+    begin {
+        $sql = "SELECT @@SERVERNAME as SqlInstance, name as [Database], COUNT(name) as Count
+                FROM sys.symmetric_keys s, sys.key_encryptions k
+                WHERE s.name = '##MS_DatabaseMasterKey##'
+                AND s.symmetric_key_id = k.key_id
+                AND k.crypt_type = 'ESKP'"
+    }
     process {
         if ($SqlInstance) {
             $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -EnableException:$EnableException -ExcludeSystem
@@ -57,29 +64,11 @@ function Get-DbsDbTde {
 
         foreach ($db in $InputObject) {
             try {
-                if (-not $db.EncryptionEnabled) {
-                    $db | Select-DefaultView -Property SqlInstance, 'Name as Database', EncryptionEnabled
-                }
+                Write-PSFMessage -Message "Processing $($db.Name) on $($db.Parent.Name)"
+                $db.Query($sql)
             } catch {
                 Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
             }
         }
-
-        <#
-        Write-PSFMessage -Message "Executing sql on $($db.Name) for $($db.Parent.Name)"
-        $db.Query($sql)
-        turns out, not going to use this
-        $sql = "SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],
-                CASE Encryption_state
-                WHEN 0 THEN 'No database encryption key present, no encryption'
-                WHEN 1 THEN 'Unencrypted'
-                WHEN 2 THEN 'Encryption in progress'
-                WHEN 3 THEN 'Encrypted'
-                WHEN 4 THEN 'Key change in progress'
-                WHEN 5 THEN 'Decryption in progress'
-                WHEN 6 THEN 'Protection change in progress'
-                END AS [EncryptionState]
-                FROM sys.dm_database_encryption_keys"
-        #>
     }
 }
