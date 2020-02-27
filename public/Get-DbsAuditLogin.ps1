@@ -1,10 +1,10 @@
-function Get-DbsAuditSuccessfulLoginGroup {
+function Get-DbsAuditLogin {
     <#
     .SYNOPSIS
-        Gets a list of SQL Server must generate audit records when concurrent logons/connections by the same user from different workstations occur.
+        Returns a list of (non-compliant) servers that are not auditing logins either by Audits or via "Both failed and successful logins"
 
     .DESCRIPTION
-        Gets a list of SQL Server must generate audit records when concurrent logons/connections by the same user from different workstations occur.
+        Returns a list of (non-compliant) servers that are not auditing logins either by Audits or via "Both failed and successful logins"
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
@@ -29,7 +29,7 @@ function Get-DbsAuditSuccessfulLoginGroup {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsAuditSuccessfulLoginGroup -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsAuditLogin -SqlInstance sql2017, sql2016, sql2012
 
         Gets a list of SQL Server must generate audit records when concurrent logons/connections by the same user from different workstations occur.
     #>
@@ -41,11 +41,11 @@ function Get-DbsAuditSuccessfulLoginGroup {
         [switch]$EnableException
     )
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
-
-        foreach ($server in $servers) {
+        foreach ($instance in $SqlInstance) {
             try {
-                $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
+                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
+
+                $auditresult = $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
                         s.name AS 'SpecName',
                         d.audit_action_name AS 'ActionName',
                         d.audited_result AS 'Result'
@@ -53,6 +53,15 @@ function Get-DbsAuditSuccessfulLoginGroup {
                         JOIN sys.server_audits a ON s.audit_guid = a.audit_guid
                         JOIN sys.server_audit_specification_details d ON s.server_specification_id = d.server_specification_id
                         WHERE a.is_state_enabled = 1 AND d.audit_action_name = 'SUCCESSFUL_LOGIN_GROUP' ")
+
+                $regread = $server.Query("EXEC xp_instance_regread N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'AuditLevel'")
+
+                if (-not ($auditresult -or $regread.Data -eq 3)) {
+                    [PSCustomObject]@{
+                        SqlInstance   = $server.Name
+                        LoginTracking = $false
+                    }
+                }
             } catch {
                 Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
             }
