@@ -22,7 +22,7 @@ function Get-DbsAuditSchemaAccessGroup {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79137, V-79139, V-79301, V-79299
+        Tags: V-79137, V-79139, V-79301, V-79299, V-79251, V-79253, V-79255, V-79257, V-79267, V-79269, V-79271, V-79273, V-79279, V-79281, V-79283, V-79285
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
