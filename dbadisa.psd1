@@ -57,7 +57,6 @@
         'Export-DbaUserPermission',
         'Get-DbsDbComputerUser',
         'Get-DbsDbTrustworthy',
-        'Set-DbaDbAuditMaintainer',
         'Get-DbsDbRecoveryModel',
         'Disable-DbsDbContainment',
         'Disable-DbsMixedMode',
@@ -127,7 +126,11 @@
         'Disable-DbsFilestreamAccess',
         'Get-DbsSaAccount',
         'Disable-DbsSaAccount',
-        'Get-DbsAuditLogin'
+        'Get-DbsAuditLogin',
+        'Get-DbaAuditMaintainer',
+        'Set-DbaAuditMaintainer',
+        'Get-DbaDbAuditMaintainer',
+        'Set-DbaDbAuditMaintainer'
     )
 
     CmdletsToExport   = @( )
