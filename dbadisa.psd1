@@ -110,7 +110,9 @@
         'Get-DbsReplicationXp',
         'Disable-DbsReplicationXp',
         'Get-DbsExternalScripts',
-        'Disable-DbsExternalScripts'
+        'Disable-DbsExternalScripts',
+        'Get-DbsRemoteDataArchive',
+        'Disable-DbsRemoteDataArchive'
     )
 
     CmdletsToExport   = @( )
