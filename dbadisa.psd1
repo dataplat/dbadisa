@@ -122,7 +122,9 @@
         'Get-DbsUserOptions',
         'Disable-DbsUserOptions',
         'Get-DbsOleAutomationProcedures',
-        'Disable-DbsOleAutomationProcedures'
+        'Disable-DbsOleAutomationProcedures',
+        'Get-DbsFilestreamAccess',
+        'Disable-DbsFilestreamAccess'
     )
 
     CmdletsToExport   = @( )
