@@ -77,7 +77,8 @@ function Get-DbsAcl {
 
             if (-not $PSBoundParameters.Path) {
                 $defaults = Get-DbaDefaultPath -SqlInstance $server
-                $Path = $defaults.Data, $defaults.Log, $defaults.Backup | Where-Object { $_ -notmatch '\\\\' } | Select-Object -Unique
+                $Path = $defaults.Data, $defaults.Log, $defaults.Backup
+                $Path = $Path | Where-Object { $_ -notmatch '\\\\' } | Select-Object -Unique
             }
 
             try {
