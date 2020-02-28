@@ -1,4 +1,4 @@
-function Get-DbsOleAutomationProcedures {
+function Get-DbsOleAutomation {
     <#
     .SYNOPSIS
         Gets non-compliant Ole Automation Procedures settings.
@@ -29,7 +29,7 @@ function Get-DbsOleAutomationProcedures {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsOleAutomationProcedures -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsOleAutomation -SqlInstance sql2017, sql2016, sql2012
 
         Only returns non-compliant Ole Automation Procedures settings from sql2017, sql2016 and sql2012
     #>

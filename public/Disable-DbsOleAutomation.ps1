@@ -1,4 +1,4 @@
-function Disable-DbsOleAutomationProcedures {
+function Disable-DbsOleAutomation {
     <#
     .SYNOPSIS
         Disables non-compliant Ole Automation Procedures settings.
@@ -35,12 +35,12 @@ function Disable-DbsOleAutomationProcedures {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Disable-DbsOleAutomationProcedures -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Disable-DbsOleAutomation -SqlInstance sql2017, sql2016, sql2012
 
         Disables Ole Automation Procedures on sql2017, sql2016 and sql2012
 
     .EXAMPLE
-        PS C:\> Disable-DbsOleAutomationProcedures -SqlInstance sql2017, sql2016, sql2012 -WhatIf
+        PS C:\> Disable-DbsOleAutomation -SqlInstance sql2017, sql2016, sql2012 -WhatIf
 
         Shows what would happen if the command would run
     #>
