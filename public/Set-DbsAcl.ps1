@@ -8,8 +8,6 @@ function Set-DbsAcl {
 
         By default, it will detect and secure the default Data, Log and Backup directories.
 
-        Currently, this is accomplished using admin UNC shares so they should be available to your account.
-
     .PARAMETER SqlInstance
         The target SQL Server instance or instances.
 
@@ -50,7 +48,7 @@ function Set-DbsAcl {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79215
+        Tags: V-79215, V-79151 & V-79153, V-79155
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
