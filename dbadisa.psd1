@@ -140,7 +140,8 @@
         'Get-DbsAcl',
         'Get-DbsAdminRoleMember',
         'Get-DbsPrivilegedLogin',
-        'Get-DbsExternalProcessAccess'
+        'Get-DbsExternalProcessAccess',
+        'Move-DbsAuditFile'
     )
 
     CmdletsToExport   = @( )
