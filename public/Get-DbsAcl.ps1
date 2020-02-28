@@ -64,10 +64,6 @@ function Get-DbsAcl {
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
         [PsCredential]$Credential,
-        [parameter(Mandatory)]
-        [string]$Owner,
-        [parameter(Mandatory)]
-        [string[]]$Account,
         [string[]]$Path,
         [switch]$EnableException
     )
@@ -103,20 +99,32 @@ function Get-DbsAcl {
                         $acls = Invoke-PSFCommand -ComputerName $computername -Credential $credential -ScriptBlock {
                             param ($folder)
                             # set it as a script variable to ensure it persists in the session, may be excessive
-                            Get-Acl -Path $folder -ErrorAction Stop
+                            $acl = Get-Acl -Path $folder -ErrorAction Stop
+
+                            $access = $acl.Access
+                            $accessrules = @()
+                            foreach ($a in $access) {
+                                $accessrules += "$($a.IdentityReference) - $($a.AccessControlType) - $($a.FileSystemRights)"
+                            }
+                            [PSCustomObject]@{
+                                Acl         = $acl
+                                AccessRules = $accessrules
+                            }
                         } -ArgumentList $folder -ErrorAction Stop
                     } catch {
-                        Stop-PSFFunction -Message "Issue setting file permissions on $folder" -ErrorRecord $_ -Continue
+                        Stop-PSFFunction -Message "Issue getting file permissions on $folder" -ErrorRecord $_ -Continue
                     }
-                    foreach ($acl  in $acls) {
+                    foreach ($aclobject  in $acls) {
                         [PSCustomObject]@{
                             ComputerName  = $server.ComputerName
                             InstanceName  = $server.ServiceName
                             SqlInstance   = $server.DomainInstanceName
                             Path          = $folder
-                            Owner         = $acls.GetOwner()
+                            Owner         = $aclobject.Acl.Owner
+                            Permissions   = $aclobject.AccessRules
                             EngineAccount = $dbaccount
                             AgentAccount  = $agentaccount
+                            AclObject     = $aclobject.Acl
                         }
                     }
                 }
