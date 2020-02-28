@@ -130,7 +130,8 @@
         'Get-DbaAuditMaintainer',
         'Set-DbaAuditMaintainer',
         'Get-DbaDbAuditMaintainer',
-        'Set-DbaDbAuditMaintainer'
+        'Set-DbaDbAuditMaintainer',
+        'Set-DbsAuditLogin'
     )
 
     CmdletsToExport   = @( )
