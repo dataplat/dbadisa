@@ -1,4 +1,4 @@
-function Set-DbaDbAuditMaintainer {
+function Set-DbsDbAuditMaintainer {
     <#
     .SYNOPSIS
         Creates the database audit maintainer role, sets the permissions for the role, and adds logins.
@@ -46,12 +46,12 @@ function Set-DbaDbAuditMaintainer {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Set-DbaDbAuditMaintainer -SqlInstance sql2017, sql2016, sql2012 -User "AD\SQL Admins"
+        PS C:\> Set-DbsDbAuditMaintainer -SqlInstance sql2017, sql2016, sql2012 -User "AD\SQL Admins"
 
         Set permissions for the DATABASE_AUDIT_MAINTAINERS role on sql2017, sql2016, sql2012 for user AD\SQL Admins on Prod database.
 
     .EXAMPLE
-        PS C:\> Set-DbaDbAuditMaintainer -SqlInstance sql2017, sql2016, sql2012 -Role auditmaintainers -User "AD\SQL Admins"
+        PS C:\> Set-DbsDbAuditMaintainer -SqlInstance sql2017, sql2016, sql2012 -Role auditmaintainers -User "AD\SQL Admins"
 
         Set permissions for the auditmaintainers role on sql2017, sql2016, sql2012 for user AD\SQL Admins on Prod database.
     #>

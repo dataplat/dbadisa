@@ -1,4 +1,4 @@
-function Get-DbaDbAuditMaintainer {
+function Get-DbsDbAuditMaintainer {
     <#
     .SYNOPSIS
         Returns a list of the database roles and individual users that have permissions which enable the ability to create and maintain audit definitions.
@@ -29,7 +29,7 @@ function Get-DbaDbAuditMaintainer {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbaDbAuditMaintainer -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsDbAuditMaintainer -SqlInstance sql2017, sql2016, sql2012
 
         Returns a list of audit maintainers for sql2017, sql2016 and sql2012
     #>
