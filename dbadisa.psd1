@@ -132,7 +132,8 @@
         'Get-DbaDbAuditMaintainer',
         'Set-DbaDbAuditMaintainer',
         'Set-DbsAuditLogin',
-        'Test-DbsBuild'
+        'Test-DbsBuild',
+        'Get-DbsServiceAccount'
     )
 
     CmdletsToExport   = @( )
