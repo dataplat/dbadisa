@@ -1,10 +1,10 @@
 function Set-DbsAuditLogin {
     <#
     .SYNOPSIS
-        Returns a list of (non-compliant) servers that are not auditing logins either by Audits or via "Both failed and successful logins"
+        Sets "Both failed and successful logins"
 
     .DESCRIPTION
-        Returns a list of (non-compliant) servers that are not auditing logins either by Audits or via "Both failed and successful logins"
+        Sets "Both failed and successful logins"
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
@@ -31,7 +31,7 @@ function Set-DbsAuditLogin {
     .EXAMPLE
         PS C:\> Set-DbsAuditLogin -SqlInstance sql2017, sql2016, sql2012
 
-        Gets a list of SQL Server must generate audit records when concurrent logons/connections by the same user from different workstations occur.
+        Sets "Both failed and successful logins" on sql2017, sql2016 and sql2012
     #>
     [CmdletBinding()]
     param (
