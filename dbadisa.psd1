@@ -139,7 +139,8 @@
         'Test-DbsDiskSpace',
         'Get-DbsAcl',
         'Get-DbsAdminRoleMember',
-        'Get-DbsPrivilegedLogin'
+        'Get-DbsPrivilegedLogin',
+        'Get-DbsExternalProcessAccess'
     )
 
     CmdletsToExport   = @( )
