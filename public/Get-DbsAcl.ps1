@@ -39,7 +39,7 @@ function Get-DbsAcl {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79215, V-79151 & V-79153, V-79155
+        Tags: V-79215, V-79151, V-79153, V-79155, V-79163
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
@@ -82,6 +82,7 @@ function Get-DbsAcl {
                 foreach ($auditpath in $auditpaths) {
                     $Path += Split-Path -Path $auditpath
                 }
+                $Path += $server.RootDirectory
                 $Path = $Path | Select-Object -Unique
             }
 
