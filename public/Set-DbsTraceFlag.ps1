@@ -24,7 +24,7 @@ function Set-DbsTraceFlag {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79097
+        Tags: V-79097, V-79217
         Author: Tracy Boggiano (@TracyBoggiano), databasesuperhero.com
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT

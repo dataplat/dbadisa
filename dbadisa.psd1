@@ -137,7 +137,8 @@
         'Get-DbsTimeSource',
         'Get-DbsAlert',
         'Test-DbsDiskSpace',
-        'Get-DbsAcl'
+        'Get-DbsAcl',
+        'Get-DbsAdminRoleMember'
     )
 
     CmdletsToExport   = @( )
