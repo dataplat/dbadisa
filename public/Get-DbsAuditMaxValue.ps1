@@ -1,10 +1,10 @@
-function Get-DbsAuditMaxRollover {
+function Get-DbsAuditMaxValue {
     <#
     .SYNOPSIS
-        Gets a list of non-compliant max rollover values.
+        Gets a list of non-compliant max values (rollover and file size)
 
     .DESCRIPTION
-        Gets a list of non-compliant max rollover values.
+        Gets a list of non-compliant max values (rollover and file size)
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances.
@@ -25,21 +25,21 @@ function Get-DbsAuditMaxRollover {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79149
+        Tags: V-79149, V-79227
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsAuditMaxRollover -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsAuditMaxValue -SqlInstance sql2017, sql2016, sql2012
 
-        Gets a list of non-compliant max rollover values for sql2017, sql2016 and sql2012
+        Gets a list of non-compliant max values (rollover and file size) for sql2017, sql2016 and sql2012
 
     .EXAMPLE
-        PS C:\> Get-DbsAuditMaxRollover -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\auditonfailure.csv -NoTypeInformation
+        PS C:\> Get-DbsAuditMaxValue -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\maxvalues.csv -NoTypeInformation
 
-        Exports a list of non-compliant max rollover values on sql2017, sql2016 and sql2012 to D:\disa\auditonfailure.csv
+        Exports a list of non-compliant max values (rollover and file size) on sql2017, sql2016 and sql2012 to D:\disa\maxvalues.csv
     #>
     [CmdletBinding()]
     param (
@@ -64,11 +64,12 @@ function Get-DbsAuditMaxRollover {
                         SqlInstance          = $instance
                         Name                 = $Audit
                         MaximumRolloverFiles = $null
+                        MaximumFileSize      = $null
                         Enabled              = $null
                     }
                     Stop-Function -Message "Audit $instanceaudit not found on $instance" -Continue
                 } else {
-                    $stigaudit | Where-Object MaximumRolloverFiles -eq 0 | Select-DefaultView -Property SqlInstance, Name, MaximumRolloverFiles, Enabled
+                    $stigaudit | Where-Object { $PSItem.MaximumRolloverFiles -eq 0 -or $PSItem.MaximumFileSize -eq 0 } | Select-DefaultView -Property SqlInstance, Name, MaximumValuesFiles, Enabled
                 }
             }
         }

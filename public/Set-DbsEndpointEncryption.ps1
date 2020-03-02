@@ -22,7 +22,7 @@ function Set-DbsEndpointEncryption {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79323
+        Tags: V-79323, V-79325
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -46,15 +46,27 @@ function Set-DbsEndpointEncryption {
     )
     process {
         foreach ($endpoint in $InputObject) {
-            if ($PSCmdlet.ShouldProcess($endpoint.Parent.name, "Changing endpoint $($endpoint.Name) encryption from $($endpoint.Algorithm) to AES")) {
-                $endpoint.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm = [Microsoft.SqlServer.Management.Smo.EndpointEncryptionAlgorithm]::Aes
-                $endpoint.Alter()
-                [PSCustomObject]@{
-                    SqlInstance = $endpoint.Parent.Name
-                    Name        = $endpoint.Name
-                    Algorithm   = "Aes"
+            $result = [PSCustomObject]@{
+                SqlInstance                = $endpoint.Parent.Name
+                Name                       = $endpoint.Name
+                DatabaseMirroringAlgorithm = $result.DatabaseMirroringAlgorithm
+                ServiceBrokerAlgorithm     = $result.ServiceBrokerAlgorithm
+            }
+            if ($endpoint.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm) {
+                if ($PSCmdlet.ShouldProcess($endpoint.Parent.name, "Changing database mirroring endpoint $($endpoint.Name) encryption from $($endpoint.Algorithm) to AES")) {
+                    $endpoint.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm = [Microsoft.SqlServer.Management.Smo.EndpointEncryptionAlgorithm]::Aes
+                    $endpoint.Alter()
+                    $result.DatabaseMirroringAlgorithm = "Aes"
                 }
             }
+            if ($endpoint.Payload.ServiceBroker.EndpointEncryptionAlgorithm) {
+                if ($PSCmdlet.ShouldProcess($endpoint.Parent.name, "Changing service broker endpoint $($endpoint.Name) encryption from $($endpoint.Algorithm) to AES")) {
+                    $endpoint.Payload.ServiceBroker.EndpointEncryptionAlgorithm = [Microsoft.SqlServer.Management.Smo.EndpointEncryptionAlgorithm]::Aes
+                    $endpoint.Alter()
+                    $result.ServiceBrokerAlgorithm = "Aes"
+                }
+            }
+            $result
         }
     }
 }

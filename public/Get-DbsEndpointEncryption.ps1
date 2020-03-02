@@ -22,7 +22,7 @@ function Get-DbsEndpointEncryption {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79323
+        Tags: V-79323, V-79325
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -46,11 +46,15 @@ function Get-DbsEndpointEncryption {
         [switch]$EnableException
     )
     process {
-        $endpoints = Get-DbaEndpoint @PSBoundParameters | Where-Object { $PSItem.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm -and $PSItem.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm -ne 'AES' }
+        $endpoints = Get-DbaEndpoint @PSBoundParameters | Where-Object {
+            ($PSItem.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm -and $PSItem.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm -ne 'AES') -or
+            ($PSItem.Payload.ServiceBroker.EndpointEncryptionAlgorithm -and $PSItem.Payload.ServiceBroker.EndpointEncryptionAlgorithm -ne 'AES')
+        }
         foreach ($endpoint in $endpoints) {
             $endpoint |
-            Add-Member -MemberType NoteProperty -Name Algorithm -Value $endpoint.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm -PassThru |
-            Select-DefaultView -Property SqlInstance, Id, Name, Algorithm, Port, EndpointState, EndpointType, Owner, IsAdminEndpoint, Fqdn, IsSystemObject
+            Add-Member -MemberType NoteProperty -Name DatabaseMirroringAlgorithm -Value $endpoint.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm -PassThru |
+            Add-Member -MemberType NoteProperty -Name ServiceBrokerAlgorithm -Value $endpoint.Payload.ServiceBroker.EndpointEncryptionAlgorithm -PassThru |
+            Select-DefaultView -Property SqlInstance, Id, Name, DatabaseMirroringAlgorithm, ServiceBrokerAlgorithm, Port, EndpointState, EndpointType, Owner, IsAdminEndpoint, Fqdn, IsSystemObject
         }
     }
 }
