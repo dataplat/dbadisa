@@ -12,6 +12,12 @@ function Disable-DbsBrowser {
     .PARAMETER Credential
         Credential object used to connect to the computer as a different user
 
+    .PARAMETER WhatIf
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+
+    .PARAMETER Confirm
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
         This avoids overwhelming you with "sea of red" exceptions, but is inconvenient because it basically disables advanced scripting.
@@ -36,33 +42,48 @@ function Disable-DbsBrowser {
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        $PSDefaultParameterValues['*:EnableException'] = $true
+    }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            $allports = Get-DbaTcpPort -SqlInstance $Computer -Credential $Credential -All -EnableException:$EnableException
-            $ports = $allports | Where-Object Port -ne 1433
-
-            foreach ($port in $allports) {
-                Write-Message -Level Verbose -Message "Found instance $($port.InstanceName) on $($port.ComputerName) with IP $($port.IPAddress) on port $($port.Port)"
-            }
-            if ($ports) {
-                $disabled = $false
-                $notes = "SQL services found on ports other than 1433"
-            } else {
-                try {
-                    $browser = Get-DbaService -ComputerName $Computer -Type Browser -EnableException:$EnableException
-                    $null = $browser | Stop-DbaService -EnableException:$EnableException
-                    $null = $browser | Set-Service -StartupType Disabled
-                    $disabled = $true
-                    $notes = "No SQL services found on ports other than 1433"
-                } catch {
-                    Stop-Function -EnableException:$EnableException -Message "Error setting services on $computer" -ErrorRecord $_
+            try {
+                $null = Test-ElevationRequirement -ComputerName $computer
+                $ports = Invoke-PSFCommand -Computer $computer -Credential $Credential -ScriptBlock {
+                    [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SqlWmiManagement')
+                    $wmi = New-Object Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer
+                    $null = $wmi.Initialize()
+                    $wmi.ServerInstances.ServerProtocols.IPAddresses.IPAddressProperties | Where-Object { $PSItem.Name -eq 'TcpPort' -and $PSItem.Value -ne 1433 } |
+                    Select-Object -Unique -Property Value
                 }
-            }
 
-            [pscustomobject]@{
-                ComputerName    = $computer
-                BrowserDisabled = $disabled
-                Notes           = $notes
+                foreach ($port in $allports) {
+                    Write-Message -Level Verbose -Message "Found instance with port $($port.Value) on $($env:ComputerName)"
+                }
+
+                if ($ports) {
+                    $disabled = $false
+                    $notes = "SQL services found on ports other than 1433"
+                } else {
+                    try {
+                        $browser = Get-DbaService -ComputerName $Computer -Credential $Credential -Type Browser
+                        $null = $browser | Stop-DbaService
+                        $null = $browser | Set-Service -StartupType Disabled
+                        $disabled = $true
+                        $notes = "No SQL services found on ports other than 1433"
+                    } catch {
+                        Stop-Function -EnableException:$EnableException -Message "Error setting services on $computer" -ErrorRecord $_
+                    }
+                }
+                if ($PSCmdlet.ShouldProcess($computer, "Showing output")) {
+                    [pscustomobject]@{
+                        ComputerName    = $computer
+                        BrowserDisabled = $disabled
+                        Notes           = $notes
+                    }
+                }
+            } catch {
+                Stop-Function -EnableException:$EnableException -Message "Error setting services on $computer" -ErrorRecord $_
             }
         }
     }
