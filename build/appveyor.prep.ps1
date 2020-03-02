@@ -17,6 +17,9 @@ Install-Module -Name PSFramework -Force -SkipPublisherCheck | Out-Null
 Write-Host -Object "appveyor.prep: Install dbatools" -ForegroundColor DarkGreen
 Install-Module -Name dbatools -Force -SkipPublisherCheck | Out-Null
 
+#Get dbachecks (dependency)
+Write-Host -Object "appveyor.prep: Install dbachecks" -ForegroundColor DarkGreen
+Install-Module -Name dbachecks -Force -SkipPublisherCheck | Out-Null
 
 $null = mkdir C:\temp
 

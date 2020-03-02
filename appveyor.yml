@@ -8,6 +8,7 @@ cache:
 - C:\Program Files\WindowsPowerShell\Modules\Pester -> appveyor.yml
 - C:\Program Files\WindowsPowerShell\Modules\PSFramework -> appveyor.yml
 - C:\Program Files\WindowsPowerShell\Modules\dbatools -> appveyor.yml
+- C:\Program Files\WindowsPowerShell\Modules\dbachecks -> appveyor.yml
 
 shallow_clone: true
 
