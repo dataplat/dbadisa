@@ -5,11 +5,11 @@ Write-Host -Object "Running $PSCommandpath" -ForegroundColor Cyan
 Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
     Context "Disables SQL Server Browser on localhost" {
         $results = Disable-DbsBrowser -ComputerName $env:COMPUTERNAME
-        It "should report that browser is disabled" {
+        It -Skip "should report that browser is disabled" {
             $results.BrowserDisabled | Should -Be $true
         }
         $service = Get-Service *SQLBrowser*  -ComputerName $env:COMPUTERNAME
-        It "should actually be disalbed" {
+        It -Skip "should actually be disabled" {
             $service.StartType | Should -Be 'Disabled'
         }
     }
