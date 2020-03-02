@@ -37,6 +37,7 @@ function Get-DbsCEIP {
     )
     process {
         foreach ($computer in $ComputerName.ComputerName) {
+            # thanks to https://blog.dbi-services.com/sql-server-tips-deactivate-the-customer-experience-improvement-program-ceip/
             try {
                 Invoke-PSFCommand -ErrorAction SilentlyContinue -ComputerName $computer -Credential $Credential -ScriptBlock {
                     $enabled = $false

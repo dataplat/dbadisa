@@ -38,6 +38,7 @@ function Disable-DbsCEIP {
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             try {
+                # thanks to https://blog.dbi-services.com/sql-server-tips-deactivate-the-customer-experience-improvement-program-ceip/
                 Invoke-PSFCommand -ErrorAction SilentlyContinue -ComputerName $computer -Credential $Credential -ScriptBlock {
                     $services = Get-Service | Where-Object Name -Like "*TELEMETRY*"
                     $services | Stop-Service
