@@ -8,6 +8,8 @@ if ($env:BUILD_BUILDURI -like "vstfs*") {
     Install-Module Pester -Force -SkipPublisherCheck
     Write-Host "Installing PSFramework" -ForegroundColor Cyan
     Install-Module PSFramework -Force -SkipPublisherCheck
+    Write-Host "Installing dbatools" -ForegroundColor Cyan
+    Install-Module dbatools -Force
 }
 
 Write-Host "Loading constants"

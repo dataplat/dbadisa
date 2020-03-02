@@ -7,6 +7,7 @@ cache:
 - C:\Program Files\WindowsPowerShell\Modules\PSScriptAnalyzer -> appveyor.yml
 - C:\Program Files\WindowsPowerShell\Modules\Pester -> appveyor.yml
 - C:\Program Files\WindowsPowerShell\Modules\PSFramework -> appveyor.yml
+- C:\Program Files\WindowsPowerShell\Modules\dbatools -> appveyor.yml
 
 shallow_clone: true
 
@@ -15,7 +16,9 @@ environment:
   version: 0.0.$(appveyor_build_number)
 
 matrix:
-  fast_finish: true
+  - scenario: SQL2017
+      main_instance: localhost\SQL2017
+      setup_scripts: \tests\appveyor.SQL2017.ps1
 
 build_script:
 # grab appveyor lab files and needed requirements for tests in CI
