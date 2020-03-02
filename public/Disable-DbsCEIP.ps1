@@ -1,10 +1,10 @@
 function Disable-DbsCEIP {
     <#
     .SYNOPSIS
-        Disables CEIP
+        Disables all instances of CEIP on a server via both services and the registry (x64 and x86)
 
     .DESCRIPTION
-        Disables CEIP
+        Disables all instances of CEIP on a server via both services and the registry (x64 and x86)
 
     .PARAMETER ComputerName
         The SQL Server (or server in general) that you're connecting to.
@@ -26,7 +26,12 @@ function Disable-DbsCEIP {
     .EXAMPLE
         PS C:\> Disable-DbsCEIP -ComputerName sql2016, sql2017, sql2012
 
-        Disables CEIP on sql2016, sql2017 and sql2012
+        Disables all instances of CEIP on sql2016, sql2017 and sql2012
+
+    .EXAMPLE
+        PS C:\> Disable-DbsCEIP -ComputerName sql2016, sql2017, sql2012 -Credential ad\altdba
+
+        Disables all instances of CEIP on sql2016, sql2017 and sql2012 using alternative Windows credentials
 #>
     [CmdletBinding()]
     param (

@@ -1,16 +1,16 @@
 function Disable-DbsBrowser {
     <#
     .SYNOPSIS
-        Disable and stop broswer service
+        Disables and stops the SQL Server Broswer service on computers with no named instances
 
     .DESCRIPTION
-        Disable and stop broswer service on computers with no named instances
+        Disables and stops the SQL Server Broswer service on computers with no named instances
 
     .PARAMETER ComputerName
-        The SQL Server (or server in general) that you're connecting to. This command handles named instances.
+        The SQL Server (or server in general) that you're connecting to. This command handles named instances
 
     .PARAMETER Credential
-        Credential object used to connect to the computer as a different user.
+        Credential object used to connect to the computer as a different user
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -18,20 +18,20 @@ function Disable-DbsBrowser {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags:V-79353, V-79349
+        Tags: V-79353, V-79349
         Author: Tracy Boggiano (@TracyBoggiano), databasesuperhero.com
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Disable-DbsBrowser -ComputerName Sql2016
+        PS C:\> Disable-DbsBrowser -ComputerName Sql2016, sql2019
 
-        Disables and stops Browser service is not named instances exist
+        Disables and stops the SQL Server Broswer service on sql2016 and sql2019 if no named instances exist
 #>
 
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
-        [parameter(Mandatory, ValueFromPipeline, Position = 0)]
+        [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,
         [switch]$EnableException
