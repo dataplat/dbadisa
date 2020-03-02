@@ -67,7 +67,7 @@ function Get-DbsAuditDisabled {
                                     JOIN sys.server_audit_specification_details d ON s.server_specification_id = d.server_specification_id
                                     WHERE a.is_state_enabled = 0")
             } catch {
-                Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
             }
         }
     }

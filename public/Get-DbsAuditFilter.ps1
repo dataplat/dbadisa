@@ -63,7 +63,7 @@ function Get-DbsAuditFilter {
                             FROM sys.server_audits
                             WHERE predicate IS NOT NULL")
             } catch {
-                Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
             }
         }
     }

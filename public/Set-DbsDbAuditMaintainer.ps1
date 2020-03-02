@@ -143,7 +143,7 @@ function Set-DbsDbAuditMaintainer {
                     }
                 }
             } catch {
-                Stop-Function -EnableException:$EnableException -Message "Could not modify $db on $($db.Parent.Name)" -ErrorRecord $_ -Continue
+                Stop-PSFFunction -EnableException:$EnableException -Message "Could not modify $db on $($db.Parent.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

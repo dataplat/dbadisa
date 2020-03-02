@@ -34,7 +34,6 @@ function Disable-DbsBrowser {
 
         Disables and stops the SQL Server Broswer service on sql2016 and sql2019 if no named instances exist
 #>
-
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
@@ -44,6 +43,7 @@ function Disable-DbsBrowser {
     )
     begin {
         $PSDefaultParameterValues['*:EnableException'] = $true
+        $PSDefaultParameterValues['Stop-PSFFunction:EnableException'] = $EnableException
         $PSDefaultParameterValues['*:Credential'] = $Credential
     }
     process {
@@ -59,7 +59,7 @@ function Disable-DbsBrowser {
                 }
 
                 foreach ($port in $allports) {
-                    Write-Message -Level Verbose -Message "Found instance with port $($port.Value) on $($env:ComputerName)"
+                    Write-PSFMessage -Level Verbose -Message "Found instance with port $($port.Value) on $($env:ComputerName)"
                 }
 
                 if ($ports) {
@@ -73,7 +73,7 @@ function Disable-DbsBrowser {
                         $disabled = $true
                         $notes = "No SQL services found on ports other than 1433"
                     } catch {
-                        Stop-Function -EnableException:$EnableException -Message "Error setting services on $computer" -ErrorRecord $_
+                        Stop-PSFFunction -EnableException:$EnableException -Message "Error setting services on $computer" -ErrorRecord $_
                     }
                 }
                 if ($PSCmdlet.ShouldProcess($computer, "Showing output")) {
@@ -84,7 +84,7 @@ function Disable-DbsBrowser {
                     }
                 }
             } catch {
-                Stop-Function -EnableException:$EnableException -Message "Error setting services on $computer" -ErrorRecord $_
+                Stop-PSFFunction -EnableException:$EnableException -Message "Error setting services on $computer" -ErrorRecord $_
             }
         }
     }

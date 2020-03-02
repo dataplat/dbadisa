@@ -100,7 +100,7 @@ function Get-DbsAcl {
                 }
 
                 foreach ($folder in $Path) {
-                    Write-Message -Level Verbose -Message "Modifying $folder on $computername"
+                    Write-PSFMessage -Level Verbose -Message "Modifying $folder on $computername"
                     try {
                         $acls = Invoke-PSFCommand -ComputerName $computername -Credential $credential -ScriptBlock {
                             param ($folder)

@@ -59,7 +59,7 @@ function Get-DbsExternalProcessAccess {
                                 WHERE P.enabled = 1")
                 }
             } catch {
-                Stop-Function -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
             }
         }
     }

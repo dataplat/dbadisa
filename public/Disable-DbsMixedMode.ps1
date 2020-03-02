@@ -65,10 +65,10 @@ function Disable-DbsMixedMode {
                             SqlInstance = $server.Name
                             Status      = "Success. Please restart SQL Server."
                         }
-                        Write-Message -Level Verbose -Message "You must restart SQL Server $($server.Name) for this setting to go into effect"
+                        Write-PSFMessage -Level Verbose -Message "You must restart SQL Server $($server.Name) for this setting to go into effect"
                     }
                 } else {
-                    Write-Message -Level Output -Message "Integrated authentication already set on $($server.Name)"
+                    Write-PSFMessage -Level Output -Message "Integrated authentication already set on $($server.Name)"
                 }
             } catch {
                 Stop-PSFunction -EnableException:$EnableException -ErrorRecord $_ -Message "Failure on $($server.Name)"

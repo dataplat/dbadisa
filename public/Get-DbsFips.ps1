@@ -52,7 +52,7 @@ function Get-DbsFips {
                     }
                 }
             } catch {
-                Stop-Function -Message "Failure" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure" -ErrorRecord $_ -Continue -EnableException:$EnableException
             }
         }
     }

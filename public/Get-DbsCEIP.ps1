@@ -70,7 +70,7 @@ function Get-DbsCEIP {
                 } | Select-DefaultView -Property ComputerName, Enabled, Services, Keys
 
             } catch {
-                Stop-Function -Message "Failure on $computer" -ErrorRecord $_ -Continue
+                Stop-PSFFunction -Message "Failure on $computer" -ErrorRecord $_ -Continue
             }
         }
     }

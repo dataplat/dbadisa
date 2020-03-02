@@ -52,7 +52,7 @@ function Get-DbsDbContainedUser {
             try {
                 $db.Query("SELECT distinct @@SERVERNAME as SqlInstance, DB_NAME() as [Database], Name as ContainedUser FROM sys.database_principals WHERE type_desc = 'SQL_USER' AND authentication_type_desc = 'DATABASE'")
             } catch {
-                Stop-Function -Message "Failure on $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue
+                Stop-PSFFunction -Message "Failure on $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

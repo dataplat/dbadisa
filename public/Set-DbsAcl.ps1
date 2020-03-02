@@ -107,7 +107,7 @@ function Set-DbsAcl {
                 }
 
                 foreach ($folder in $Path) {
-                    Write-Message -Level Verbose -Message "Modifying $folder on $computername"
+                    Write-PSFMessage -Level Verbose -Message "Modifying $folder on $computername"
 
                     if ($PSCmdlet.ShouldProcess($computername, "Removing permission protections for $folder")) {
                         try {

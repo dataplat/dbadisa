@@ -92,7 +92,7 @@ function Get-DbsPrivilegedLogin {
                         AND P.principal_id = SP.major_id ")
                 }
             } catch {
-                Stop-Function -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
             }
         }
     }
