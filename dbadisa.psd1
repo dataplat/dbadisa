@@ -145,7 +145,12 @@
         'Get-DbsDbAuditSpecification',
         'Get-DbsAuditMaxRollover',
         'Get-DbsLinkedServer',
-        'Get-DbsLogin'
+        'Get-DbsLogin',
+        'Get-DbsAuditFilter',
+        'Get-DbsStartupProcedure',
+        'Get-DbsEndpointEncryption',
+        'Set-DbsEndpointEncryption',
+        'Get-DbsXpPermission'
     )
 
     CmdletsToExport   = @( )
