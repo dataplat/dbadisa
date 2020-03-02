@@ -15,14 +15,10 @@ environment:
   environment: master
   version: 0.0.$(appveyor_build_number)
 
-matrix:
-  - scenario: SQL2017
-      main_instance: localhost\SQL2017
-      setup_scripts: \tests\appveyor.SQL2017.ps1
-
 build_script:
 # grab appveyor lab files and needed requirements for tests in CI
 - ps: .\build\appveyor.prep.ps1
+- ps: .\tests\appveyor.SQL2017.ps1
 
 test_script:
 # Test with PowerShell and Pester
