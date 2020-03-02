@@ -10,7 +10,7 @@ Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
         }
         $services = Get-Service *SQLTELEMETRY*  -ComputerName $env:COMPUTERNAME
         foreach ($service in $services) {
-            It "should actually be disabled" {
+            It "$($service.Name) should actually be disabled" {
                 $service.StartType | Should -Be "Disabled"
             }
         }
