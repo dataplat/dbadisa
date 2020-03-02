@@ -28,7 +28,7 @@ Write-Host -Object "$indent Starting $instance" -ForegroundColor DarkGreen
 Restart-Service "MSSQL`$$instance" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
 
 do {
-    Start-Sleep 1
+    Start-Sleep 3
     $null = (& sqlcmd -S "$sqlinstance" -b -Q "select 1" -d master)
 }
 while ($lastexitcode -ne 0 -and $t++ -lt 10)
@@ -36,7 +36,7 @@ while ($lastexitcode -ne 0 -and $t++ -lt 10)
 # Agent sometimes takes a moment to start
 do {
     Write-Host -Object "$indent Waiting for SQL Agent to start" -ForegroundColor DarkGreen
-    Start-Sleep 1
+    Start-Sleep 3
 }
 while ((Get-Service "SQLAgent`$$instance").Status -ne 'Running' -and $z++ -lt 10)
 

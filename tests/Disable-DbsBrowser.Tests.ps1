@@ -3,7 +3,7 @@ Write-Host -Object "Running $PSCommandpath" -ForegroundColor Cyan
 . "$PSScriptRoot\constants.ps1"
 
 Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
-    Context "Command gets current agent log using LogNumber parameter" {
+    Context "Disables SQL Server Browser on localhost" {
         $results = Disable-DbsBrowser -ComputerName $env:COMPUTERNAME
         It "should report that browser is disabled" {
             $results.BrowserDisabled | Should -Be $true
