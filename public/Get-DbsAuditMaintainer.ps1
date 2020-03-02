@@ -22,7 +22,7 @@ function Get-DbsAuditMaintainer {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79135, V-79143
+        Tags: V-79135, V-79143, V-79159, V-79161
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -44,7 +44,6 @@ function Get-DbsAuditMaintainer {
         foreach ($instance in $SqlInstance) {
             try {
                 $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
-
                 $server.Query("SELECT @@SERVERNAME as SqlInstance,
                     CASE
                     WHEN SP.class_desc IS NOT NULL THEN
@@ -97,7 +96,7 @@ function Get-DbsAuditMaintainer {
                     LEFT OUTER JOIN sys.server_principals R
                     ON SRM.role_principal_id = R.principal_id
                     WHERE sp.permission_name IN ('ALTER ANY SERVER AUDIT','CONTROL SERVER','ALTER ANY DATABASE','CREATE ANY DATABASE')
-                    OR R.name IN ('sysadmin','dbcreator')")
+                    OR R.name IN ('sysadmin','dbcreator')") | Where-Object Securable -notlike '##MS_*'
             } catch {
                 Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
             }
