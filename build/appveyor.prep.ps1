@@ -13,6 +13,11 @@ choco install pester | Out-Null
 Write-Host -Object "appveyor.prep: Install PSFramework" -ForegroundColor DarkGreen
 Install-Module -Name PSFramework -Force -SkipPublisherCheck | Out-Null
 
+#Get dbatools (dependency)
+Write-Host -Object "appveyor.prep: Install dbatools" -ForegroundColor DarkGreen
+Install-Module -Name dbatools -Force -SkipPublisherCheck | Out-Null
+
+
 $null = mkdir C:\temp
 
 $sw.Stop()
