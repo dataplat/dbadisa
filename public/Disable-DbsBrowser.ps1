@@ -44,12 +44,13 @@ function Disable-DbsBrowser {
     )
     begin {
         $PSDefaultParameterValues['*:EnableException'] = $true
+        $PSDefaultParameterValues['*:Credential'] = $Credential
     }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             try {
                 $null = Test-ElevationRequirement -ComputerName $computer
-                $ports = Invoke-PSFCommand -Computer $computer -Credential $Credential -ScriptBlock {
+                $ports = Invoke-PSFCommand -Computer $computer -ScriptBlock {
                     [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SqlWmiManagement')
                     $wmi = New-Object Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer
                     $null = $wmi.Initialize()
@@ -66,7 +67,7 @@ function Disable-DbsBrowser {
                     $notes = "SQL services found on ports other than 1433"
                 } else {
                     try {
-                        $browser = Get-DbaService -ComputerName $Computer -Credential $Credential -Type Browser
+                        $browser = Get-DbaService -ComputerName $Computer -Type Browser
                         $null = $browser | Stop-DbaService
                         $null = $browser | Set-Service -StartupType Disabled
                         $disabled = $true
