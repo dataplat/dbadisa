@@ -28,7 +28,7 @@ $testresults = @()
 Write-Host "Running individual tests"
 foreach ($file in (Get-ChildItem "$PSScriptRoot" -File -Filter "*.Tests.ps1")) {
     Write-Host "Executing $($file.Name)"
-    $results = Invoke-Pester -Script $file.FullName -Quiet -PassThru
+    $results = Invoke-Pester -Script $file.FullName -Show None -PassThru
     foreach ($result in $results) {
         $totalRun += $result.TotalCount
         $totalFailed += $result.FailedCount
