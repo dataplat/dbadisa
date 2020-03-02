@@ -8,25 +8,27 @@ if ($env:BUILD_BUILDURI -like "vstfs*") {
     Install-Module Pester -Force -SkipPublisherCheck
     Write-Host "Installing PSFramework" -ForegroundColor Cyan
     Install-Module PSFramework -Force -SkipPublisherCheck
+    Write-Host "Installing dbatools" -ForegroundColor Cyan
+    Install-Module dbatools -Force
 }
 
 Write-Host "Loading constants"
 . "$PSScriptRoot\constants.ps1"
 
-Write-Host "Importing Module"
+Write-Host "Importing dbadisa"
 
-Remove-Module dbadisa -ErrorAction Ignore
+#Remove-Module dbadisa -ErrorAction Ignore
 Import-Module "$PSScriptRoot\..\dbadisa.psd1"
-Import-Module "$PSScriptRoot\..\dbadisa.psm1" -Force
+# Import-Module "$PSScriptRoot\..\dbadisa.psm1" -Force
 
 $totalFailed = 0
 $totalRun = 0
 
 $testresults = @()
-Write-Host "Proceeding with individual tests"
+Write-Host "Running individual tests"
 foreach ($file in (Get-ChildItem "$PSScriptRoot" -File -Filter "*.Tests.ps1")) {
     Write-Host "Executing $($file.Name)"
-    $results = Invoke-Pester -Script $file.FullName -PassThru
+    $results = Invoke-Pester -Script $file.FullName -Show None -PassThru
     foreach ($result in $results) {
         $totalRun += $result.TotalCount
         $totalFailed += $result.FailedCount

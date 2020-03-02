@@ -60,7 +60,7 @@ function Get-DbsCustomXp {
                             WHERE O.is_ms_shipped = 0
                             ORDER BY X.xp_name")
             } catch {
-                Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
             }
         }
     }

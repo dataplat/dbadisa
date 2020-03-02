@@ -67,7 +67,7 @@ function Get-DbsAuditMaxValue {
                         MaximumFileSize      = $null
                         Enabled              = $null
                     }
-                    Stop-Function -Message "Audit $instanceaudit not found on $instance" -Continue
+                    Stop-PSFFunction -Message "Audit $instanceaudit not found on $instance" -Continue
                 } else {
                     $stigaudit | Where-Object { $PSItem.MaximumRolloverFiles -eq 0 -or $PSItem.MaximumFileSize -eq 0 } | Select-DefaultView -Property SqlInstance, Name, MaximumValuesFiles, Enabled
                 }

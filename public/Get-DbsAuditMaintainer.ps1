@@ -98,7 +98,7 @@ function Get-DbsAuditMaintainer {
                     WHERE sp.permission_name IN ('ALTER ANY SERVER AUDIT','CONTROL SERVER','ALTER ANY DATABASE','CREATE ANY DATABASE')
                     OR R.name IN ('sysadmin','dbcreator')") | Where-Object Securable -notlike '##MS_*'
             } catch {
-                Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
             }
         }
     }

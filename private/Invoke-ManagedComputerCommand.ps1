@@ -58,12 +58,12 @@ function Invoke-ManagedComputerCommand {
     $postscriptblock = $ScriptBlock.ToString()
 
     $scriptblock = [ScriptBlock]::Create("$prescriptblock  $postscriptblock")
-    Write-Message -Level Verbose -Message "Connecting to SQL WMI on $computer."
+    Write-PSFMessage -Level Verbose -Message "Connecting to SQL WMI on $computer."
 
     try {
         Invoke-Command2 -ScriptBlock $ScriptBlock -ArgumentList $ArgumentList -Credential $Credential -ErrorAction Stop
     } catch {
-        Write-Message -Level Verbose -Message "Local connection attempt to $computer failed. Connecting remotely."
+        Write-PSFMessage -Level Verbose -Message "Local connection attempt to $computer failed. Connecting remotely."
 
         # For surely resolve stuff, and going by default with kerberos, this needs to match FullComputerName
         $hostname = $resolved.FullComputerName

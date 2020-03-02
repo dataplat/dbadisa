@@ -61,7 +61,7 @@ function Get-DbsPermission {
         try {
             $results = $server.Query($sql)
         } catch {
-            Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+            Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
         }
 
         foreach ($result in $results) {

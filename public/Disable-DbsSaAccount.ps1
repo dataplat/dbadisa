@@ -49,7 +49,7 @@ function Disable-DbsSaAccount {
             try {
                 $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $sqlcredential -MinimumVersion 11
             } catch {
-                Stop-Function -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
+                Stop-PSFFunction -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
             }
 
             try {
@@ -63,7 +63,7 @@ function Disable-DbsSaAccount {
                     $login.Disable()
                 }
             } catch {
-                Stop-Function -Message "Failed to rename sa account." -ErrorRecord $_ -Continue -Target $instance
+                Stop-PSFFunction -Message "Failed to rename sa account." -ErrorRecord $_ -Continue -Target $instance
             }
         }
     }

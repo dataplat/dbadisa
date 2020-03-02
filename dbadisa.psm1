@@ -54,11 +54,6 @@ Register-PSFTeppScriptblock -Name Version -ScriptBlock { "2008", "2012", "2014",
 # Register the actual auto completer
 Register-PSFTeppArgumentCompleter -Command Get-DbsStig -Parameter Version -Name Version
 
-Set-Alias -Name Stop-Function -Value Stop-PSFFunction
-Set-Alias -Name Write-Message -Value Write-PSFMessage
-Set-Alias -Name Test-FunctionInterrupt -Value Test-PSFFunctionInterrupt
-Set-Alias -Name Connect-SqlInstance -Value Connect-DbaInstance
-
 # some configs to help with autocompletes and other module level stuff
 $defaultRepo = "$script:ModuleRoot\checks"
 Set-PSFConfig -Module dbadisa -Name app.checkrepos -Value @($defaultRepo) -Initialize -Description "Where Pester tests/checks are stored"
@@ -76,6 +71,5 @@ if ($IsLinux) {
 }
 
 Set-PSFConfig -Module dbadisa -Name app.auditname -Value "DISA_STIG" -Initialize -Description "The standardized name of your DISA STIG Audit. Defaults to DISA_STIG."
-
 
 $script:allnumbers = @(90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200)

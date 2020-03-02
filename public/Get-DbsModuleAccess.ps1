@@ -71,7 +71,7 @@ function Get-DbsModuleAccess {
                         AND M.name != 'dbo'"
                 $db.Query($sql)
             } catch {
-                Stop-Function -Message "Failure on $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue
+                Stop-PSFFunction -Message "Failure on $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

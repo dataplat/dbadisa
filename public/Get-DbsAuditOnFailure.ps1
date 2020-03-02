@@ -60,7 +60,7 @@ function Get-DbsAuditOnFailure {
         foreach ($instance in $SqlInstance) {
             $stigaudit = Get-DbaInstanceAudit -SqlInstance $instance @params | Where-Object OnFailure -ne 'Shutdown'
             if (-not $stigaudit) {
-                Stop-Function -Message "Audit $Audit not found on $instance" -Continue
+                Stop-PSFFunction -Message "Audit $Audit not found on $instance" -Continue
             } else {
                 $stigaudit | Select-DefaultView -Property SqlInstance, Name, Onfailure, Enabled
             }

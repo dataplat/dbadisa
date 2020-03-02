@@ -81,10 +81,10 @@ function Set-DbsDbFileSize {
                         # SMO gave me some weird errors so I'm just gonna go with T-SQL
                         try {
                             $sql = "ALTER DATABASE $db MODIFY FILE ( NAME = N'$($file.Name)', FILEGROWTH = $($Growth)$($GrowthType) )"
-                            Write-Message -Level Verbose -Message $sql
+                            Write-PSFMessage -Level Verbose -Message $sql
                             $db.Query($sql)
                         } catch {
-                            Stop-Function -EnableException:$EnableException -Message "Could not modify $db on $($db.Parent.Name)" -ErrorRecord $_ -Continue
+                            Stop-PSFFunction -EnableException:$EnableException -Message "Could not modify $db on $($db.Parent.Name)" -ErrorRecord $_ -Continue
                         }
                         [pscustomobject]@{
                             SqlInstance = $db.SqlInstance

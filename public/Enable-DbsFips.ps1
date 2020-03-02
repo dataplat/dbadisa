@@ -56,7 +56,7 @@ function Enable-DbsFips {
                         FipsEnabled  = $true
                     }
                 } catch {
-                    Stop-Function -Message "Failure" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                    Stop-PSFFunction -Message "Failure" -ErrorRecord $_ -Continue -EnableException:$EnableException
                 }
             }
         }

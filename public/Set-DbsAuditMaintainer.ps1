@@ -123,7 +123,7 @@ function Set-DbsAuditMaintainer {
                     }
                 }
             } catch {
-                Stop-Function -EnableException:$EnableException -Message "Failure on $($server.Name)" -ErrorRecord $_ -Continue
+                Stop-PSFFunction -EnableException:$EnableException -Message "Failure on $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

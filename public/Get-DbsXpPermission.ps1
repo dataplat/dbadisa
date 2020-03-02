@@ -72,7 +72,7 @@ function Get-DbsXpPermission {
                             AND dp.[type] = 'EX'
                             ORDER BY dpr.NAME")
             } catch {
-                Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
             }
         }
     }

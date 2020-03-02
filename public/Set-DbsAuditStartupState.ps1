@@ -60,7 +60,7 @@ function Set-DbsAuditStartupState {
             foreach ($currentaudit in $audit) {
                 try {
                     $sql = "ALTER SERVER AUDIT [$Audit] WITH (STATE = ON)"
-                    Write-Message -Message $sql -Level Verbose
+                    Write-PSFMessage -Message $sql -Level Verbose
                     $null = $server.Query($sql)
                     [pscustomobject]@{
                         SqlInstance  = $server.Name
@@ -68,7 +68,7 @@ function Set-DbsAuditStartupState {
                         StartupState = "ON"
                     }
                 } catch {
-                    Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                    Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
                 }
             }
         }

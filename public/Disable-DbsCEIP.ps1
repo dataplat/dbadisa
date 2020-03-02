@@ -40,11 +40,16 @@ function Disable-DbsCEIP {
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        $PSDefaultParameterValues['*:EnableException'] = $true
+        $PSDefaultParameterValues['Stop-PSFFunction:EnableException'] = $EnableException
+        $PSDefaultParameterValues['*:Credential'] = $Credential
+    }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             try {
                 # thanks to https://blog.dbi-services.com/sql-server-tips-deactivate-the-customer-experience-improvement-program-ceip/
-                Invoke-PSFCommand -ErrorAction SilentlyContinue -ComputerName $computer -Credential $Credential -ScriptBlock {
+                Invoke-PSFCommand -ComputerName $computer -ScriptBlock {
                     $services = Get-Service | Where-Object Name -Like "*TELEMETRY*"
                     $services | Stop-Service
                     $services | Set-Service -StartupType Disabled
@@ -54,9 +59,9 @@ function Disable-DbsCEIP {
                         $null = $key | Set-ItemProperty -Name CustomerFeedback -Value 0
                     }
                 }
-                Get-DbsCEIP -Computer $computer -Credential $Credential
+                Get-DbsCEIP -Computer $computer
             } catch {
-                Stop-Function -Message "Failure on $computer" -ErrorRecord $_ -Continue
+                Stop-PSFFunction -Message "Failure on $computer" -ErrorRecord $_ -Continue
             }
         }
     }

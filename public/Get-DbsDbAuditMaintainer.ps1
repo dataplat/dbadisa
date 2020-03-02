@@ -56,7 +56,7 @@ function Get-DbsDbAuditMaintainer {
                         OR R.name IN ('db_owner')")
                 }
             } catch {
-                Stop-Function -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
             }
         }
     }

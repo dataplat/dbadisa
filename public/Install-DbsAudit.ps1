@@ -93,7 +93,7 @@ function Install-DbsAudit {
             try {
                 $server = Connect-SqlInstance -SqlInstance $instance -SqlCredential $sqlcredential -MinimumVersion 11
             } catch {
-                Stop-Function -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
+                Stop-PSFFunction -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
             }
             try {
                 switch ($server.VersionMajor) {
@@ -148,7 +148,7 @@ function Install-DbsAudit {
                     }
                 }
             } catch {
-                Stop-Function -Message "Failed to install stored procedure." -ErrorRecord $_ -Continue -Target $instance
+                Stop-PSFFunction -Message "Failed to install stored procedure." -ErrorRecord $_ -Continue -Target $instance
             }
         }
     }

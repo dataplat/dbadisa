@@ -64,7 +64,7 @@ function Get-DbsAuditStartupState {
                 FROM sys.dm_server_audit_status
                 WHERE status_desc != 'STARTED' AND name = '$Audit'")
             } catch {
-                Stop-Function -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
             }
         }
     }

@@ -61,7 +61,7 @@ function Get-DbsDbPermission {
             try {
                 $results = $db.Query($sql)
             } catch {
-                Stop-Function -Message "Failure for $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
             }
             foreach ($result in $results) {
                 [pscustomobject]@{
