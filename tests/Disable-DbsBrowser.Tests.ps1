@@ -5,8 +5,12 @@ Write-Host -Object "Running $PSCommandpath" -ForegroundColor Cyan
 Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
     Context "Command gets current agent log using LogNumber parameter" {
         $results = Disable-DbsBrowser -ComputerName $env:COMPUTERNAME
-        It "Results are not empty" {
-            $results | Should Not Be $Null
+        It "should report that browser is disabled" {
+            $results.BrowserDisabled | Should -Be $true
+        }
+        $service = Get-Service *SQLBrowser*  -ComputerName $env:COMPUTERNAME
+        It "should actually be disalbed" {
+            $service.StartType | Should -Be 'Disabled'
         }
     }
 }
