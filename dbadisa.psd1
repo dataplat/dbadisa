@@ -150,7 +150,9 @@
         'Get-DbsStartupProcedure',
         'Get-DbsEndpointEncryption',
         'Set-DbsEndpointEncryption',
-        'Get-DbsXpPermission'
+        'Get-DbsXpPermission',
+        'Get-DbsCEIP',
+        'Disable-DbsCEIP'
     )
 
     CmdletsToExport   = @( )
