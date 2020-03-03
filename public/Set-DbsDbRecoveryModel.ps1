@@ -39,7 +39,7 @@ function Set-DbsDbRecoveryModel {
 
         Sets all user databases to the FULL recovery model on sql2017, sql2016, and sql2012
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,

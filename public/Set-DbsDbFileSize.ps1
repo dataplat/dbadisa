@@ -76,7 +76,7 @@ function Set-DbsDbFileSize {
         foreach ($db in $InputObject) {
             $allfiles = @($db.FileGroups.Files, $db.LogFiles)
             foreach ($file in $allfiles) {
-                if (($file.GrowthType -eq "Percent" -or ($file.GrowthType -eq "KB" -and $file.Growth -eq 1024)) -or (Was-Bound -Parameter Growth) -or (Was-Bound -Parameter GrowthType)) {
+                if (($file.GrowthType -eq "Percent" -or ($file.GrowthType -eq "KB" -and $file.Growth -eq 1024)) -or (Test-PSFParameterBinding -Parameter Growth) -or (Test-PSFParameterBinding -Parameter GrowthType)) {
                     if ($PSCmdlet.ShouldProcess($db.Parent, "Setting filegrowth for $($file.Name) in $($db.name) to $($Growth)$($GrowthType)")) {
                         # SMO gave me some weird errors so I'm just gonna go with T-SQL
                         try {
