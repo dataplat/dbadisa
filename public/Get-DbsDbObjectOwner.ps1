@@ -72,7 +72,7 @@ function Get-DbsDbObjectOwner {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException) | Where-Object VersionMajor -gt 11 | Get-DbaDatabase -EnableException:$EnableException
+            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance -DisableException:$(-not $EnableException) | Where-Object VersionMajor -gt 11 | Get-DbaDatabase
         }
 
         foreach ($db in $InputObject) {

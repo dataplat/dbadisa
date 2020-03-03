@@ -38,6 +38,6 @@ function Get-DbsTcpPort {
         [switch]$EnableException
     )
     process {
-        Get-DbaTcpPort -SqlInstance $ComputerName -Credential $Credential -All -EnableException:$EnableException
+        Get-DbaTcpPort -SqlInstance $ComputerName -All
     }
 }

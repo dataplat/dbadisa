@@ -70,7 +70,7 @@ function Set-DbsDbAuditMaintainer {
 
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -ExcludeDatabase tempdb -EnableException:$EnableException | Where-Object IsAccessible
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeDatabase tempdb | Where-Object IsAccessible
         }
 
         foreach ($db in $InputObject) {
@@ -126,7 +126,7 @@ function Set-DbsDbAuditMaintainer {
                         }
                     }
 
-                    $casedname = Get-DbaDbUser  -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $db.Name | Where-Object Name -eq $dbuser | Select-Object -ExpandProperty Name
+                    $casedname = Get-DbaDbUser  -SqlInstance $SqlInstance -Database $db.Name | Where-Object Name -eq $dbuser | Select-Object -ExpandProperty Name
                     $sql = "ALTER ROLE [$($Role)] ADD MEMBER [$($casedname)]"
                     Write-PSFMessage -Level Verbose -Message $sql
 
@@ -143,7 +143,7 @@ function Set-DbsDbAuditMaintainer {
                     }
                 }
             } catch {
-                Stop-PSFFunction -EnableException:$EnableException -Message "Could not modify $db on $($db.Parent.Name)" -ErrorRecord $_ -Continue
+                Stop-PSFFunction -Message "Could not modify $db on $($db.Parent.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

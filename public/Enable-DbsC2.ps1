@@ -1,13 +1,13 @@
 function Enable-DbsC2 {
     <#
     .SYNOPSIS
-        Enables Common Criteria Compliance Criteria Compliance.
+        Enables Common Criteria Compliance Criteria Compliance
 
     .DESCRIPTION
-        Enables Common Criteria Compliance Criteria Compliance.
+        Enables Common Criteria Compliance Criteria Compliance
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

@@ -56,7 +56,7 @@ function Get-DbsDbAuditSpecification {
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
                 $results = $server.Query($sql)
                 foreach ($item in $list) {
                     if ($item -notin $results.ActionName) {
@@ -68,7 +68,7 @@ function Get-DbsDbAuditSpecification {
                     }
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

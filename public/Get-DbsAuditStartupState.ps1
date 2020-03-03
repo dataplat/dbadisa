@@ -55,7 +55,7 @@ function Get-DbsAuditStartupState {
         [switch]$EnableException
     )
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
+        $servers = Connect-DbaInstance -SqlInstance $SqlInstance
         foreach ($server in $servers) {
             try {
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, name AS 'AuditName',
@@ -64,7 +64,7 @@ function Get-DbsAuditStartupState {
                 FROM sys.dm_server_audit_status
                 WHERE status_desc != 'STARTED' AND name = '$Audit'")
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

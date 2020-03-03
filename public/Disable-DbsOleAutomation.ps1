@@ -44,7 +44,6 @@ function Disable-DbsOleAutomation {
 
         Shows what would happen if the command would run
     #>
-
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

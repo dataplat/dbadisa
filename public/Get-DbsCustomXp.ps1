@@ -44,7 +44,7 @@ function Get-DbsCustomXp {
         foreach ($instance in $SqlInstance) {
             try {
                 # $server.Databases.ExtendedStoredProcedures.DllLocation
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
                 $server.Query("DECLARE @xplist AS TABLE
                             (
                             xp_name sysname,
@@ -60,7 +60,7 @@ function Get-DbsCustomXp {
                             WHERE O.is_ms_shipped = 0
                             ORDER BY X.xp_name")
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

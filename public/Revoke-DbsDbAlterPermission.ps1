@@ -39,7 +39,7 @@ function Revoke-DbsDbAlterPermission {
     )
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -EnableException:$EnableException -ExcludeSystem |
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem |
             Where-Object ContainmentType -eq $null
         }
 

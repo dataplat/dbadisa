@@ -46,14 +46,14 @@ function Get-DbsStartupProcedure {
         [switch]$EnableException
     )
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
+        $servers = Connect-DbaInstance -SqlInstance $SqlInstance
         foreach ($server in $servers) {
             try {
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, Name
                             From sys.procedures
                             Where OBJECTPROPERTY(OBJECT_ID, 'ExecIsStartup') = 1")
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

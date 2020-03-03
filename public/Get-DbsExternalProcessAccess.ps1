@@ -43,7 +43,7 @@ function Get-DbsExternalProcessAccess {
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
 
                 foreach ($db in $server.Databases) {
                     $db.Query("SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],
@@ -59,7 +59,7 @@ function Get-DbsExternalProcessAccess {
                                 WHERE P.enabled = 1")
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

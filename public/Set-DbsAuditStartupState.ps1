@@ -55,7 +55,7 @@ function Set-DbsAuditStartupState {
         [switch]$EnableException
     )
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
+        $servers = Connect-DbaInstance -SqlInstance $SqlInstance
         foreach ($server in $servers) {
             foreach ($currentaudit in $audit) {
                 try {
@@ -68,7 +68,7 @@ function Set-DbsAuditStartupState {
                         StartupState = "ON"
                     }
                 } catch {
-                    Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                    Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
                 }
             }
         }

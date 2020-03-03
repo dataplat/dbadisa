@@ -43,7 +43,7 @@ function Get-DbsDbProhibitedKeyAlgorithm {
         [switch]$EnableException
     )
     process {
-        $dbs = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential | Get-DbaDatabase
+        $dbs = Connect-DbaInstance -SqlInstance $SqlInstance | Get-DbaDatabase
         foreach ($db in $dbs) {
             try {
                 Write-PSFMessage -Level Verbose -Message "Processing $($db.Name)"
@@ -53,7 +53,7 @@ function Get-DbsDbProhibitedKeyAlgorithm {
                 WHERE key_algorithm NOT IN ('D3','A3')
                 ORDER BY name")
             } catch {
-                Stop-PSFFunction -Message "Failure for $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

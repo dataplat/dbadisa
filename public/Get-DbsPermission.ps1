@@ -56,12 +56,12 @@ function Get-DbsPermission {
         $sql = [IO.File]::ReadAllText("$script:ModuleRoot\bin\sql\Instance permissions assignments to logins and roles.sql")
     }
     process {
-        $server = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
+        $server = Connect-DbaInstance -SqlInstance $SqlInstance
 
         try {
             $results = $server.Query($sql)
         } catch {
-            Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+            Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
         }
 
         foreach ($result in $results) {

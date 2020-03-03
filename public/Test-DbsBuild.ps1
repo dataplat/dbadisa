@@ -43,7 +43,7 @@ function Test-DbsBuild {
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
                 $build = Get-DbaBuildReference -SqlInstance $server
                 $outdated = $build | Where-Object SupportedUntil -lt (Get-Date)
                 $latest = Test-DbaBuild -SqlInstance $server -Latest
@@ -58,7 +58,7 @@ function Test-DbsBuild {
                     }
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

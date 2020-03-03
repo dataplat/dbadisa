@@ -47,7 +47,7 @@ function Test-DbsDbInputValidity {
     )
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -EnableException:$EnableException -ExcludeSystem
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem
         }
 
         foreach ($db in $InputObject) {

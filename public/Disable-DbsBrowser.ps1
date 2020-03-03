@@ -30,7 +30,7 @@ function Disable-DbsBrowser {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Disable-DbsBrowser -ComputerName Sql2016, sql2019
+        PS C:\> Disable-DbsBrowser -ComputerName sql2016, sql2019
 
         Disables and stops the SQL Server Broswer service on sql2016 and sql2019 if no named instances exist
 #>
@@ -42,9 +42,7 @@ function Disable-DbsBrowser {
         [switch]$EnableException
     )
     begin {
-        $PSDefaultParameterValues['*:EnableException'] = $true
-        $PSDefaultParameterValues['Stop-PSFFunction:EnableException'] = $EnableException
-        $PSDefaultParameterValues['*:Credential'] = $Credential
+        . "$script:ModuleRoot\private\set-defaults.ps1"
     }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
@@ -58,7 +56,7 @@ function Disable-DbsBrowser {
                     Select-Object -Unique -Property Value
                 }
             } catch {
-                Stop-PSFFunction -EnableException:$EnableException -Message "Error setting services on $computer" -ErrorRecord $_
+                Stop-PSFFunction -Message "Error setting services on $computer" -ErrorRecord $_
             }
 
             foreach ($port in $ports) {
@@ -80,7 +78,7 @@ function Disable-DbsBrowser {
             } else {
                 if ($PSCmdlet.ShouldProcess($computer, "No SQL services found on ports other than 1433, disabling SQL Browser service")) {
                     try {
-                        $browser = Get-DbaService -ComputerName $Computer -Type Browser
+                        $browser = Get-DbaService -ComputerName $computer -Type Browser
                         $null = $browser | Stop-DbaService
                         $null = $browser | Set-Service -StartupType Disabled
                         [pscustomobject]@{
@@ -89,7 +87,7 @@ function Disable-DbsBrowser {
                             Notes           = "No SQL services found on ports other than 1433"
                         }
                     } catch {
-                        Stop-PSFFunction -EnableException:$EnableException -Message "Error setting services on $computer" -ErrorRecord $_
+                        Stop-PSFFunction -Message "Error setting services on $computer" -ErrorRecord $_
                     }
                 }
             }

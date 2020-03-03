@@ -46,7 +46,7 @@ function Get-DbsXpPermission {
         [switch]$EnableException
     )
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
+        $servers = Connect-DbaInstance -SqlInstance $SqlInstance
         foreach ($server in $servers) {
             try {
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, OBJECT_NAME(major_id) AS [StoredProcedure]
@@ -72,7 +72,7 @@ function Get-DbsXpPermission {
                             AND dp.[type] = 'EX'
                             ORDER BY dpr.NAME")
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

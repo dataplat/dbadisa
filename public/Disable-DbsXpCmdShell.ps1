@@ -1,13 +1,13 @@
 function Disable-DbsXPCmdShell {
     <#
     .SYNOPSIS
-        Disables xp_cmdshell.
+        Disables xp_cmdshell
 
     .DESCRIPTION
-        Disables xp_cmdshell.
+        Disables xp_cmdshell
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

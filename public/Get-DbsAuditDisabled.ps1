@@ -55,7 +55,7 @@ function Get-DbsAuditDisabled {
         [switch]$EnableException
     )
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
+        $servers = Connect-DbaInstance -SqlInstance $SqlInstance
         foreach ($server in $servers) {
             try {
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
@@ -67,7 +67,7 @@ function Get-DbsAuditDisabled {
                                     JOIN sys.server_audit_specification_details d ON s.server_specification_id = d.server_specification_id
                                     WHERE a.is_state_enabled = 0")
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

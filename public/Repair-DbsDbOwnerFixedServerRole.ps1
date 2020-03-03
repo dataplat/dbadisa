@@ -65,7 +65,7 @@ function Repair-DbsDbOwnerFixedServerRole {
             return
         }
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -EnableException:$EnableException -ExcludeSystem |
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem |
             Where-Object ContainmentType -eq $null
         }
         foreach ($fixedrole in $InputObject) {

@@ -39,7 +39,7 @@ function Get-DbsServiceAccount {
     )
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            Get-DbaService -ComputerName $computer -Credential $Credential -EnableException:$EnableException 3>$null | Select-DefaultView -Property ComputerName, ServiceName, ServiceType, StartName
+            Get-DbaService -ComputerName $computer 3>$null | Select-DefaultView -Property ComputerName, ServiceName, ServiceType, StartName
         }
     }
 }

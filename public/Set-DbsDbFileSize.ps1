@@ -70,7 +70,7 @@ function Set-DbsDbFileSize {
     )
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -ExcludeDatabase tempdb -EnableException:$EnableException | Where-Object IsAccessible
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeDatabase tempdb | Where-Object IsAccessible
         }
 
         foreach ($db in $InputObject) {
@@ -84,7 +84,7 @@ function Set-DbsDbFileSize {
                             Write-PSFMessage -Level Verbose -Message $sql
                             $db.Query($sql)
                         } catch {
-                            Stop-PSFFunction -EnableException:$EnableException -Message "Could not modify $db on $($db.Parent.Name)" -ErrorRecord $_ -Continue
+                            Stop-PSFFunction -Message "Could not modify $db on $($db.Parent.Name)" -ErrorRecord $_ -Continue
                         }
                         [pscustomobject]@{
                             SqlInstance = $db.SqlInstance

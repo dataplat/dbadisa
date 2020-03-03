@@ -39,7 +39,7 @@ function Test-DbsServiceAccount {
     )
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            $services = Get-DbaService -ComputerName $computer -Credential $Credential -EnableException:$EnableException
+            $services = Get-DbaService -ComputerName $computer
             # no sql service account must be the same on the same computer, no matter the instance
             foreach ($service in $services) {
                 $accounts = $services | Where-Object StartName -eq $service.StartName

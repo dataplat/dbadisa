@@ -41,9 +41,9 @@ function Test-DbsInstallPath {
     )
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            $regroots = Get-DbaRegistryRoot -Computer $computer -Credential $Credential | Select-Object -ExpandProperty RegistryRoot
+            $regroots = Get-DbaRegistryRoot -Computer $computer | Select-Object -ExpandProperty RegistryRoot
             foreach ($regroot in $regroots) {
-                Invoke-PSFCommand -ComputerName $computer -Credential $Credential -ArgumentList "$regroot\Setup" -ScriptBlock {
+                Invoke-PSFCommand -ComputerName $computer -ArgumentList "$regroot\Setup" -ScriptBlock {
                     $rootdir = $currentdir = Get-ItemProperty -Path $args | Select-Object -ExpandProperty SqlPath
                     $osroot = ([system.io.directoryinfo]$rootdir).Root
                     $appdirmatch = $false

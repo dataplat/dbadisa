@@ -61,7 +61,7 @@ function Get-DbsDbTemporalTable {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential | Where-Object VersionMajor -gt 11 | Get-DbaDatabase -EnableException:$EnableException
+            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance | Where-Object VersionMajor -gt 11 | Get-DbaDatabase
         }
 
         foreach ($db in $InputObject) {

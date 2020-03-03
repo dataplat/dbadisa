@@ -43,7 +43,7 @@ function Get-DbsAuditLogin {
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
 
                 $auditresult = $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
                         s.name AS 'SpecName',
@@ -63,7 +63,7 @@ function Get-DbsAuditLogin {
                     }
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

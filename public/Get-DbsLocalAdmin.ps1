@@ -40,7 +40,7 @@ function Get-DbsLocalAdmin {
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             try {
-                $results = Invoke-PSFCommand -ComputerName $computer -Credential $Credential -ScriptBlock { Get-LocalGroupMember -Name Administrators } -ErrorAction Stop
+                $results = Invoke-PSFCommand -ComputerName $computer -ScriptBlock { Get-LocalGroupMember -Name Administrators } -ErrorAction Stop
                 foreach ($result in $results) {
                     [PSCustomObject]@{
                         ComputerName = $computer
@@ -50,7 +50,7 @@ function Get-DbsLocalAdmin {
                     }
                 }
             } catch {
-                Stop-PSFFunction -EnableException:$EnableException -Message "Failure on $computer" -ErrorRecord $_
+                Stop-PSFFunction -Message "Failure on $computer" -ErrorRecord $_
             }
         }
     }

@@ -55,7 +55,7 @@ function Get-DbsAuditFilter {
         [switch]$EnableException
     )
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
+        $servers = Connect-DbaInstance -SqlInstance $SqlInstance
         foreach ($server in $servers) {
             try {
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
@@ -63,7 +63,7 @@ function Get-DbsAuditFilter {
                             FROM sys.server_audits
                             WHERE predicate IS NOT NULL")
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

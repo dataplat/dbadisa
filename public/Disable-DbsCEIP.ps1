@@ -33,7 +33,7 @@ function Disable-DbsCEIP {
 
         Disables all instances of CEIP on sql2016, sql2017 and sql2012 using alternative Windows credentials
 #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$ComputerName,
@@ -41,28 +41,30 @@ function Disable-DbsCEIP {
         [switch]$EnableException
     )
     begin {
-        $PSDefaultParameterValues['*:EnableException'] = $true
-        $PSDefaultParameterValues['Stop-PSFFunction:EnableException'] = $EnableException
-        $PSDefaultParameterValues['*:Credential'] = $Credential
+        . "$script:ModuleRoot\private\set-defaults.ps1"
     }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            try {
-                # thanks to https://blog.dbi-services.com/sql-server-tips-deactivate-the-customer-experience-improvement-program-ceip/
-                Invoke-PSFCommand -ComputerName $computer -ScriptBlock {
-                    $services = Get-Service | Where-Object Name -Like "*TELEMETRY*"
-                    $services | Stop-Service
-                    $services | Set-Service -StartupType Disabled
-                    $keys = Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server', 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Microsoft SQL Server' -Recurse -ErrorAction Stop | Where-Object -Property Property -eq 'EnableErrorReporting'
-                    foreach ($key in $keys) {
-                        $null = $key | Set-ItemProperty -Name EnableErrorReporting -Value 0
-                        $null = $key | Set-ItemProperty -Name CustomerFeedback -Value 0
+            if ((Get-DbsCEIP -Computer $computer).Enabled) {
+                if ($PSCmdlet.ShouldProcess($computer, "Disabling telemetry")) {
+                    try {
+                        # thanks to https://blog.dbi-services.com/sql-server-tips-deactivate-the-customer-experience-improvement-program-ceip/
+                        Invoke-PSFCommand -ComputerName $computer -ScriptBlock {
+                            $services = Get-Service | Where-Object Name -Like "*TELEMETRY*"
+                            $services | Stop-Service
+                            $services | Set-Service -StartupType Disabled
+                            $keys = Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server', 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\Microsoft SQL Server' -Recurse -ErrorAction Stop | Where-Object -Property Property -eq 'EnableErrorReporting'
+                            foreach ($key in $keys) {
+                                $null = $key | Set-ItemProperty -Name EnableErrorReporting -Value 0
+                                $null = $key | Set-ItemProperty -Name CustomerFeedback -Value 0
+                            }
+                        }
+                    } catch {
+                        Stop-PSFFunction -Message "Failure on $computer" -ErrorRecord $_ -Continue
                     }
                 }
-                Get-DbsCEIP -Computer $computer
-            } catch {
-                Stop-PSFFunction -Message "Failure on $computer" -ErrorRecord $_ -Continue
             }
+            Get-DbsCEIP -Computer $computer
         }
     }
 }

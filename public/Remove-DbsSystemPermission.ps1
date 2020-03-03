@@ -56,7 +56,7 @@ function Remove-DbsSystemPermission {
     )
     process {
         if ($SqlInstance) {
-            $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
+            $servers = Connect-DbaInstance -SqlInstance $SqlInstance
             foreach ($server in $servers) {
                 try {
                     $cluster = $server.Query("SELECT SERVERPROPERTY('IsClustered') as IsClustered, SERVERPROPERTY('IsHadrEnabled') as IsHadrEnabled")
@@ -93,7 +93,7 @@ function Remove-DbsSystemPermission {
                         }
                     }
                 } catch {
-                    Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                    Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
                 }
             }
         }
@@ -117,7 +117,7 @@ function Remove-DbsSystemPermission {
                     Revoked     = $true
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

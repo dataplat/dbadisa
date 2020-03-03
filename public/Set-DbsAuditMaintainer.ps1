@@ -65,7 +65,7 @@ function Set-DbsAuditMaintainer {
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
 
                 $sql = "IF NOT EXISTS(SELECT name FROM sys.server_principals WHERE type = 'R' AND name='[$Role]') CREATE SERVER ROLE [$($Role)]" # CREATE  ROLE SERVER_AUDIT_MAINTAINERS;
                 Write-PSFMessage -Level Verbose -Message $sql
@@ -123,7 +123,7 @@ function Set-DbsAuditMaintainer {
                     }
                 }
             } catch {
-                Stop-PSFFunction -EnableException:$EnableException -Message "Failure on $($server.Name)" -ErrorRecord $_ -Continue
+                Stop-PSFFunction -Message "Failure on $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

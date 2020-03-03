@@ -42,7 +42,7 @@ function Get-DbsAuditSchemaAccessGroup {
         [switch]$EnableException
     )
     process {
-        $server = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
+        $server = Connect-DbaInstance -SqlInstance $SqlInstance
 
         try {
             $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
@@ -54,7 +54,7 @@ function Get-DbsAuditSchemaAccessGroup {
             JOIN sys.server_audit_specification_details d ON s.server_specification_id = d.server_specification_id
             WHERE a.is_state_enabled = 1 AND d.audit_action_name = 'SCHEMA_OBJECT_ACCESS_GROUP'")
         } catch {
-            Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+            Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
         }
     }
 }

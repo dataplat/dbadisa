@@ -42,7 +42,7 @@ function Get-DbsFips {
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             try {
-                $enabled = Invoke-Command2 -ComputerName $computer -Credential $credential -ScriptBlock {
+                $enabled = Invoke-Command2 -ComputerName $computer -ScriptBlock {
                     Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy | Select-Object -ExpandProperty Enabled
                 } -Raw
                 if ($enabled) {
@@ -52,7 +52,7 @@ function Get-DbsFips {
                     }
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure" -ErrorRecord $_ -Continue
             }
         }
     }

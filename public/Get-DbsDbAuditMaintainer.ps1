@@ -43,7 +43,7 @@ function Get-DbsDbAuditMaintainer {
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
 
                 foreach ($db in $server.Databases) {
                     $db.Query("SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],
@@ -56,7 +56,7 @@ function Get-DbsDbAuditMaintainer {
                         OR R.name IN ('db_owner')")
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

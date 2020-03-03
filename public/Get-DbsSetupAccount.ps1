@@ -41,9 +41,9 @@ function Get-DbsSetupAccount {
     )
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            $regroots = Get-DbaRegistryRoot -Computer $computer -Credential $Credential | Select-Object -ExpandProperty RegistryRoot
+            $regroots = Get-DbaRegistryRoot -Computer $computer | Select-Object -ExpandProperty RegistryRoot
             foreach ($regroot in $regroots) {
-                Invoke-PSFCommand -ErrorAction SilentlyContinue -ComputerName $computer -Credential $Credential -ArgumentList $regroot, $script:allnumbers -ScriptBlock {
+                Invoke-PSFCommand -ErrorAction SilentlyContinue -ComputerName $computer -ArgumentList $regroot, $script:allnumbers -ScriptBlock {
                     $results = Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\*' -ErrorAction SilentlyContinue | Where-Object PSChildName -in $args[1]
                     $dirs = $results | Get-ItemProperty -ErrorAction SilentlyContinue | Select-Object -ExpandProperty VerSpecificRootDir
                     foreach ($dir in $dirs) {

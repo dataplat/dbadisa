@@ -44,15 +44,18 @@ function Disable-DbsProtocol {
     #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
-        [parameter(ValueFromPipeline)]
+        [parameter(Mandatory, ValueFromPipeline)]
         [Alias("cn", "host", "Server")]
-        [DbaInstanceParameter[]]$ComputerName = $env:COMPUTERNAME,
+        [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            $protocols = Get-DbaInstanceProtocol -ComputerName $computer -Credential $Credential
+            $protocols = Get-DbaInstanceProtocol -ComputerName $computer
             foreach ($protocol in $protocols) {
                 if ($protocol.Name -eq 'Tcp') {
                     if ($PSCmdlet.ShouldProcess($computer, "Enabling $($protocol.Name) for $($protocol.InstanceName)")) {

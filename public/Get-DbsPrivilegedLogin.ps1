@@ -43,7 +43,7 @@ function Get-DbsPrivilegedLogin {
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
 
                 foreach ($db in $server.Databases) {
                     $db.Query("SELECT DISTINCT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],
@@ -92,7 +92,7 @@ function Get-DbsPrivilegedLogin {
                         AND P.principal_id = SP.major_id ")
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

@@ -48,7 +48,7 @@ function Test-DbsDiskSpace {
     )
     process {
         if ($ComputerName) {
-            $InputObject = Get-DbaDiskSpace -Computer $computername -Credential $Credential -EnableException:$EnableException
+            $InputObject = Get-DbaDiskSpace -Computer $computername
         }
         $InputObject | Where-Object PercentFree -lt $Threshold
     }

@@ -96,7 +96,7 @@ function Move-DbsAuditFile {
             $filecount = 0
 
             try {
-                $server = Connect-SqlInstance -SqlInstance $instance -SqlCredential $sqlcredential
+                $server = Connect-SqlInstance -SqlInstance $instance
             } catch {
                 Stop-PSFFunction -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
             }
@@ -129,7 +129,7 @@ function Move-DbsAuditFile {
                     Write-Progress -Activity "Moving sqlaudit files from $instance" -Completed
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure when processing $instance" -ErrorRecord $_ -Continue -Target $instance -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure when processing $instance" -ErrorRecord $_ -Continue -Target $instance
             }
         }
         Write-Progress -Activity "Processing instances" -Completed

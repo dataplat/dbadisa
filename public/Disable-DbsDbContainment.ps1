@@ -39,7 +39,6 @@ function Disable-DbsDbContainment {
 
         Disables database containment features on sql2017, sql2016 and sql2012
     #>
-
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

@@ -39,7 +39,7 @@ function Get-DbsAlert {
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
                 $alerts = Get-DbaAgentAlert -SqlInstance $server
                 $mailserver = (Get-DbaDbMailAccount -SqlInstance $server).MailServers
 
@@ -52,7 +52,7 @@ function Get-DbsAlert {
                     }
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure on $instance" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure on $instance" -ErrorRecord $_ -Continue
             }
         }
     }

@@ -44,10 +44,13 @@ function Disable-DbsSaAccount {
         [string]$NewName,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $sqlcredential -MinimumVersion 11
+                $server = Connect-DbaInstance -SqlInstance $instance -MinimumVersion 11
             } catch {
                 Stop-PSFFunction -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
             }

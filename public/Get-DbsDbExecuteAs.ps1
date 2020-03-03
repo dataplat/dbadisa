@@ -47,7 +47,7 @@ function Get-DbsDbExecuteAs {
         [switch]$EnableException
     )
     process {
-        $databases = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential -MinimumVersion 12 | Get-DbaDatabase
+        $databases = Connect-DbaInstance -SqlInstance $SqlInstance -MinimumVersion 12 | Get-DbaDatabase
         foreach ($db in $databases) {
             try {
                 $results = $db.Query("SELECT S.name AS schema_name, O.name AS module_name,
@@ -118,7 +118,7 @@ function Get-DbsDbExecuteAs {
                 )
                 ORDER BY schema_name, module_name")
             } catch {
-                Stop-PSFFunction -Message "Failure for $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue
             }
             foreach ($result in $results) {
                 [pscustomobject]@{

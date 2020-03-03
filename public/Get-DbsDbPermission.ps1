@@ -56,12 +56,12 @@ function Get-DbsDbPermission {
         $sql = [IO.File]::ReadAllText("$script:ModuleRoot\bin\sql\Database permission assignments to users and roles.sql")
     }
     process {
-        $databases = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential | Get-DbaDatabase
+        $databases = Connect-DbaInstance -SqlInstance $SqlInstance | Get-DbaDatabase
         foreach ($db in $databases) {
             try {
                 $results = $db.Query($sql)
             } catch {
-                Stop-PSFFunction -Message "Failure for $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue
             }
             foreach ($result in $results) {
                 [pscustomobject]@{

@@ -1,10 +1,10 @@
 function Disable-DbsMixedMode {
     <#
     .SYNOPSIS
-        Disables mixed mode authentication.
+        Disables mixed mode authentication
 
     .DESCRIPTION
-        Disables mixed mode authentication.
+        Disables mixed mode authentication
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher. Server version must be SQL Server version 2012 or higher. Server version must be SQL Server version 2012 or higher. Server version must be SQL Server version 2012 or higher.
@@ -52,10 +52,13 @@ function Disable-DbsMixedMode {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential -DisableException:$($EnableException -eq $false)
-        foreach ($server in $servers) {
+        foreach ($instance in $SqlInstance) {
             try {
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $mode = $server.Settings.LoginMode
                 if ($mode -ne "Integrated") {
                     if ($PSCmdlet.ShouldProcess($server.Name, "Changing login mode from $mode to Integrated")) {
@@ -68,11 +71,9 @@ function Disable-DbsMixedMode {
                         }
                         Write-PSFMessage -Level Verbose -Message "You must restart SQL Server $($server.Name) for this setting to go into effect"
                     }
-                } else {
-                    Write-PSFMessage -Level Output -Message "Integrated authentication already set on $($server.Name)"
                 }
             } catch {
-                Stop-PSFunction -EnableException:$EnableException -ErrorRecord $_ -Message "Failure on $($server.Name)"
+                Stop-PSFFunction -ErrorRecord $_ -Message "Failure on $($server.Name)"
             }
         }
     }
