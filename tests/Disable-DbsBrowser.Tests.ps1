@@ -9,7 +9,7 @@ Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
         It -Skip "should actually be disabled" {
             $service.StartType | Should -Be 'Disabled'
         }
-        $results = Disable-DbsBrowser -ComputerName $env:COMPUTERNAME -WhatIf
+        $results = Disable-DbsBrowser -ComputerName $env:COMPUTERNAME -WhatIf -WarningAction SilentlyContinue
         It "should not return any objects when using whatif" {
             $results | Should -Be $null
         }

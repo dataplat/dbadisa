@@ -1,5 +1,4 @@
 $CommandName = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
-$PSDefaultParameterValues['Set-DbaSpConfigure:WarningAction'] = 'SilentlyContinue'
 Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
     BeforeAll {
         $null = Set-DbaSpConfigure -SqlInstance $env:COMPUTERNAME -Name ContainmentEnabled -Value 1
@@ -15,7 +14,7 @@ Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
             $config.RunningValue | Should -Be 0
         }
 
-        $results = Disable-DbsDbContainment -SqlInstance $env:COMPUTERNAME -WhatIf
+        $results = Disable-DbsDbContainment -SqlInstance $env:COMPUTERNAME -WhatIf -WarningAction SilentlyContinue
         It "should not return any objects when using whatif" {
             $results | Should -Be $null
         }

@@ -13,7 +13,7 @@ Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
             }
         }
 
-        $results = Disable-DbsCEIP -ComputerName $env:COMPUTERNAME -WhatIf
+        $results = Disable-DbsCEIP -ComputerName $env:COMPUTERNAME -WhatIf -WarningAction SilentlyContinue
         It "should not return any objects when using whatif" {
             $results | Should -Be $null
         }
