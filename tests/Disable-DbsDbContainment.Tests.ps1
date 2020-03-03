@@ -1,4 +1,5 @@
 $CommandName = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
+$PSDefaultParameterValues['Set-DbaSpConfigure:WarningAction'] = 'SilentlyContinue'
 Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
     BeforeAll {
         $null = Set-DbaSpConfigure -SqlInstance $env:COMPUTERNAME -Name ContainmentEnabled -Value 1
