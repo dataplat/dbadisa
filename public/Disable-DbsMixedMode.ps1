@@ -63,7 +63,8 @@ function Disable-DbsMixedMode {
                         $server.Alter()
                         [PSCustomObject]@{
                             SqlInstance = $server.Name
-                            Status      = "Success. Please restart SQL Server."
+                            LoginMode   = "Integrated"
+                            Notes       = "Please restart SQL Server"
                         }
                         Write-PSFMessage -Level Verbose -Message "You must restart SQL Server $($server.Name) for this setting to go into effect"
                     }
