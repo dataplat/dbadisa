@@ -1,13 +1,13 @@
 function Disable-DbsExternalScripts {
     <#
     .SYNOPSIS
-        Disables non-compliant External Scripts Enabled settings.
+        Disables external scripts
 
     .DESCRIPTION
-        Disables non-compliant External Scripts Enabled settings.
+        Disables external scripts
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -37,14 +37,13 @@ function Disable-DbsExternalScripts {
     .EXAMPLE
         PS C:\> Disable-DbsExternalScripts -SqlInstance sql2017, sql2016, sql2012
 
-        Disables External Scripts Enabled on sql2017, sql2016 and sql2012
+        Disables external scripts on sql2017, sql2016 and sql2012
 
     .EXAMPLE
         PS C:\> Disable-DbsExternalScripts -SqlInstance sql2017, sql2016, sql2012 -WhatIf
 
         Shows what would happen if the command would run
     #>
-
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
