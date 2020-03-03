@@ -42,7 +42,7 @@ function Get-DbsComputerLogin {
         [switch]$EnableException
     )
     begin {
-        . "$script:ModuleRoot\private\set-defaults.ps1"
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
     }
     process {
         $logins = Get-DbaLogin @PSBoundParameters | Where-Object Name -like '*$' | Sort-Object -Unique SqlInstance, Database, Login

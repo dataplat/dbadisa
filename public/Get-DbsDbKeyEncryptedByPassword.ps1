@@ -47,7 +47,7 @@ function Get-DbsDbKeyEncryptedByPassword {
         [switch]$EnableException
     )
     begin {
-        . "$script:ModuleRoot\private\set-defaults.ps1"
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $sql = "SELECT @@SERVERNAME as SqlInstance, name as [Database], COUNT(name) as Count
                 FROM sys.symmetric_keys s, sys.key_encryptions k
                 WHERE s.name = '##MS_DatabaseMasterKey##'

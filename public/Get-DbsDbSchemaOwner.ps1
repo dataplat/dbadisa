@@ -47,7 +47,7 @@ function Get-DbsDbSchemaOwner {
         [switch]$EnableException
     )
     begin {
-        . "$script:ModuleRoot\private\set-defaults.ps1"
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $sql = "SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database], S.name AS SchemaName, P.name AS OwningPrincipal
                         FROM sys.schemas S
                         JOIN sys.database_principals P ON S.principal_id = P.principal_id

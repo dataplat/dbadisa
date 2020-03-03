@@ -49,7 +49,7 @@ function Get-DbsPermission {
         [switch]$EnableException
     )
     begin {
-        . "$script:ModuleRoot\private\set-defaults.ps1"
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $sql = [IO.File]::ReadAllText("$script:ModuleRoot\bin\sql\Instance permissions assignments to logins and roles.sql")
     }
     process {

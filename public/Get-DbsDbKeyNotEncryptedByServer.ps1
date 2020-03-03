@@ -47,7 +47,7 @@ function Get-DbsDbKeyNotEncryptedByServer {
         [switch]$EnableException
     )
     begin {
-        . "$script:ModuleRoot\private\set-defaults.ps1"
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $sql = "SELECT @@SERVERNAME as SqlInstance, name as [Database],
                 is_master_key_encrypted_by_server as MasterKeyEncryptedByServer
                 FROM [master].sys.databases

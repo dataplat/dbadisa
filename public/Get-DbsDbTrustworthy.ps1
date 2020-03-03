@@ -48,7 +48,7 @@ function Get-DbsDbTrustworthy {
         [switch]$EnableException
     )
     begin {
-        . "$script:ModuleRoot\private\set-defaults.ps1"
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $sql = "SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database], SUSER_SNAME(d.owner_sid) AS Owner,
                 CASE
                 WHEN d.is_trustworthy_on = 0 THEN 'False'

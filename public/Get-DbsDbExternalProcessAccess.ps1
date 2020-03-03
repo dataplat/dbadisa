@@ -42,7 +42,7 @@ function Get-DbsDbExternalProcessAccess {
         [switch]$EnableException
     )
     begin {
-        . "$script:ModuleRoot\private\set-defaults.ps1"
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
     }
     process {
         if ($SqlInstance) {
