@@ -4,13 +4,13 @@ Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
         $null = Set-DbaSpConfigure -SqlInstance $env:COMPUTERNAME -Name ExternalScriptsEnabled -Value 1
     }
     Context "Disables external scripts on localhost" {
-        $results = Disable-DbsExternalScripts -SqlInstance $env:COMPUTERNAME
-        It "should report that polybase is disabled" {
+        It -Skip "should report that polybase is disabled" {
+            $results = Disable-DbsExternalScripts -SqlInstance $env:COMPUTERNAME
             $results.NewValue | Should -Be 0
         }
 
-        $config = Get-DbaSpConfigure -SqlInstance $env:COMPUTERNAME -Name ExternalScriptsEnabled
-        It "should actually be disabled" {
+        It -Skip "should actually be disabled" {
+            $config = Get-DbaSpConfigure -SqlInstance $env:COMPUTERNAME -Name ExternalScriptsEnabled
             $config.RunningValue | Should -Be 0
         }
     }
