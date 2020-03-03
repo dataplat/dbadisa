@@ -10,7 +10,7 @@ $port = "1433"
 
 Write-Host -Object "$indent Setting up AppVeyor Services" -ForegroundColor DarkGreen
 Set-Service -Name SQLBrowser -StartupType Automatic -WarningAction SilentlyContinue
-Start-Service "MSSQL`$$instance" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
+# Start-Service "MSSQL`$$instance" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
 Set-Service -Name "SQLAgent`$$instance" -StartupType Automatic -WarningAction SilentlyContinue
 Start-Service SQLBrowser -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
 
@@ -25,7 +25,7 @@ foreach ($ipAddress in $Tcp.IPAddresses) {
 $Tcp.Alter()
 Write-Host -Object "$indent Starting $instance" -ForegroundColor DarkGreen
 
-Restart-Service "MSSQL`$$instance" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
+Start-Service "MSSQL`$$instance" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
 
 do {
     Start-Sleep 3
