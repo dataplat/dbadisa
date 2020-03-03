@@ -1,4 +1,4 @@
-function Disable-DbsHadoopConnectivityy {
+function Disable-DbsHadoopConnectivity {
     <#
     .SYNOPSIS
         Disables non-compliant Allow Polybase Export settings.
