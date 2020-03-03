@@ -57,34 +57,37 @@ function Disable-DbsBrowser {
                     $wmi.ServerInstances.ServerProtocols.IPAddresses.IPAddressProperties | Where-Object { $PSItem.Name -eq 'TcpPort' -and $PSItem.Value -ne 1433 } |
                     Select-Object -Unique -Property Value
                 }
+            } catch {
+                Stop-PSFFunction -EnableException:$EnableException -Message "Error setting services on $computer" -ErrorRecord $_
+            }
 
-                foreach ($port in $allports) {
-                    Write-PSFMessage -Level Verbose -Message "Found instance with port $($port.Value) on $($env:ComputerName)"
+            foreach ($port in $ports) {
+                Write-PSFMessage -Level Verbose -Message "Found instance with port $($port.Value) on $($env:ComputerName)"
+            }
+
+            if ($ports) {
+                if ($PSCmdlet.ShouldProcess($computer, "No changes required, showing output")) {
+                    [pscustomobject]@{
+                        ComputerName    = $computer
+                        BrowserDisabled = $false
+                        Notes           = "SQL services found on ports other than 1433"
+                    }
                 }
-
-                if ($ports) {
-                    $disabled = $false
-                    $notes = "SQL services found on ports other than 1433"
-                } else {
+            } else {
+                if ($PSCmdlet.ShouldProcess($computer, "No SQL services found on ports other than 1433, disabling SQL Browser service")) {
                     try {
                         $browser = Get-DbaService -ComputerName $Computer -Type Browser
                         $null = $browser | Stop-DbaService
                         $null = $browser | Set-Service -StartupType Disabled
-                        $disabled = $true
-                        $notes = "No SQL services found on ports other than 1433"
+                        [pscustomobject]@{
+                            ComputerName    = $computer
+                            BrowserDisabled = $true
+                            Notes           = "No SQL services found on ports other than 1433"
+                        }
                     } catch {
                         Stop-PSFFunction -EnableException:$EnableException -Message "Error setting services on $computer" -ErrorRecord $_
                     }
                 }
-                if ($PSCmdlet.ShouldProcess($computer, "Showing output")) {
-                    [pscustomobject]@{
-                        ComputerName    = $computer
-                        BrowserDisabled = $disabled
-                        Notes           = $notes
-                    }
-                }
-            } catch {
-                Stop-PSFFunction -EnableException:$EnableException -Message "Error setting services on $computer" -ErrorRecord $_
             }
         }
     }
