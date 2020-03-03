@@ -1,20 +1,16 @@
 function Get-DbsStartupProcedure {
     <#
     .SYNOPSIS
-        Gets a list of startup procedures.
+        Gets a list of startup procedures
 
     .DESCRIPTION
-        Gets a list of startup procedures.
+        Gets a list of startup procedures
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -45,15 +41,18 @@ function Get-DbsStartupProcedure {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
-        foreach ($server in $servers) {
+        foreach ($instance in $SqlInstance) {
             try {
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, Name
                             From sys.procedures
                             Where OBJECTPROPERTY(OBJECT_ID, 'ExecIsStartup') = 1")
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

@@ -7,14 +7,10 @@ function Get-DbsDbTemporalTable {
         Gets all of the temporal tables in the database
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER InputObject
         Allows databases to be piped in from Get-DbaDatabase
@@ -51,6 +47,7 @@ function Get-DbsDbTemporalTable {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $sql = "SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],
         SCHEMA_NAME(T.schema_id) AS [Schema], T.name AS [Table],
         T.temporal_type_desc as TemporalTypeDescription, SCHEMA_NAME(H.schema_id) as HistorySchema,
@@ -61,13 +58,13 @@ function Get-DbsDbTemporalTable {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential | Where-Object VersionMajor -gt 11 | Get-DbaDatabase -EnableException:$EnableException
+            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance | Where-Object VersionMajor -gt 11 | Get-DbaDatabase
         }
 
         foreach ($db in $InputObject) {
             try {
                 $db.Query($sql) | Select-Object -Property SqlInstance, Database, Schema, Table, TemporalTypeDescription, HistorySchema, HistoryTable, @{ Name = 'db'; Expression = { $db } } |
-                Select-DefaultView -Property SqlInstance, Database, Schema, Table, TemporalTypeDescription, HistorySchema, HistoryTable
+                    Select-DefaultView -Property SqlInstance, Database, Schema, Table, TemporalTypeDescription, HistorySchema, HistoryTable
             } catch {
                 Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
             }

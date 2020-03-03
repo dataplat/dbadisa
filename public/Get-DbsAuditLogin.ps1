@@ -1,20 +1,16 @@
 function Get-DbsAuditLogin {
     <#
     .SYNOPSIS
-        Returns a list of (non-compliant) servers that are not auditing logins either by Audits or via "Both failed and successful logins"
+        Returns a list of non-compliant servers that are not auditing logins either by Audits or via "Both failed and successful logins"
 
     .DESCRIPTION
-        Returns a list of (non-compliant) servers that are not auditing logins either by Audits or via "Both failed and successful logins"
+        Returns a list of non-compliant servers that are not auditing logins either by Audits or via "Both failed and successful logins"
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -40,11 +36,13 @@ function Get-DbsAuditLogin {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
-
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $auditresult = $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
                         s.name AS 'SpecName',
                         d.audit_action_name AS 'ActionName',
@@ -63,7 +61,7 @@ function Get-DbsAuditLogin {
                     }
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

@@ -7,16 +7,16 @@ function Set-DbsTraceFlag {
         Sets trace flag 3625 to hide information from non-sysadmins in error messages.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER Credential
         Login to the target _Windows Server_ instance using alternative credentials. Accepts PowerShell credentials (Set-Credential).
 
     .PARAMETER WhatIf
-        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
     .PARAMETER Confirm
-        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.

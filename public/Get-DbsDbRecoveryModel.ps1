@@ -7,14 +7,13 @@ function Get-DbsDbRecoveryModel {
         Returns a list of all non-compliant (non-full) database recovery models.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
+        Login to the target instance using alternative credentials
 
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+    .PARAMETER InputObject
+        Allows databases to be piped in from Get-DbaDatabase
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -41,13 +40,22 @@ function Get-DbsDbRecoveryModel {
 
     [CmdletBinding()]
     param (
-        [parameter(Mandatory, ValueFromPipeline)]
+        [parameter(ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
+        [parameter(ValueFromPipeline)]
+        [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
-        $rec = Get-DbaDbRecoveryModel @PSBoundParameters -ExcludeDatabase master, msdb, tempdb, model | Where-Object RecoveryModel -ne Full
-        Select-DefaultView -InputObject $rec -Property SqlInstance, 'Name as Database', RecoveryModel
+        if ($SqlInstance) {
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeDatabase master, msdb, tempdb, model
+        }
+
+        $results = $InputObject | Where-Object RecoveryModel -ne Full
+        Select-DefaultView -InputObject $results -Property SqlInstance, 'Name as Database', RecoveryModel
     }
 }

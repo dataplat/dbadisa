@@ -1,23 +1,28 @@
 function Remove-DbsSystemPermission {
     <#
     .SYNOPSIS
-        Remoes non-compliant audit states.
+        Remoes non-compliant audit states
 
     .DESCRIPTION
-       Removes non-compliant audit states.
+       Removes non-compliant audit states
 
        If you remove permissions for 'NT AUTHORITY\SYSTEM' using this command and they continue to persist, check to ensure
        that the permissions are not granted by a role such as sysadmin.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
+        Login to the target instance using alternative credentials
 
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
+    .PARAMETER InputObject
+        Allows piping from Get-DbsSystemPermission
 
-        For MFA support, please use Connect-DbaInstance.
+    .PARAMETER WhatIf
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
+
+    .PARAMETER Confirm
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -46,7 +51,7 @@ function Remove-DbsSystemPermission {
 
         Gets a list of non-compliant permissions for NT AUTHORITY\SYSTEM, prompts to select specific permissions, then removes the selected permissions
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
     param (
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
@@ -54,11 +59,14 @@ function Remove-DbsSystemPermission {
         [pscustomobject[]]$InputObject,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         if ($SqlInstance) {
-            $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
-            foreach ($server in $servers) {
+            foreach ($instance in $SqlInstance) {
                 try {
+                    $server = Connect-DbaInstance -SqlInstance $instance
                     $cluster = $server.Query("SELECT SERVERPROPERTY('IsClustered') as IsClustered, SERVERPROPERTY('IsHadrEnabled') as IsHadrEnabled")
 
                     if ($cluster.IsClustered -and $cluster.IsHadrEnabled) {
@@ -78,22 +86,23 @@ function Remove-DbsSystemPermission {
                     $results = $results | Where-Object permission_name -notin $collection
                     foreach ($result in $results.permission_name) {
                         $sql = "REVOKE $result TO [NT AUTHORITY\SYSTEM]"
-                        Write-PSFMessage -Level Verbose -Message $sql
-                        $server.Query($sql)
+                        if ($PSCmdlet.ShouldProcess($server.Name, $sql)) {
+                            $server.Query($sql)
+                        }
 
                         $sql = "REVOKE EXEC ON $result From [NT AUTHORITY\SYSTEM]"
-                        Write-PSFMessage -Level Verbose -Message $sql
-                        $server.Query($sql)
-
-                        [pscustomobject]@{
-                            SqlInstance = $server.Name
-                            Permission  = $result
-                            Login       = "NT AUTHORITY\SYSTEM"
-                            Revoked     = $true
+                        if ($PSCmdlet.ShouldProcess($server.Name, $sql)) {
+                            $server.Query($sql)
+                            [pscustomobject]@{
+                                SqlInstance = $server.Name
+                                Permission  = $result
+                                Login       = "NT AUTHORITY\SYSTEM"
+                                Revoked     = $true
+                            }
                         }
                     }
                 } catch {
-                    Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                    Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
                 }
             }
         }
@@ -103,21 +112,23 @@ function Remove-DbsSystemPermission {
                 $server = $item.Server
                 $result = $item.Permission
                 $sql = "REVOKE $result TO [NT AUTHORITY\SYSTEM]"
-                Write-PSFMessage -Level Verbose -Message $sql
-                $server.Query($sql)
+                if ($PSCmdlet.ShouldProcess($server.Name, $sql)) {
+                    $server.Query($sql)
+                }
 
                 $sql = "REVOKE EXEC ON $result From [NT AUTHORITY\SYSTEM]"
-                Write-PSFMessage -Level Verbose -Message $sql
-                $server.Query($sql)
+                if ($PSCmdlet.ShouldProcess($server.Name, $sql)) {
+                    $server.Query($sql)
 
-                [pscustomobject]@{
-                    SqlInstance = $server.Name
-                    Permission  = $result
-                    Login       = "NT AUTHORITY\SYSTEM"
-                    Revoked     = $true
+                    [pscustomobject]@{
+                        SqlInstance = $server.Name
+                        Permission  = $result
+                        Login       = "NT AUTHORITY\SYSTEM"
+                        Revoked     = $true
+                    }
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

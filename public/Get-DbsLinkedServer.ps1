@@ -7,7 +7,7 @@ function Get-DbsLinkedServer {
         Gets a list of linked servers and their logins
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target SQL Server instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

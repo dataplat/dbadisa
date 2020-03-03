@@ -7,14 +7,10 @@ function Get-DbsAuditMaintainer {
         Returns a list of the server roles and individual logins that have permissions which enable the ability to create and maintain audit definitions.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -40,10 +36,13 @@ function Get-DbsAuditMaintainer {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $server.Query("SELECT @@SERVERNAME as SqlInstance,
                     CASE
                     WHEN SP.class_desc IS NOT NULL THEN
@@ -98,7 +97,7 @@ function Get-DbsAuditMaintainer {
                     WHERE sp.permission_name IN ('ALTER ANY SERVER AUDIT','CONTROL SERVER','ALTER ANY DATABASE','CREATE ANY DATABASE')
                     OR R.name IN ('sysadmin','dbcreator')") | Where-Object Securable -notlike '##MS_*'
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

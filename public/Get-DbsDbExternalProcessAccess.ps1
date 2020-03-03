@@ -1,10 +1,10 @@
-function Test-DbsDbInputValidity {
+function Get-DbsDbExternalProcessAccess {
     <#
     .SYNOPSIS
-        Tests a db to see if it's got contraints
+        Returns a listing of accounts currently configured for use by external processes.
 
     .DESCRIPTION
-        Tests a db to see if it's got contraints
+        Returns a listing of accounts currently configured for use by external processes.
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -21,16 +21,16 @@ function Test-DbsDbInputValidity {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79095
+        Tags: V-79221
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Test-DbsDbInputValidity -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsDbExternalProcessAccess -SqlInstance sql2017, sql2016, sql2012
 
-        Tests a db to see if it's got contraints on sql2017, sql2016 and sql2012
+        Returns a listing of accounts currently configured for use by external processes for sql2017, sql2016 and sql2012
     #>
     [CmdletBinding()]
     param (
@@ -46,22 +46,23 @@ function Test-DbsDbInputValidity {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem
+            $InputObject = Get-DbaDatabase @PSBoundParameters -ExcludeDatabase msdb
         }
-
         foreach ($db in $InputObject) {
             try {
-                Write-PSFMessage -Level Verbose -Message "Processing $($db.Name) on $($db.Parent.Name)"
-                $totaltables = ($db.Query("select count(*) as [Count] from sys.tables tab")).Count
-                $checks = $db | Get-DbsDbInputValidity
-                [pscustomobject]@{
-                    SqlInstance = $db.SqlInstance
-                    Database    = $db.Name
-                    TotalTables = $totaltables
-                    TotalChecks = @($checks).Count
-                }
+                $db.Query("SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],
+                        'Credential' as [Type], C.Name as CredentialName,
+                        NULL as ProxyName, C.credential_identity as [Identity]
+                        FROM sys.credentials C
+                        UNION
+                        SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],
+                        'Proxy' as [Type], C.Name as CredentialName, P.name AS ProxyName,
+                        C.credential_identity as [Identity]
+                        FROM sys.credentials C
+                        JOIN msdb.dbo.sysproxies P ON C.credential_id = P.credential_id
+                        WHERE P.enabled = 1")
             } catch {
-                Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
+                Stop-PSFFunction -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

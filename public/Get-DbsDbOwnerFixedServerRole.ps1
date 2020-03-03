@@ -7,14 +7,10 @@ function Get-DbsDbOwnerFixedServerRole {
         Gets a listing of user databases whose owner is a member of a fixed server role
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER InputObject
         Allows databases to be piped in from Get-DbaDatabase
@@ -46,31 +42,31 @@ function Get-DbsDbOwnerFixedServerRole {
         [parameter(ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
+        [parameter(ValueFromPipeline)]
+        [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
-        try {
-            $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential -MinimumVersion 11
-        } catch {
-            Stop-PSFFunction -Message "Failure on $($server.Name)" -ErrorRecord $_ -Continue
+        if ($SqlInstance) {
+            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance -MinimumVersion 11 | Get-DbaDatabase
         }
 
-        foreach ($server in $servers) {
+        foreach ($db in $InputObject) {
             try {
-                $roles = Get-DbaServerRole -SqlInstance $server | Where-Object IsFixedRole
-                $dbs = Get-DbaDatabase -SqlInstance $server -ExcludeSystem
-                foreach ($db in $dbs) {
-
-                    $fixedrolesmatch = $roles | Where-Object Login -contains $db.Owner
-                    foreach ($match in $fixedrolesmatch) {
-                        [PSCustomObject]@{
-                            SqlInstance = $db.SqlInstance
-                            Database    = $db.Name
-                            Owner       = $db.Owner
-                            FixedRole   = $match.Role
-                            db          = $db
-                        } | Select-DefaultView -Property SqlInstance, Database, Owner, FixedRole
-                    }
+                $server = $db.Parent
+                $roles = $server.Roles | Where-Object IsFixedRole
+                $fixedrolesmatch = $roles | Where-Object Login -contains $db.Owner
+                foreach ($match in $fixedrolesmatch) {
+                    [PSCustomObject]@{
+                        SqlInstance = $db.SqlInstance
+                        Database    = $db.Name
+                        Owner       = $db.Owner
+                        FixedRole   = $match.Role
+                        db          = $db
+                    } | Select-DefaultView -Property SqlInstance, Database, Owner, FixedRole
                 }
             } catch {
                 Stop-PSFFunction -Message "Failure on $($server.Name)" -ErrorRecord $_ -Continue

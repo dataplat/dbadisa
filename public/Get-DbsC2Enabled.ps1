@@ -7,14 +7,10 @@ function Get-DbsC2Disabled {
         Gets non-compliant Common Criteria Compliance settings.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -33,7 +29,6 @@ function Get-DbsC2Disabled {
 
         Only returns non-compliant Common Criteria Compliance settings from sql2017, sql2016 and sql2012
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

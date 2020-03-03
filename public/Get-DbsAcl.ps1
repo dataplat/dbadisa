@@ -1,18 +1,15 @@
 function Get-DbsAcl {
     <#
     .SYNOPSIS
-        Gets the permissions required by DISA for SQL Server directories.
+        Gets the permissions required by DISA for SQL Server directories
 
     .DESCRIPTION
-        Gets the required permissions for SQL Server directories.
+        Gets the required permissions for SQL Server directories
 
-        By default, it will detect and secure the default Data, Log and Backup directories.
+        By default, it will detect and secure the default Data, Log and Backup directories
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
-
-        This is required to get specific information about the paths to modify. The base computer name is also used to
-        perform the actual modifications.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target _SQL Server_ instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -67,10 +64,13 @@ function Get-DbsAcl {
         [string[]]$Path,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-SqlInstance -SqlInstance $instance -SqlCredential $sqlcredential
+                $server = Connect-DbaInstance -SqlInstance $instance
             } catch {
                 Stop-PSFFunction -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
             }
@@ -89,7 +89,7 @@ function Get-DbsAcl {
             try {
                 $computername = $instance.ComputerName
                 $instancename = $instance.InstanceName
-                $services = Get-DbaService -ComputerName $instance -Credential $Credential 3>$null
+                $services = Get-DbaService -ComputerName $instance 3>$null
                 $dbengine = $services | Where-Object DisplayName -match "SQL Server \($instancename\)"
                 $dbaccount = $dbengine.StartName
                 $agentengine = $services | Where-Object DisplayName -match "SQL Server Agent \($instancename\)"
@@ -102,7 +102,7 @@ function Get-DbsAcl {
                 foreach ($folder in $Path) {
                     Write-PSFMessage -Level Verbose -Message "Modifying $folder on $computername"
                     try {
-                        $acls = Invoke-PSFCommand -ComputerName $computername -Credential $credential -ScriptBlock {
+                        $acls = Invoke-PSFCommand -ComputerName $computername -ScriptBlock {
                             param ($folder)
                             # set it as a script variable to ensure it persists in the session, may be excessive
                             $acl = Get-Acl -Path $folder -ErrorAction Stop

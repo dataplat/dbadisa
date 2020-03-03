@@ -18,10 +18,10 @@ function Repair-DbsDbOwnerFixedServerRole {
         Allows databases to be piped in from Get-DbsDbOwnerFixedServerRole
 
     .PARAMETER WhatIf
-        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
     .PARAMETER Confirm
-        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -59,14 +59,17 @@ function Repair-DbsDbOwnerFixedServerRole {
         [string]$NewOwner,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         if ($Type -contains "SetOwner" -and -not $NewOwner) {
             Stop-PSFFunction -Message "You must specify -NewOwner when using the SetOwner type"
             return
         }
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -EnableException:$EnableException -ExcludeSystem |
-            Where-Object ContainmentType -eq $null
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem |
+                Where-Object ContainmentType -eq $null
         }
         foreach ($fixedrole in $InputObject) {
             $db = $fixedrole.db

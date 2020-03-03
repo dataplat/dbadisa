@@ -1,23 +1,19 @@
 function Get-DbsAuditOnFailure {
     <#
     .SYNOPSIS
-        Gets a list of non-compliant audit onfailure actions.
+        Gets a list of non-compliant audit onfailure actions
 
     .DESCRIPTION
-        Gets a list of non-compliant audit onfailure actions.
+        Gets a list of non-compliant audit onfailure actions
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER Audit
-       The name of the DISA Audit.
+       The name of the DISA Audit
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -50,15 +46,11 @@ function Get-DbsAuditOnFailure {
         [switch]$EnableException
     )
     begin {
-        $params = @{
-            SqlCredential   = $SqlCredential
-            EnableException = $EnableException
-            Audit           = $Audit
-        }
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
     }
     process {
         foreach ($instance in $SqlInstance) {
-            $stigaudit = Get-DbaInstanceAudit -SqlInstance $instance @params | Where-Object OnFailure -ne 'Shutdown'
+            $stigaudit = Get-DbaInstanceAudit -SqlInstance $instance -Audit $Audit | Where-Object OnFailure -ne 'Shutdown'
             if (-not $stigaudit) {
                 Stop-PSFFunction -Message "Audit $Audit not found on $instance" -Continue
             } else {

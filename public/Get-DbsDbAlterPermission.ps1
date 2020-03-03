@@ -7,14 +7,10 @@ function Get-DbsDbAlterPermission {
         Gets non-compliant alter permissions
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER InputObject
         Allows databases to be piped in from Get-DbaDatabase
@@ -51,6 +47,7 @@ function Get-DbsDbAlterPermission {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $sql = "SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database], O.Name AS ObjectName, P.name AS PrincipalName, P.type_desc AS PrincipalType,
                 O.type_desc AS TypeDescription,
                 CASE class
@@ -74,14 +71,14 @@ function Get-DbsDbAlterPermission {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -EnableException:$EnableException -ExcludeSystem |
-            Where-Object ContainmentType -eq $null
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem |
+                Where-Object ContainmentType -eq $null
         }
 
         foreach ($db in $InputObject) {
             try {
                 $db.Query($sql) | Select-Object -Property SqlInstance, Database, ObjectName, PrincipalName, PrincipalType, TypeDescription, SecurableName, StateDescription, PermissionName, @{ Name = 'db'; Expression = { $db } } |
-                Select-DefaultView -Property SqlInstance, Database, ObjectName, PrincipalName, PrincipalType, TypeDescription, SecurableName, StateDescription, PermissionName
+                    Select-DefaultView -Property SqlInstance, Database, ObjectName, PrincipalName, PrincipalType, TypeDescription, SecurableName, StateDescription, PermissionName
             } catch {
                 Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
             }

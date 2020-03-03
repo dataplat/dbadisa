@@ -9,7 +9,7 @@ function Set-DbsAcl {
         By default, it will detect and secure the default Data, Log and Backup directories.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
         This is required to get specific information about the paths to modify. The base computer name is also used to
         perform the actual modifications.
@@ -34,13 +34,10 @@ function Set-DbsAcl {
         Note that if your Backup directory is a UNC share, it will be skipped.
 
     .PARAMETER WhatIf
-        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
     .PARAMETER Confirm
-        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
-
-    .PARAMETER Force
-        If this switch is enabled, the sp_WhoisActive will be downloaded from the internet even if previously cached.
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -80,10 +77,13 @@ function Set-DbsAcl {
         [string[]]$Path,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-SqlInstance -SqlInstance $instance -SqlCredential $sqlcredential
+                $server = Connect-DbaInstance -SqlInstance $instance
             } catch {
                 Stop-PSFFunction -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
             }
@@ -96,7 +96,7 @@ function Set-DbsAcl {
             try {
                 $computername = $instance.ComputerName
                 $instancename = $instance.InstanceName
-                $services = Get-DbaService -ComputerName $instance -Credential $Credential 3>$null
+                $services = Get-DbaService -ComputerName $instance 3>$null
                 $dbengine = $services | Where-Object DisplayName -match "SQL Server \($instancename\)"
                 $dbaccount = $dbengine.StartName
                 $agentengine = $services | Where-Object DisplayName -match "SQL Server Agent \($instancename\)"
@@ -111,7 +111,7 @@ function Set-DbsAcl {
 
                     if ($PSCmdlet.ShouldProcess($computername, "Removing permission protections for $folder")) {
                         try {
-                            Invoke-PSFCommand -ComputerName $computername -Credential $credential -ScriptBlock {
+                            Invoke-PSFCommand -ComputerName $computername -ScriptBlock {
                                 param ($folder)
                                 # set it as a script variable to ensure it persists in the session, may be excessive
                                 $script:acl = Get-Acl -Path $folder -ErrorAction Stop
@@ -125,7 +125,7 @@ function Set-DbsAcl {
 
                     if ($PSCmdlet.ShouldProcess($computername, "Collecting all access rules for $folder")) {
                         try {
-                            $access = Invoke-PSFCommand -ComputerName $computername -Credential $credential -ScriptBlock {
+                            $access = Invoke-PSFCommand -ComputerName $computername -ScriptBlock {
                                 param ($folder)
                                 (Get-Acl -Path $folder -ErrorAction Stop).Access
                             } -ArgumentList $folder -ErrorAction Stop
@@ -136,7 +136,7 @@ function Set-DbsAcl {
 
                     if ($PSCmdlet.ShouldProcess($computername, "Removing all access rules for $folder")) {
                         try {
-                            Invoke-PSFCommand -ComputerName $computername -Credential $credential -ScriptBlock {
+                            Invoke-PSFCommand -ComputerName $computername -ScriptBlock {
                                 param ($folder, $VerbosePreference)
                                 $script:acl = Get-Acl -Path $folder
                                 $access = $script:acl.Access
@@ -158,7 +158,7 @@ function Set-DbsAcl {
                         $accountdisplay += $username
                         if ($PSCmdlet.ShouldProcess($computername, "Adding full control for $username on $folder")) {
                             try {
-                                Invoke-PSFCommand -ComputerName $computername -Credential $credential -ScriptBlock {
+                                Invoke-PSFCommand -ComputerName $computername -ScriptBlock {
                                     param ($username, $VerbosePreference)
                                     $permission = $username, "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow"
                                     $rule = New-Object System.Security.AccessControl.FileSystemAccessRule $permission
@@ -176,7 +176,7 @@ function Set-DbsAcl {
                             $accountdisplay += $agentaccount
                         }
                         try {
-                            $null = Invoke-PSFCommand -ComputerName $computername -Credential $credential -ScriptBlock {
+                            $null = Invoke-PSFCommand -ComputerName $computername -ScriptBlock {
                                 param ($dbaccount, $agentaccount, $VerbosePreference)
                                 $permission = "$dbaccount", "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow"
                                 $rule = New-Object System.Security.AccessControl.FileSystemAccessRule $permission
@@ -196,7 +196,7 @@ function Set-DbsAcl {
 
                     if ($PSCmdlet.ShouldProcess($computername, "Changing the owner for $folder")) {
                         try {
-                            $null = Invoke-PSFCommand -ComputerName $computername -Credential $credential -ScriptBlock {
+                            $null = Invoke-PSFCommand -ComputerName $computername -ScriptBlock {
                                 param ($Owner)
                                 $script:acl.SetOwner([System.Security.Principal.NTAccount]$Owner)
                             } -ArgumentList $Owner -ErrorAction Stop
@@ -207,7 +207,7 @@ function Set-DbsAcl {
 
                     if ($PSCmdlet.ShouldProcess($computername, "Performing the actual set")) {
                         try {
-                            $null = Invoke-PSFCommand -ComputerName $computername -Credential $credential -ScriptBlock {
+                            $null = Invoke-PSFCommand -ComputerName $computername -ScriptBlock {
                                 param ($folder)
                                 $null = Set-Acl -Path $folder -AclObject $script:acl
                             } -ArgumentList $folder -ErrorAction Stop

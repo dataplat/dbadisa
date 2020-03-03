@@ -1,20 +1,16 @@
 function Get-DbsSaAccount {
     <#
     .SYNOPSIS
-        Gets a list of (non-compliant) logins named 'sa' or 'sa' accounts that are still enabled
+        Gets a list of non-compliant logins named 'sa' or 'sa' accounts that are still enabled
 
     .DESCRIPTION
-        Gets a list of (non-compliant) logins named 'sa' or 'sa' accounts that are still enabled
+        Gets a list of non-compliant logins named 'sa' or 'sa' accounts that are still enabled
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -31,7 +27,7 @@ function Get-DbsSaAccount {
         PS C:\> Get-DbsSaAccount -SqlInstance sql2017, sql2016, sql2012
 
         Gets a list of logins named 'sa' or 'sa' accounts that are still enabled from sql2017, sql2016, and sql2012
-#>
+    #>
 
     [CmdletBinding()]
     param (

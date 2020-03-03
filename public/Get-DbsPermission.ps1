@@ -9,14 +9,10 @@ function Get-DbsPermission {
         Uses the Instance permissions assignments to logins and roles.sql file provided by DISA.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -53,28 +49,29 @@ function Get-DbsPermission {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $sql = [IO.File]::ReadAllText("$script:ModuleRoot\bin\sql\Instance permissions assignments to logins and roles.sql")
     }
     process {
-        $server = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
-
-        try {
-            $results = $server.Query($sql)
-        } catch {
-            Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
-        }
-
-        foreach ($result in $results) {
-            [pscustomobject]@{
-                SqlInstance    = $server.Name
-                SecurableClass = $result.'Securable Class'
-                Securable      = $result.Securable
-                Grantee        = $result.Grantee
-                GranteeType    = $result.'Grantee Type'
-                Permission     = $result.Permission
-                State          = $result.State
-                Grantor        = $result.Grantor
-                GrantorType    = $result.'Grantor Type'
+        foreach ($instance in $SqlInstance) {
+            try {
+                $server = Connect-DbaInstance -SqlInstance $instance
+                $results = $server.Query($sql)
+                foreach ($result in $results) {
+                    [pscustomobject]@{
+                        SqlInstance    = $server.Name
+                        SecurableClass = $result.'Securable Class'
+                        Securable      = $result.Securable
+                        Grantee        = $result.Grantee
+                        GranteeType    = $result.'Grantee Type'
+                        Permission     = $result.Permission
+                        State          = $result.State
+                        Grantor        = $result.Grantor
+                        GrantorType    = $result.'Grantor Type'
+                    }
+                }
+            } catch {
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

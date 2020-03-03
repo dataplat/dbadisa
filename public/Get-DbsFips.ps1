@@ -30,7 +30,7 @@ function Get-DbsFips {
         PS C:\> Get-DbsFips -ComputerName sql2016, sql2017, sql2012
 
         Gets FIPS disabled state from sql2016, sql2017 and sql2012
-#>
+    #>
 
     [CmdletBinding()]
     param (
@@ -39,10 +39,13 @@ function Get-DbsFips {
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             try {
-                $enabled = Invoke-Command2 -ComputerName $computer -Credential $credential -ScriptBlock {
+                $enabled = Invoke-Command2 -ComputerName $computer -ScriptBlock {
                     Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy | Select-Object -ExpandProperty Enabled
                 } -Raw
                 if ($enabled) {
@@ -52,7 +55,7 @@ function Get-DbsFips {
                     }
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure" -ErrorRecord $_ -Continue
             }
         }
     }

@@ -9,14 +9,10 @@ function Set-DbsAuditMaintainer {
         Create the audit maintainer role, sets the permissions for the role, and adds logins.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER Role
         Name to be given the audit maintainer role.
@@ -25,10 +21,10 @@ function Set-DbsAuditMaintainer {
         The login or logins that are to be granted permissions. This should be a Windows Group or you may violate another STIG.
 
     .PARAMETER WhatIf
-        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
     .PARAMETER Confirm
-        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -62,10 +58,13 @@ function Set-DbsAuditMaintainer {
         [string[]]$Login,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance
 
                 $sql = "IF NOT EXISTS(SELECT name FROM sys.server_principals WHERE type = 'R' AND name='[$Role]') CREATE SERVER ROLE [$($Role)]" # CREATE  ROLE SERVER_AUDIT_MAINTAINERS;
                 Write-PSFMessage -Level Verbose -Message $sql
@@ -123,7 +122,7 @@ function Set-DbsAuditMaintainer {
                     }
                 }
             } catch {
-                Stop-PSFFunction -EnableException:$EnableException -Message "Failure on $($server.Name)" -ErrorRecord $_ -Continue
+                Stop-PSFFunction -Message "Failure on $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

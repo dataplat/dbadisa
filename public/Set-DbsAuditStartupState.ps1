@@ -7,17 +7,19 @@ function Set-DbsAuditStartupState {
         Sets startup state for compliance audit to ON.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER Audit
        The name of the DISA Audit.
+
+    .PARAMETER WhatIf
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
+
+    .PARAMETER Confirm
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -46,7 +48,7 @@ function Set-DbsAuditStartupState {
 
         Gets a list of non-compliant audit startup states sql2017, sql2016 and sql2012 to D:\disa\auditstartup.csv
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
@@ -54,21 +56,26 @@ function Set-DbsAuditStartupState {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
-        foreach ($server in $servers) {
+        foreach ($instance in $SqlInstance) {
             foreach ($currentaudit in $audit) {
                 try {
-                    $sql = "ALTER SERVER AUDIT [$Audit] WITH (STATE = ON)"
-                    Write-PSFMessage -Message $sql -Level Verbose
-                    $null = $server.Query($sql)
-                    [pscustomobject]@{
-                        SqlInstance  = $server.Name
-                        Audit        = $currentaudit
-                        StartupState = "ON"
+                    $server = Connect-DbaInstance -SqlInstance $instance
+                    if ($PSCmdlet.ShouldProcess($instance, "Starting $currentaudit")) {
+                        $sql = "ALTER SERVER AUDIT [$Audit] WITH (STATE = ON)"
+                        Write-PSFMessage -Message $sql -Level Verbose
+                        $null = $server.Query($sql)
+                        [pscustomobject]@{
+                            SqlInstance  = $server.Name
+                            Audit        = $currentaudit
+                            StartupState = "ON"
+                        }
                     }
                 } catch {
-                    Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                    Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
                 }
             }
         }

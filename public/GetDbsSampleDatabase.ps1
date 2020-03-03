@@ -7,14 +7,10 @@ function Get-DbsSampleDatabase {
         Returns a list of prohibited sample databases.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -38,7 +34,6 @@ function Get-DbsSampleDatabase {
 
         Exports a list of prohibited sample databases for sql2017, sql2016 and sql2012 to D:\disa\sampledbs.csv
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

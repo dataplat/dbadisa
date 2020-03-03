@@ -7,14 +7,10 @@ function Get-DbsDbAccessControl {
         Gathers information for for object ownership and authorization delegation to be documented
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER InputObject
         Allows databases to be piped in from Get-DbaDatabase
@@ -51,6 +47,7 @@ function Get-DbsDbAccessControl {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $sql = "-- Schemas not owned by the schema or dbo:
                 SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database], 'Schema' as Type,
                 [Name], USER_NAME(principal_id) AS Owner, NULL as Description,
@@ -85,13 +82,13 @@ function Get-DbsDbAccessControl {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -EnableException:$EnableException -ExcludeSystem
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem
         }
 
         foreach ($db in $InputObject) {
             try {
                 $db.Query($sql) | Select-Object -Property SqlInstance, Database, Type, Name, Owner, Description, StateDescription, PermissionName, @{ Name = 'db'; Expression = { $db } } |
-                Select-DefaultView -Property SqlInstance, Database, Type, Name, Owner, Description, StateDescription, PermissionName
+                    Select-DefaultView -Property SqlInstance, Database, Type, Name, Owner, Description, StateDescription, PermissionName
             } catch {
                 Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
             }

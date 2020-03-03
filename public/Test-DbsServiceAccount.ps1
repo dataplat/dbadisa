@@ -33,19 +33,22 @@ function Test-DbsServiceAccount {
     param (
         [parameter(ValueFromPipeline)]
         [Alias("cn", "host", "Server")]
-        [DbaInstanceParameter[]]$ComputerName = $env:COMPUTERNAME,
+        [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            $services = Get-DbaService -ComputerName $computer -Credential $Credential -EnableException:$EnableException
+            $services = Get-DbaService -ComputerName $computer
             # no sql service account must be the same on the same computer, no matter the instance
             foreach ($service in $services) {
                 $accounts = $services | Where-Object StartName -eq $service.StartName
                 if ($accounts.Count -gt 1) {
                     $service | Add-Member -NotePropertyName DuplicateCount -NotePropertyValue $accounts.Count -Passthru |
-                    Select-DefaultView -Property ComputerName, ServiceName, ServiceType, InstanceName, DisplayName, StartName, State, StartMode, DuplicateCount
+                        Select-DefaultView -Property ComputerName, ServiceName, ServiceType, InstanceName, DisplayName, StartName, State, StartMode, DuplicateCount
                 }
             }
         }

@@ -7,14 +7,10 @@ function Get-DbsComputerLogin {
         Returns a list of all server logins that are computers.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -38,7 +34,6 @@ function Get-DbsComputerLogin {
 
         Exports a list of all server logins that are computers to D:\disa\computeruser.csv
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
@@ -46,6 +41,9 @@ function Get-DbsComputerLogin {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         $logins = Get-DbaLogin @PSBoundParameters | Where-Object Name -like '*$' | Sort-Object -Unique SqlInstance, Database, Login
 

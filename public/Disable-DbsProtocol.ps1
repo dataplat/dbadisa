@@ -15,10 +15,10 @@ function Disable-DbsProtocol {
         Credential object used to connect to the computer as a different user
 
     .PARAMETER WhatIf
-        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
     .PARAMETER Confirm
-        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -44,15 +44,18 @@ function Disable-DbsProtocol {
     #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
-        [parameter(ValueFromPipeline)]
+        [parameter(Mandatory, ValueFromPipeline)]
         [Alias("cn", "host", "Server")]
-        [DbaInstanceParameter[]]$ComputerName = $env:COMPUTERNAME,
+        [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            $protocols = Get-DbaInstanceProtocol -ComputerName $computer -Credential $Credential
+            $protocols = Get-DbaInstanceProtocol -ComputerName $computer
             foreach ($protocol in $protocols) {
                 if ($protocol.Name -eq 'Tcp') {
                     if ($PSCmdlet.ShouldProcess($computer, "Enabling $($protocol.Name) for $($protocol.InstanceName)")) {
@@ -60,7 +63,7 @@ function Disable-DbsProtocol {
                         if ($return -eq 0) { $results = "False" } else { $results = "True" }
                         $protocol | Add-Member -NotePropertyName Disabled -NotePropertyValue $results
                         $protocol | Add-Member -NotePropertyName Notes -NotePropertyValue "Restart required" -PassThru |
-                        Select-DefaultView -Property ComputerName, DisplayName, InstanceName, Disabled, Notes
+                            Select-DefaultView -Property ComputerName, DisplayName, InstanceName, Disabled, Notes
                     }
                 } else {
                     if ($PSCmdlet.ShouldProcess($computer, "Disabling $($protocol.Name) for $($protocol.InstanceName)")) {
@@ -68,7 +71,7 @@ function Disable-DbsProtocol {
                         if ($return -eq 0) { $results = "True" } else { $results = "False" }
                         $protocol | Add-Member -NotePropertyName Disabled -NotePropertyValue $results
                         $protocol | Add-Member -NotePropertyName Notes -NotePropertyValue "Restart required" -PassThru |
-                        Select-DefaultView -Property ComputerName, DisplayName, InstanceName, Disabled, Notes
+                            Select-DefaultView -Property ComputerName, DisplayName, InstanceName, Disabled, Notes
                     }
                 }
             }

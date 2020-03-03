@@ -1,20 +1,16 @@
 function Get-DbsAuditStartupState {
     <#
     .SYNOPSIS
-        Gets a list of non-compliant audit startup states.
+        Gets a list of non-compliant audit startup states
 
     .DESCRIPTION
-        Gets a list of non-compliant audit startup states.
+        Gets a list of non-compliant audit startup states
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER Audit
        The name of the DISA Audit.
@@ -54,17 +50,20 @@ function Get-DbsAuditStartupState {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
-        foreach ($server in $servers) {
+        foreach ($instance in $SqlInstance) {
             try {
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, name AS 'AuditName',
                 status_desc AS 'AuditStatus',
                 audit_file_path AS 'Path'
                 FROM sys.dm_server_audit_status
                 WHERE status_desc != 'STARTED' AND name = '$Audit'")
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

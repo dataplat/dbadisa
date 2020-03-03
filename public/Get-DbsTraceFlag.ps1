@@ -7,7 +7,7 @@ function Get-DbsTraceFlag {
         Checks to see if trace flag 3625 to hide system information form non-sysadmins in error messages.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target _SQL Server_ instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -40,12 +40,15 @@ function Get-DbsTraceFlag {
         [PsCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $startupflags = (Get-DbaStartupParameter -SqlInstance $instance -Credential $Credential -EnableException).TraceFlags.Split(",")
+                $startupflags = (Get-DbaStartupParameter -SqlInstance $instance -EnableException).TraceFlags.Split(",")
                 $startupflag = $startupflags -contains 3625
-                $traceflags = Get-DbaTraceFlag -TraceFlag 3625 -SqlInstance $instance -SqlCredential $SqlCredential -EnableException *>$null
+                $traceflags = Get-DbaTraceFlag -TraceFlag 3625 -SqlInstance $instance -EnableException *>$null
 
                 if ($startupflag -and -not $traceflags) {
                     Write-PSFMessage -Level Warning -Message "Startup parameter for trace flag 3625 has already been set in $instance, but the SQL service needs to be restarted for it to take effect"
@@ -58,7 +61,7 @@ function Get-DbsTraceFlag {
                     }
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure on $instance" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure on $instance" -ErrorRecord $_ -Continue
             }
         }
     }

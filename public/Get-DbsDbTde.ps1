@@ -7,14 +7,10 @@ function Get-DbsDbTde {
        Returns a list of non-compliant (unencrypted) databases
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER InputObject
         Allows databases to be piped in from Get-DbaDatabase
@@ -52,7 +48,7 @@ function Get-DbsDbTde {
     )
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -EnableException:$EnableException -ExcludeSystem
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem
         }
 
         foreach ($db in $InputObject) {

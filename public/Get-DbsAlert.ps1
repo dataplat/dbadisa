@@ -7,7 +7,7 @@ function Get-DbsAlert {
         Checks both Agent Alerts and Database Mail to ensure SQL Server provides immediate, real-time alerts to appropriate support staff
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target SQL Server instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -36,10 +36,13 @@ function Get-DbsAlert {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $alerts = Get-DbaAgentAlert -SqlInstance $server
                 $mailserver = (Get-DbaDbMailAccount -SqlInstance $server).MailServers
 
@@ -52,7 +55,7 @@ function Get-DbsAlert {
                     }
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure on $instance" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure on $instance" -ErrorRecord $_ -Continue
             }
         }
     }

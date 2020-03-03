@@ -7,14 +7,10 @@ function Get-DbsAuditMaxValue {
         Gets a list of non-compliant max values (rollover and file size)
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER Audit
        The name of the DISA Audit.
@@ -49,6 +45,9 @@ function Get-DbsAuditMaxValue {
         [string[]]$Audit = (Get-PSFConfigValue -FullName dbadisa.app.auditname),
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             foreach ($instanceaudit in $audit) {

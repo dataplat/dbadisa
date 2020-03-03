@@ -1,26 +1,22 @@
 function Disable-DbsMixedMode {
     <#
     .SYNOPSIS
-        Disables mixed mode authentication.
+        Disables mixed mode authentication
 
     .DESCRIPTION
-        Disables mixed mode authentication.
+        Disables mixed mode authentication
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher. Server version must be SQL Server version 2012 or higher. Server version must be SQL Server version 2012 or higher. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher. Server version must be SQL Server version 2012 or higher. Server version must be SQL Server version 2012 or higher. Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER WhatIf
-        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
     .PARAMETER Confirm
-        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -44,7 +40,6 @@ function Disable-DbsMixedMode {
 
         Shows what would happen if you ran the command
     #>
-
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
@@ -52,10 +47,13 @@ function Disable-DbsMixedMode {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential -DisableException:$($EnableException -eq $false)
-        foreach ($server in $servers) {
+        foreach ($instance in $SqlInstance) {
             try {
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $mode = $server.Settings.LoginMode
                 if ($mode -ne "Integrated") {
                     if ($PSCmdlet.ShouldProcess($server.Name, "Changing login mode from $mode to Integrated")) {
@@ -63,15 +61,14 @@ function Disable-DbsMixedMode {
                         $server.Alter()
                         [PSCustomObject]@{
                             SqlInstance = $server.Name
-                            Status      = "Success. Please restart SQL Server."
+                            LoginMode   = "Integrated"
+                            Notes       = "Please restart SQL Server"
                         }
                         Write-PSFMessage -Level Verbose -Message "You must restart SQL Server $($server.Name) for this setting to go into effect"
                     }
-                } else {
-                    Write-PSFMessage -Level Output -Message "Integrated authentication already set on $($server.Name)"
                 }
             } catch {
-                Stop-PSFunction -EnableException:$EnableException -ErrorRecord $_ -Message "Failure on $($server.Name)"
+                Stop-PSFFunction -ErrorRecord $_ -Message "Failure on $($server.Name)"
             }
         }
     }

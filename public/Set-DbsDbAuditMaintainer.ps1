@@ -9,14 +9,10 @@ function Set-DbsDbAuditMaintainer {
         Creates the database audit maintainer role, sets the permissions for the role, and adds logins.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER Database
         Allows databases to be piped in from Get-DbaDatabase.
@@ -27,11 +23,14 @@ function Set-DbsDbAuditMaintainer {
     .PARAMETER User
         The login or logins that are to be granted permissions. This should be a Windows Group or you may violate another STIG.
 
+    .PARAMETER InputObject
+        Allows piping from Get-DbsDbAuditMaintainer
+
     .PARAMETER WhatIf
-        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
     .PARAMETER Confirm
-        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -70,7 +69,7 @@ function Set-DbsDbAuditMaintainer {
 
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -ExcludeDatabase tempdb -EnableException:$EnableException | Where-Object IsAccessible
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeDatabase tempdb | Where-Object IsAccessible
         }
 
         foreach ($db in $InputObject) {
@@ -126,7 +125,7 @@ function Set-DbsDbAuditMaintainer {
                         }
                     }
 
-                    $casedname = Get-DbaDbUser  -SqlInstance $SqlInstance -SqlCredential $SqlCredential -Database $db.Name | Where-Object Name -eq $dbuser | Select-Object -ExpandProperty Name
+                    $casedname = Get-DbaDbUser  -SqlInstance $SqlInstance -Database $db.Name | Where-Object Name -eq $dbuser | Select-Object -ExpandProperty Name
                     $sql = "ALTER ROLE [$($Role)] ADD MEMBER [$($casedname)]"
                     Write-PSFMessage -Level Verbose -Message $sql
 
@@ -143,7 +142,7 @@ function Set-DbsDbAuditMaintainer {
                     }
                 }
             } catch {
-                Stop-PSFFunction -EnableException:$EnableException -Message "Could not modify $db on $($db.Parent.Name)" -ErrorRecord $_ -Continue
+                Stop-PSFFunction -Message "Could not modify $db on $($db.Parent.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

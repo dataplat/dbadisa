@@ -1,20 +1,16 @@
 function Get-DbsDbKeyEncryptedByPassword {
     <#
     .SYNOPSIS
-       Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key
+       Returns a list of non-compliant Database Master Key that are not encrypted by the Service Master Key
 
     .DESCRIPTION
-       Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key
+       Returns a list of non-compliant Database Master Key that are not encrypted by the Service Master Key
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER InputObject
         Allows databases to be piped in from Get-DbaDatabase
@@ -34,12 +30,12 @@ function Get-DbsDbKeyEncryptedByPassword {
     .EXAMPLE
         PS C:\> Get-DbsDbKeyEncryptedByPassword -SqlInstance sql2017, sql2016, sql2012
 
-       Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key for all databases on sql2017, sql2016 and sql2012
+       Returns a list of non-compliant Database Master Key that are not encrypted by the Service Master Key for all databases on sql2017, sql2016 and sql2012
 
     .EXAMPLE
         PS C:\> Get-DbsDbKeyEncryptedByPassword -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\access.csv -NoTypeInformation
 
-       Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key for all databases on sql2017, sql2016 and sql2012 to D:\disa\access.csv
+       Returns a list of non-compliant Database Master Key that are not encrypted by the Service Master Key for all databases on sql2017, sql2016 and sql2012 to D:\disa\access.csv
     #>
     [CmdletBinding()]
     param (
@@ -51,6 +47,7 @@ function Get-DbsDbKeyEncryptedByPassword {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $sql = "SELECT @@SERVERNAME as SqlInstance, name as [Database], COUNT(name) as Count
                 FROM sys.symmetric_keys s, sys.key_encryptions k
                 WHERE s.name = '##MS_DatabaseMasterKey##'
@@ -59,7 +56,7 @@ function Get-DbsDbKeyEncryptedByPassword {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -EnableException:$EnableException -ExcludeSystem
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem
         }
 
         foreach ($db in $InputObject) {

@@ -33,14 +33,17 @@ function Get-DbsProtocol {
     param (
         [parameter(ValueFromPipeline)]
         [Alias("cn", "host", "Server")]
-        [DbaInstanceParameter[]]$ComputerName = $env:COMPUTERNAME,
+        [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            Get-DbaInstanceProtocol -ComputerName $computer -Credential $Credential -EnableException:$EnableException |
-            Where-Object { $psitem.Name -ne 'tcp' -and $psitem.IsEnabled }
+            Get-DbaInstanceProtocol -ComputerName $computer |
+                Where-Object { $psitem.Name -ne 'tcp' -and $psitem.IsEnabled }
         }
     }
 }

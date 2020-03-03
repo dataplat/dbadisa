@@ -7,7 +7,7 @@ function Get-DbsAdminRoleMember {
         Gets members of the sysadmin and securityadmin server roles
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target SQL Server instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

@@ -1,8 +1,6 @@
 $indent = '...'
 Write-Host -Object "Running $PSCommandpath" -ForegroundColor DarkGreen
 Import-Module dbatools
-Start-Sleep 5
-# This script spins up the 2016 instance and the relative setup
 
 $sqlinstance = "localhost\SQL2017"
 $instance = "SQL2017"
@@ -10,7 +8,6 @@ $port = "1433"
 
 Write-Host -Object "$indent Setting up AppVeyor Services" -ForegroundColor DarkGreen
 Set-Service -Name SQLBrowser -StartupType Automatic -WarningAction SilentlyContinue
-Start-Service "MSSQL`$$instance" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
 Set-Service -Name "SQLAgent`$$instance" -StartupType Automatic -WarningAction SilentlyContinue
 Start-Service SQLBrowser -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
 
@@ -25,7 +22,7 @@ foreach ($ipAddress in $Tcp.IPAddresses) {
 $Tcp.Alter()
 Write-Host -Object "$indent Starting $instance" -ForegroundColor DarkGreen
 
-Restart-Service "MSSQL`$$instance" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
+Start-Service "MSSQL`$$instance" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
 
 do {
     Start-Sleep 3
@@ -33,23 +30,4 @@ do {
 }
 while ($lastexitcode -ne 0 -and $t++ -lt 10)
 
-# Agent sometimes takes a moment to start
-do {
-    Write-Host -Object "$indent Waiting for SQL Agent to start" -ForegroundColor DarkGreen
-    Start-Sleep 3
-}
-while ((Get-Service "SQLAgent`$$instance").Status -ne 'Running' -and $z++ -lt 10)
-
-$server = Connect-DbaInstance -SqlInstance $sqlinstance
-$computername = $server.NetName
-$servicename = $server.ServiceName
-if ($servicename -eq 'MSSQLSERVER') {
-    $instancename = "$computername"
-} else {
-    $instancename = "$computername\$servicename"
-}
-
-$server = Connect-DbaInstance -SqlInstance $sqlinstance
-$server.Query("IF NOT EXISTS (select * from sys.symmetric_keys where name like '%DatabaseMasterKey%') CREATE MASTER KEY ENCRYPTION BY PASSWORD = '<StrongPassword>'")
-$server.Query("IF EXISTS ( SELECT * FROM sys.tcp_endpoints WHERE name = 'End_Mirroring') DROP ENDPOINT endpoint_mirroring")
-$server.Query("CREATE CERTIFICATE dbatoolsci_AGCert WITH SUBJECT = 'AG Certificate'")
+Start-Service "SQLAgent`$$instance" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue

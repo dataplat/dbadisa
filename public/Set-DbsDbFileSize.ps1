@@ -7,14 +7,10 @@ function Set-DbsDbFileSize {
         Sets databases to a non-default growth and growth type. 64MB by default.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER GrowthType
         The growth type. Valid values are MB, KB, GB or TB. MB by default.
@@ -22,11 +18,14 @@ function Set-DbsDbFileSize {
     .PARAMETER Growth
         The growth value. 64 by default.
 
+    .PARAMETER InputObject
+        Allows piping from Get-DbaDatabase
+
     .PARAMETER WhatIf
-        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
     .PARAMETER Confirm
-        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -70,13 +69,13 @@ function Set-DbsDbFileSize {
     )
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -ExcludeDatabase tempdb -EnableException:$EnableException | Where-Object IsAccessible
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeDatabase tempdb | Where-Object IsAccessible
         }
 
         foreach ($db in $InputObject) {
             $allfiles = @($db.FileGroups.Files, $db.LogFiles)
             foreach ($file in $allfiles) {
-                if (($file.GrowthType -eq "Percent" -or ($file.GrowthType -eq "KB" -and $file.Growth -eq 1024)) -or (Was-Bound -Parameter Growth) -or (Was-Bound -Parameter GrowthType)) {
+                if (($file.GrowthType -eq "Percent" -or ($file.GrowthType -eq "KB" -and $file.Growth -eq 1024)) -or (Test-PSFParameterBinding -Parameter Growth) -or (Test-PSFParameterBinding -Parameter GrowthType)) {
                     if ($PSCmdlet.ShouldProcess($db.Parent, "Setting filegrowth for $($file.Name) in $($db.name) to $($Growth)$($GrowthType)")) {
                         # SMO gave me some weird errors so I'm just gonna go with T-SQL
                         try {
@@ -84,7 +83,7 @@ function Set-DbsDbFileSize {
                             Write-PSFMessage -Level Verbose -Message $sql
                             $db.Query($sql)
                         } catch {
-                            Stop-PSFFunction -EnableException:$EnableException -Message "Could not modify $db on $($db.Parent.Name)" -ErrorRecord $_ -Continue
+                            Stop-PSFFunction -Message "Could not modify $db on $($db.Parent.Name)" -ErrorRecord $_ -Continue
                         }
                         [pscustomobject]@{
                             SqlInstance = $db.SqlInstance

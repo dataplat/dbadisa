@@ -7,7 +7,7 @@ function Move-DbsAuditFile {
         Moves .sqlaudit files to a central repository using UNC shares
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
         This is required to get specific information about the paths to modify. The base computer name is also used to
         perform the actual modifications.
@@ -25,10 +25,10 @@ function Move-DbsAuditFile {
         Pat dat
 
     .PARAMETER WhatIf
-        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
     .PARAMETER Confirm
-        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -57,6 +57,7 @@ function Move-DbsAuditFile {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         Function Move-AuditFile {
             [cmdletbinding()]
             param (
@@ -96,7 +97,7 @@ function Move-DbsAuditFile {
             $filecount = 0
 
             try {
-                $server = Connect-SqlInstance -SqlInstance $instance -SqlCredential $sqlcredential
+                $server = Connect-DbaInstance -SqlInstance $instance
             } catch {
                 Stop-PSFFunction -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
             }
@@ -120,16 +121,16 @@ function Move-DbsAuditFile {
                 if ($results) {
                     if ($server -eq $env:COMPUTERNAME) {
                         Get-ChildItem -Path $results.Filename | Sort-Object LastWriteTime -Descending |
-                        Select-Object -Skip 1 | Move-AuditFile -ServerName $servername
+                            Select-Object -Skip 1 | Move-AuditFile -ServerName $servername
                     } else {
                         Get-ChildItem -Path $results.RemoteFilename | Sort-Object LastWriteTime -Descending |
-                        Select-Object -Skip 1 | Move-AuditFile -ServerName $servername
+                            Select-Object -Skip 1 | Move-AuditFile -ServerName $servername
                     }
 
                     Write-Progress -Activity "Moving sqlaudit files from $instance" -Completed
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure when processing $instance" -ErrorRecord $_ -Continue -Target $instance -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure when processing $instance" -ErrorRecord $_ -Continue -Target $instance
             }
         }
         Write-Progress -Activity "Processing instances" -Completed

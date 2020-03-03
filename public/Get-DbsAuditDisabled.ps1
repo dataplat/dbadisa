@@ -1,23 +1,19 @@
 function Get-DbsAuditDisabled {
     <#
     .SYNOPSIS
-        Gets a list of non-compliant audit states.
+        Gets a list of non-compliant audit states
 
     .DESCRIPTION
-        Gets a list of non-compliant audit states.
+        Gets a list of non-compliant audit states
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER Audit
-       The name of the DISA Audit.
+       The name of the DISA Audit
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -25,7 +21,7 @@ function Get-DbsAuditDisabled {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79133
+        Tags: V-79133, non-compliant
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -54,10 +50,13 @@ function Get-DbsAuditDisabled {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential
-        foreach ($server in $servers) {
+        foreach ($instance in $SqlInstance) {
             try {
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
                                     s.name AS 'SpecName',
                                     d.audit_action_name AS 'ActionName',
@@ -67,7 +66,7 @@ function Get-DbsAuditDisabled {
                                     JOIN sys.server_audit_specification_details d ON s.server_specification_id = d.server_specification_id
                                     WHERE a.is_state_enabled = 0")
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

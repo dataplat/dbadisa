@@ -7,14 +7,10 @@ function Get-DbsEndpointEncryption {
         Gets a list of non-compliant endpoint encryption algorithms
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -52,9 +48,9 @@ function Get-DbsEndpointEncryption {
         }
         foreach ($endpoint in $endpoints) {
             $endpoint |
-            Add-Member -MemberType NoteProperty -Name DatabaseMirroringAlgorithm -Value $endpoint.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm -PassThru |
-            Add-Member -MemberType NoteProperty -Name ServiceBrokerAlgorithm -Value $endpoint.Payload.ServiceBroker.EndpointEncryptionAlgorithm -PassThru |
-            Select-DefaultView -Property SqlInstance, Id, Name, DatabaseMirroringAlgorithm, ServiceBrokerAlgorithm, Port, EndpointState, EndpointType, Owner, IsAdminEndpoint, Fqdn, IsSystemObject
+                Add-Member -MemberType NoteProperty -Name DatabaseMirroringAlgorithm -Value $endpoint.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm -PassThru |
+                Add-Member -MemberType NoteProperty -Name ServiceBrokerAlgorithm -Value $endpoint.Payload.ServiceBroker.EndpointEncryptionAlgorithm -PassThru |
+                Select-DefaultView -Property SqlInstance, Id, Name, DatabaseMirroringAlgorithm, ServiceBrokerAlgorithm, Port, EndpointState, EndpointType, Owner, IsAdminEndpoint, Fqdn, IsSystemObject
         }
     }
 }

@@ -7,14 +7,10 @@ function Get-DbsDbObjectOwner {
         Returns SQL Server accounts that own database objects. These users are presumed to be authorized.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER InputObject
         Allows databases to be piped in from Get-DbaDatabase
@@ -51,6 +47,7 @@ function Get-DbsDbObjectOwner {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $sql = ";with objects_cte as
                 (SELECT
                 o.Name, o.type_desc as Type,
@@ -72,7 +69,7 @@ function Get-DbsDbObjectOwner {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException) | Where-Object VersionMajor -gt 11 | Get-DbaDatabase -EnableException:$EnableException
+            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance | Where-Object VersionMajor -gt 11 | Get-DbaDatabase
         }
 
         foreach ($db in $InputObject) {

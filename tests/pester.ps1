@@ -16,17 +16,14 @@ Write-Host "Loading constants"
 . "$PSScriptRoot\constants.ps1"
 
 Write-Host "Importing dbadisa"
-
-#Remove-Module dbadisa -ErrorAction Ignore
 Import-Module "$PSScriptRoot\..\dbadisa.psd1"
-# Import-Module "$PSScriptRoot\..\dbadisa.psm1" -Force
 
 $totalFailed = 0
 $totalRun = 0
 
 $testresults = @()
 Write-Host "Running individual tests"
-foreach ($file in (Get-ChildItem "$PSScriptRoot" -File -Filter "*.Tests.ps1")) {
+foreach ($file in (Get-ChildItem "$PSScriptRoot" -File -Filter "*.Tests.ps1" -Recurse)) {
     Write-Host "Executing $($file.Name)"
     $results = Invoke-Pester -Script $file.FullName -Show None -PassThru
     foreach ($result in $results) {

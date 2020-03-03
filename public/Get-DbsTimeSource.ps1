@@ -33,18 +33,21 @@ function Get-DbsTimeSource {
     param (
         [parameter(ValueFromPipeline)]
         [Alias("cn", "host", "Server")]
-        [DbaInstanceParameter[]]$ComputerName = $env:COMPUTERNAME,
+        [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             try {
-                $partofodomain = Invoke-PSFCommand -ComputerName $computer -Credential $Credential -ScriptBlock {
+                $partofodomain = Invoke-PSFCommand -ComputerName $computer -ScriptBlock {
                     (Get-CimInstance -ClassName Win32_ComputerSystem).PartOfDomain
                 } -ErrorAction Stop
 
-                $cmos = Invoke-PSFCommand -ComputerName $computer -Credential $Credential -ScriptBlock {
+                $cmos = Invoke-PSFCommand -ComputerName $computer -ScriptBlock {
                     (w32tm /query /source) -match 'CMOS'
                 } -ErrorAction Stop
 
@@ -56,7 +59,7 @@ function Get-DbsTimeSource {
                     }
                 }
             } catch {
-                Stop-PSFFunction -EnableException:$EnableException -Message "Failure on $computer" -ErrorRecord $_
+                Stop-PSFFunction -Message "Failure on $computer" -ErrorRecord $_
             }
         }
     }

@@ -30,8 +30,7 @@ function Get-DbsSetupAccount {
         PS C:\> Get-DbsSetupAccount -ComputerName sql2016, sql2017, sql2012
 
         Returns a list of accounts that have isntalled or modified SQL Server on sql2016, sql2017 and sql2012
-#>
-
+    #>
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
@@ -39,11 +38,14 @@ function Get-DbsSetupAccount {
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            $regroots = Get-DbaRegistryRoot -Computer $computer -Credential $Credential | Select-Object -ExpandProperty RegistryRoot
+            $regroots = Get-DbaRegistryRoot -Computer $computer | Select-Object -ExpandProperty RegistryRoot
             foreach ($regroot in $regroots) {
-                Invoke-PSFCommand -ErrorAction SilentlyContinue -ComputerName $computer -Credential $Credential -ArgumentList $regroot, $script:allnumbers -ScriptBlock {
+                Invoke-PSFCommand -ErrorAction SilentlyContinue -ComputerName $computer -ArgumentList $regroot, $script:allnumbers -ScriptBlock {
                     $results = Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\*' -ErrorAction SilentlyContinue | Where-Object PSChildName -in $args[1]
                     $dirs = $results | Get-ItemProperty -ErrorAction SilentlyContinue | Select-Object -ExpandProperty VerSpecificRootDir
                     foreach ($dir in $dirs) {

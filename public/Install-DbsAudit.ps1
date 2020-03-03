@@ -4,17 +4,13 @@ function Install-DbsAudit {
         Installs the supplemental SQL Server Audit provided by DISA
 
     .DESCRIPTION
-
+        Installs the supplemental SQL Server Audit provided by DISA
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER Name
         The name of the audit and audit specification. Defaults to DISA's default of DISA_STIG.
@@ -38,10 +34,10 @@ function Install-DbsAudit {
         Instructs SQL Server of what to do on failure. Defaults to SHUTDOWN. Options include 'FAIL_OPERATION', 'SHUTDOWN', 'CONTINUE'.
 
     .PARAMETER WhatIf
-        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
     .PARAMETER Confirm
-        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state.
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -54,7 +50,6 @@ function Install-DbsAudit {
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
-
 
     .EXAMPLE
         PS C:\> Install-DbsAudit -SqlInstance sql2017, sql2016, sql2012
@@ -87,11 +82,13 @@ function Install-DbsAudit {
         [string]$OnFailure = "SHUTDOWN",
         [switch]$EnableException
     )
-
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-SqlInstance -SqlInstance $instance -SqlCredential $sqlcredential -MinimumVersion 11
+                $server = Connect-DbaInstance -SqlInstance $instance -MinimumVersion 11
             } catch {
                 Stop-PSFFunction -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
             }

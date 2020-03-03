@@ -7,14 +7,10 @@ function Get-DbsMixedMode {
         Returns a list of any server that has mixed mode enabled
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -33,7 +29,6 @@ function Get-DbsMixedMode {
 
         Returns a list of any server that has mixed mode enabled
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
@@ -41,14 +36,21 @@ function Get-DbsMixedMode {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -SqlCredential $SqlCredential -DisableException:$($EnableException -eq $false)
-        foreach ($server in $servers) {
-            if ($server.Settings.LoginMode -ne 'Integrated') {
-                [pscustomobject]@{
-                    SqlInstance = $server.Name
-                    LoginMode   = $server.Settings.LoginMode
+        foreach ($instance in $SqlInstance) {
+            try {
+                $server = Connect-DbaInstance -SqlInstance $instance
+                if ($server.Settings.LoginMode -ne 'Integrated') {
+                    [pscustomobject]@{
+                        SqlInstance = $server.Name
+                        LoginMode   = $server.Settings.LoginMode
+                    }
                 }
+            } catch {
+                Stop-PSFFunction -Message "Failure on $computer" -ErrorRecord $_
             }
         }
     }

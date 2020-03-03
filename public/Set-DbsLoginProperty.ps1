@@ -1,13 +1,13 @@
 function Set-DbsLoginProperty {
     <#
     .SYNOPSIS
-        Sets login properties.
+        Sets login properties
 
     .DESCRIPTION
-        Sets non-compliant login properties.
+        Sets non-compliant login properties
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Set-Credential).
@@ -15,6 +15,12 @@ function Set-DbsLoginProperty {
         Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
 
         For MFA support, please use Connect-DbaInstance.
+
+    .PARAMETER WhatIf
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
+
+    .PARAMETER Confirm
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -32,10 +38,8 @@ function Set-DbsLoginProperty {
         PS C:\> Set-DbsLoginProperty -SqlInstance sql2017, sql2016, sql2012
 
         Only returns non-compliant login properties from sql2017, sql2016 and sql2012
-
     #>
-
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
@@ -45,11 +49,13 @@ function Set-DbsLoginProperty {
     process {
         $noncompliant = Get-DbsLoginProperty @PSBoundParameters
         foreach ($login in $noncompliant) {
-            $null = $login.PasswordExpirationEnabled = $true
-            $null = $login.PasswordPolicyEnforced = $true
-            $null = $login.Alter()
-            $null = $login.Refresh()
-            $login | Select-DefaultView -Property SqlInstance, Name, PasswordExpirationEnabled, PasswordPolicyEnforced
+            if ($PSCmdlet.ShouldProcess($login.Parent.name, "Changing properties for $($login.Name)")) {
+                $null = $login.PasswordExpirationEnabled = $true
+                $null = $login.PasswordPolicyEnforced = $true
+                $null = $login.Alter()
+                $null = $login.Refresh()
+                $login | Select-DefaultView -Property SqlInstance, Name, PasswordExpirationEnabled, PasswordPolicyEnforced
+            }
         }
     }
 }

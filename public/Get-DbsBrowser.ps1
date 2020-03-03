@@ -27,7 +27,7 @@ function Get-DbsBrowser {
         PS C:\> Get-DbsBrowser -ComputerName Sql2016
 
        Gets non-compliant SQL Browser services
-#>
+    #>
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

@@ -7,14 +7,10 @@ function Get-DbsDbSchemaOwner {
         Returns a list of all schema owners
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
-
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
-
-        For MFA support, please use Connect-DbaInstance.
+        Login to the target instance using alternative credentials
 
     .PARAMETER InputObject
         Allows databases to be piped in from Get-DbaDatabase
@@ -51,6 +47,7 @@ function Get-DbsDbSchemaOwner {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $sql = "SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database], S.name AS SchemaName, P.name AS OwningPrincipal
                         FROM sys.schemas S
                         JOIN sys.database_principals P ON S.principal_id = P.principal_id
@@ -58,7 +55,7 @@ function Get-DbsDbSchemaOwner {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -SqlCredential $SqlCredential -EnableException:$EnableException -ExcludeSystem
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem
         }
 
         foreach ($db in $InputObject) {

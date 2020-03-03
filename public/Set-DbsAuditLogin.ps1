@@ -7,14 +7,16 @@ function Set-DbsAuditLogin {
         Sets "Both failed and successful logins"
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
-        Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
+        Login to the target instance using alternative credentials
 
-        Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
+    .PARAMETER WhatIf
+        If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
-        For MFA support, please use Connect-DbaInstance.
+    .PARAMETER Confirm
+        If this switch is enabled, you will be prompted for confirmation before executing any operations that change state
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -33,28 +35,33 @@ function Set-DbsAuditLogin {
 
         Sets "Both failed and successful logins" on sql2017, sql2016 and sql2012
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -SqlCredential $SqlCredential -DisableException:$(-not $EnableException)
-                $null = $server.Query("EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'AuditLevel', REG_DWORD, 3")
-                $regread = $server.Query("EXEC xp_instance_regread N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'AuditLevel'")
+                $server = Connect-DbaInstance -SqlInstance $instance
+                if ($PSCmdlet.ShouldProcess($instance, "Setting AuditLevel for $instance using xp_instance_regwrite")) {
+                    $null = $server.Query("EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'AuditLevel', REG_DWORD, 3")
+                    $regread = $server.Query("EXEC xp_instance_regread N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'AuditLevel'")
 
-                if ($regread.Data -eq 3) {
-                    [PSCustomObject]@{
-                        SqlInstance   = $server.Name
-                        LoginTracking = $true
+                    if ($regread.Data -eq 3) {
+                        [PSCustomObject]@{
+                            SqlInstance   = $server.Name
+                            LoginTracking = $true
+                        }
                     }
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue -EnableException:$EnableException
+                Stop-PSFFunction -Message "Failure for $instance" -ErrorRecord $_ -Continue
             }
         }
     }
