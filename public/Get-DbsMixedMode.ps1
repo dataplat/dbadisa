@@ -42,8 +42,8 @@ function Get-DbsMixedMode {
         [switch]$EnableException
     )
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance -DisableException:$($EnableException -eq $false)
-        foreach ($server in $servers) {
+        $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$($EnableException -eq $false)
+        foreach ($instance in $SqlInstance) {
             if ($server.Settings.LoginMode -ne 'Integrated') {
                 [pscustomobject]@{
                     SqlInstance = $server.Name

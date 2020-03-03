@@ -40,10 +40,13 @@ function Get-DbsAuditMaintainer {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $server.Query("SELECT @@SERVERNAME as SqlInstance,
                     CASE
                     WHEN SP.class_desc IS NOT NULL THEN

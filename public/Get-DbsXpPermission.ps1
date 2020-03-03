@@ -46,8 +46,8 @@ function Get-DbsXpPermission {
         [switch]$EnableException
     )
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance
-        foreach ($server in $servers) {
+        $server = Connect-DbaInstance -SqlInstance $instance
+        foreach ($instance in $SqlInstance) {
             try {
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, OBJECT_NAME(major_id) AS [StoredProcedure]
                             ,dpr.NAME AS [Principal]

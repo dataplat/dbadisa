@@ -142,7 +142,7 @@
         'Get-DbsPrivilegedLogin',
         'Get-DbsExternalProcessAccess',
         'Move-DbsAuditFile',
-        'Get-DbsDbAuditSpecification',
+        'Get-DbsAuditSpecification',
         'Get-DbsAuditMaxRollover',
         'Get-DbsLinkedServer',
         'Get-DbsLogin',

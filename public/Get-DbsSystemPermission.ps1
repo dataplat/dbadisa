@@ -51,8 +51,8 @@ function Get-DbsSystemPermission {
         [switch]$EnableException
     )
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance
-        foreach ($server in $servers) {
+        $server = Connect-DbaInstance -SqlInstance $instance
+        foreach ($instance in $SqlInstance) {
             try {
                 $cluster = $server.Query("SELECT SERVERPROPERTY('IsClustered') as IsClustered, SERVERPROPERTY('IsHadrEnabled') as IsHadrEnabled")
 

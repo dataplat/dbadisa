@@ -44,7 +44,6 @@ function Disable-DbsMixedMode {
 
         Shows what would happen if you ran the command
     #>
-
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

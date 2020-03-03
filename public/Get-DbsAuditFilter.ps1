@@ -1,10 +1,10 @@
 function Get-DbsAuditFilter {
     <#
     .SYNOPSIS
-        Gets a list of non-compliant audit filters.
+        Gets a list of non-compliant audit filters
 
     .DESCRIPTION
-        Gets a list of non-compliant audit filters.
+        Gets a list of non-compliant audit filters
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
@@ -17,7 +17,7 @@ function Get-DbsAuditFilter {
         For MFA support, please use Connect-DbaInstance.
 
     .PARAMETER Audit
-       The name of the DISA Audit.
+       The name of the DISA Audit
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -54,9 +54,12 @@ function Get-DbsAuditFilter {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance
-        foreach ($server in $servers) {
+        $server = Connect-DbaInstance -SqlInstance $instance
+        foreach ($instance in $SqlInstance) {
             try {
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
                             predicate AS AuditFilter

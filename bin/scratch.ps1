@@ -490,7 +490,7 @@ function Get-Smalldatetime {
 
 function Add-Trace {
 $servers = Get-DbaRegisteredServerName -sqlinstance localhost -Group Standard, Express
-	foreach ($server in $servers) {
+	foreach ($instance in $SqlInstance) {
 		$version = (Connect-DbaSqlServer -SqlInstance $server).VersionMajor
 		if ($version -eq 12) {
 			$sql = Get-Content S:\DISA\sql-scripts\disa\trace-2014.sql
@@ -516,7 +516,7 @@ $servers = Get-DbaRegisteredServerName -sqlinstance localhost -Group Standard, E
 }
 
 Function New-StigDirectory {
-	foreach ($server in $servers) {
+	foreach ($instance in $SqlInstance) {
 		$filepath = (Get-DbaDefaultPath -SqlInstance $server).Data
 		$filepath = "$filepath\STIG"
 		$exists = Test-DbaSqlPath -SqlInstance $server -Path $filepath
@@ -536,7 +536,7 @@ Function Get-StigFile ($SqlInstance) {
 }
 
 function Add-Audit {
-	foreach ($server in $servers) {
+	foreach ($instance in $SqlInstance) {
 		$currentserver = Connect-DbaSqlServer -SqlInstance $server
 		if ($currentserver.EngineEdition -match "Enterprise") {
 			$sql = Get-Content S:\DISA\sql-scripts\disa\Audit.sql
@@ -602,13 +602,13 @@ Function Set-ADRecoveryModel {
 }
 
 Function Set-MaxConnections {
-	foreach ($server in $servers) {
+	foreach ($instance in $SqlInstance) {
 		Set-DbaSpConfigure -SqlInstance $server -ConfigName UserConnections -Value 10000
 	}
 }
 
 Function Get-MaxConnections {
-	foreach ($server in $servers) {
+	foreach ($instance in $SqlInstance) {
 		Get-DbaSpConfigure -SqlInstance $server -ConfigName UserConnections
 	}
 }

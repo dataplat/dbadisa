@@ -55,8 +55,8 @@ function Set-DbsAuditStartupState {
         [switch]$EnableException
     )
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance
-        foreach ($server in $servers) {
+        $server = Connect-DbaInstance -SqlInstance $instance
+        foreach ($instance in $SqlInstance) {
             foreach ($currentaudit in $audit) {
                 try {
                     $sql = "ALTER SERVER AUDIT [$Audit] WITH (STATE = ON)"

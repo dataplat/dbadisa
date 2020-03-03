@@ -38,7 +38,6 @@ function Get-DbsComputerLogin {
 
         Exports a list of all server logins that are computers to D:\disa\computeruser.csv
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
@@ -46,6 +45,9 @@ function Get-DbsComputerLogin {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         $logins = Get-DbaLogin @PSBoundParameters | Where-Object Name -like '*$' | Sort-Object -Unique SqlInstance, Database, Login
 

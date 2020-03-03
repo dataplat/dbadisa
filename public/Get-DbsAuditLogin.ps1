@@ -40,11 +40,13 @@ function Get-DbsAuditLogin {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
-
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $auditresult = $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
                         s.name AS 'SpecName',
                         d.audit_action_name AS 'ActionName',

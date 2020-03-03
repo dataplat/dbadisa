@@ -33,7 +33,6 @@ function Get-DbsC2Disabled {
 
         Only returns non-compliant Common Criteria Compliance settings from sql2017, sql2016 and sql2012
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

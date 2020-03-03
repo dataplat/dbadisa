@@ -7,7 +7,7 @@ function Disable-DbsSaAccount {
         Disable and/or rename sa account
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -35,7 +35,6 @@ function Disable-DbsSaAccount {
 
         Disables and renames sa account
 #>
-
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

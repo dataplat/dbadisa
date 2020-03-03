@@ -1,10 +1,10 @@
 function Get-DbsAuditStartupState {
     <#
     .SYNOPSIS
-        Gets a list of non-compliant audit startup states.
+        Gets a list of non-compliant audit startup states
 
     .DESCRIPTION
-        Gets a list of non-compliant audit startup states.
+        Gets a list of non-compliant audit startup states
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
@@ -54,10 +54,13 @@ function Get-DbsAuditStartupState {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance
-        foreach ($server in $servers) {
+        foreach ($instance in $SqlInstance) {
             try {
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, name AS 'AuditName',
                 status_desc AS 'AuditStatus',
                 audit_file_path AS 'Path'

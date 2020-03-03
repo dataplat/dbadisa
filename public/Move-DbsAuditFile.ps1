@@ -96,7 +96,7 @@ function Move-DbsAuditFile {
             $filecount = 0
 
             try {
-                $server = Connect-SqlInstance -SqlInstance $instance
+                $server = Connect-DbaInstance -SqlInstance $instance
             } catch {
                 Stop-PSFFunction -Message "Error occurred while establishing connection to $instance" -Category ConnectionError -ErrorRecord $_ -Target $instance -Continue
             }

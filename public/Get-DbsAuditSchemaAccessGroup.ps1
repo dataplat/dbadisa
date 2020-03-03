@@ -41,20 +41,24 @@ function Get-DbsAuditSchemaAccessGroup {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $server = Connect-DbaInstance -SqlInstance $SqlInstance
-
-        try {
-            $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
-            s.name AS 'SpecName',
-            d.audit_action_name AS 'ActionName',
-            d.audited_result AS 'Result'
-            FROM sys.server_audit_specifications s
-            JOIN sys.server_audits a ON s.audit_guid = a.audit_guid
-            JOIN sys.server_audit_specification_details d ON s.server_specification_id = d.server_specification_id
-            WHERE a.is_state_enabled = 1 AND d.audit_action_name = 'SCHEMA_OBJECT_ACCESS_GROUP'")
-        } catch {
-            Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
+        foreach ($instance in $SqlInstance) {
+            try {
+                $server = Connect-DbaInstance -SqlInstance $instance
+                $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
+                    s.name AS 'SpecName',
+                    d.audit_action_name AS 'ActionName',
+                    d.audited_result AS 'Result'
+                    FROM sys.server_audit_specifications s
+                    JOIN sys.server_audits a ON s.audit_guid = a.audit_guid
+                    JOIN sys.server_audit_specification_details d ON s.server_specification_id = d.server_specification_id
+                    WHERE a.is_state_enabled = 1 AND d.audit_action_name = 'SCHEMA_OBJECT_ACCESS_GROUP'")
+            } catch {
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
+            }
         }
     }
 }

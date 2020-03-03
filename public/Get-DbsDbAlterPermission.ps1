@@ -51,6 +51,7 @@ function Get-DbsDbAlterPermission {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
         $sql = "SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database], O.Name AS ObjectName, P.name AS PrincipalName, P.type_desc AS PrincipalType,
                 O.type_desc AS TypeDescription,
                 CASE class

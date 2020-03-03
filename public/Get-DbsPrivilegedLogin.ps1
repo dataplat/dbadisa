@@ -43,7 +43,7 @@ function Get-DbsPrivilegedLogin {
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance
 
                 foreach ($db in $server.Databases) {
                     $db.Query("SELECT DISTINCT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],

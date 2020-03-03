@@ -43,7 +43,7 @@ function Test-DbsBuild {
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $build = Get-DbaBuildReference -SqlInstance $server
                 $outdated = $build | Where-Object SupportedUntil -lt (Get-Date)
                 $latest = Test-DbaBuild -SqlInstance $server -Latest

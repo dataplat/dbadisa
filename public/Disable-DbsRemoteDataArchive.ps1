@@ -1,13 +1,13 @@
 function Disable-DbsRemoteDataArchive {
     <#
     .SYNOPSIS
-        Disables non-compliant Remote Data Archive settings.
+        Disables non-compliant Remote Data Archive settings
 
     .DESCRIPTION
-        Disables non-compliant Remote Data Archive settings.
+        Disables non-compliant Remote Data Archive settings
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -44,7 +44,6 @@ function Disable-DbsRemoteDataArchive {
 
         Shows what would happen if the command would run
     #>
-
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

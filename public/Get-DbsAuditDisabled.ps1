@@ -1,13 +1,13 @@
 function Get-DbsAuditDisabled {
     <#
     .SYNOPSIS
-        Gets a list of non-compliant audit states.
+        Gets a list of non-compliant audit states
 
     .DESCRIPTION
-        Gets a list of non-compliant audit states.
+        Gets a list of non-compliant audit states
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -17,7 +17,7 @@ function Get-DbsAuditDisabled {
         For MFA support, please use Connect-DbaInstance.
 
     .PARAMETER Audit
-       The name of the DISA Audit.
+       The name of the DISA Audit
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -25,7 +25,7 @@ function Get-DbsAuditDisabled {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79133
+        Tags: V-79133, non-compliant
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -54,9 +54,12 @@ function Get-DbsAuditDisabled {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $servers = Connect-DbaInstance -SqlInstance $SqlInstance
-        foreach ($server in $servers) {
+        $server = Connect-DbaInstance -SqlInstance $instance
+        foreach ($instance in $SqlInstance) {
             try {
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
                                     s.name AS 'SpecName',

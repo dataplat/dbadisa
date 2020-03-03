@@ -49,6 +49,9 @@ function Get-DbsAuditMaxValue {
         [string[]]$Audit = (Get-PSFConfigValue -FullName dbadisa.app.auditname),
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             foreach ($instanceaudit in $audit) {

@@ -1,4 +1,4 @@
-function Get-DbsDbAuditSpecification {
+function Get-DbsAuditSpecification {
     <#
     .SYNOPSIS
         Returns a list of missing audit specifications
@@ -29,7 +29,7 @@ function Get-DbsDbAuditSpecification {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsDbAuditSpecification -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsAuditSpecification -SqlInstance sql2017, sql2016, sql2012
 
         Returns a list of missing audit specifications for sql2017, sql2016 and sql2012
     #>
@@ -56,7 +56,7 @@ function Get-DbsDbAuditSpecification {
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $results = $server.Query($sql)
                 foreach ($item in $list) {
                     if ($item -notin $results.ActionName) {

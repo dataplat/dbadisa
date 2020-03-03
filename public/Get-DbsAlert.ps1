@@ -36,10 +36,13 @@ function Get-DbsAlert {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $alerts = Get-DbaAgentAlert -SqlInstance $server
                 $mailserver = (Get-DbaDbMailAccount -SqlInstance $server).MailServers
 

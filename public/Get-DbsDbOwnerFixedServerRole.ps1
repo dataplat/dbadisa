@@ -50,12 +50,12 @@ function Get-DbsDbOwnerFixedServerRole {
     )
     process {
         try {
-            $servers = Connect-DbaInstance -SqlInstance $SqlInstance -MinimumVersion 11
+            $server = Connect-DbaInstance -SqlInstance $instance -MinimumVersion 11
         } catch {
             Stop-PSFFunction -Message "Failure on $($server.Name)" -ErrorRecord $_ -Continue
         }
 
-        foreach ($server in $servers) {
+        foreach ($instance in $SqlInstance) {
             try {
                 $roles = Get-DbaServerRole -SqlInstance $server | Where-Object IsFixedRole
                 $dbs = Get-DbaDatabase -SqlInstance $server -ExcludeSystem

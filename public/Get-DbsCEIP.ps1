@@ -1,16 +1,16 @@
 function Get-DbsCEIP {
     <#
     .SYNOPSIS
-        Returns a list of accounts that have installed or modified SQL Server.
+        Returns a list of accounts that have installed or modified SQL Server
 
     .DESCRIPTION
-        Returns a list of accounts that have installed or modified SQL Server.
+        Returns a list of accounts that have installed or modified SQL Server
 
     .PARAMETER ComputerName
-        The SQL Server (or server in general) that you're connecting to.
+        The SQL Server (or server in general) that you're connecting to
 
     .PARAMETER Credential
-        Credential object used to connect to the computer as a different user.
+        Credential object used to connect to the computer as a different user
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -35,6 +35,9 @@ function Get-DbsCEIP {
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             # thanks to https://blog.dbi-services.com/sql-server-tips-deactivate-the-customer-experience-improvement-program-ceip/

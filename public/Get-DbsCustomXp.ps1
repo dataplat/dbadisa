@@ -40,11 +40,14 @@ function Get-DbsCustomXp {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
                 # $server.Databases.ExtendedStoredProcedures.DllLocation
-                $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$(-not $EnableException)
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $server.Query("DECLARE @xplist AS TABLE
                             (
                             xp_name sysname,
