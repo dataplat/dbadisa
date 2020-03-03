@@ -1,11 +1,11 @@
 $CommandName = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
 Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
     BeforeAll {
-        $null = Set-DbaSpConfigure -SqlInstance $env:COMPUTERNAME -Name HadoopConnectivity -Value 1
+        $null = Set-DbaSpConfigure -SqlInstance $env:COMPUTERNAME -Name HadoopConnectivity -Value 1 -WarningAction SilentlyContinue
     }
     Context "Disables polybase on localhost" {
         It "should report that polybase is disabled" {
-            $results = Disable-DbsHadoopConnectivity -SqlInstance $env:COMPUTERNAME
+            $results = Disable-DbsHadoopConnectivity -SqlInstance $env:COMPUTERNAME -WarningAction SilentlyContinue
             $results.NewValue | Should -Be 0
         }
 
