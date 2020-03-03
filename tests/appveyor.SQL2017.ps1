@@ -30,14 +30,4 @@ do {
 }
 while ($lastexitcode -ne 0 -and $t++ -lt 10)
 
-# Agent sometimes takes a moment to start
-do {
-    Write-Host -Object "$indent Waiting for SQL Agent to start" -ForegroundColor DarkGreen
-    Start-Sleep 3
-}
-while ((Get-Service "SQLAgent`$$instance").Status -ne 'Running' -and $z++ -lt 10)
-
-$server = Connect-DbaInstance -SqlInstance $sqlinstance
-$server.Query("IF NOT EXISTS (select * from sys.symmetric_keys where name like '%DatabaseMasterKey%') CREATE MASTER KEY ENCRYPTION BY PASSWORD = '<StrongPassword>'")
-$server.Query("IF EXISTS ( SELECT * FROM sys.tcp_endpoints WHERE name = 'End_Mirroring') DROP ENDPOINT endpoint_mirroring")
-$server.Query("CREATE CERTIFICATE dbatoolsci_AGCert WITH SUBJECT = 'AG Certificate'")
+Start-Service "SQLAgent`$$instance" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
