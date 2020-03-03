@@ -16,7 +16,7 @@ Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
             $server.Settings.LoginMode | Should -Be Integrated
         }
 
-        $results = Disable-DbsMixedMode -ComputerName $env:COMPUTERNAME -WhatIf
+        $results = Disable-DbsMixedMode -SqlInstance $env:COMPUTERNAME -WhatIf
         It "should not return any objects when using whatif" {
             $results | Should -Be $null
         }

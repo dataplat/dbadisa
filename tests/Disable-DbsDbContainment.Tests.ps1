@@ -14,7 +14,7 @@ Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
             $config.RunningValue | Should -Be 0
         }
 
-        $results = Disable-DbsDbContainment -ComputerName $env:COMPUTERNAME -WhatIf
+        $results = Disable-DbsDbContainment -SqlInstance $env:COMPUTERNAME -WhatIf
         It "should not return any objects when using whatif" {
             $results | Should -Be $null
         }
