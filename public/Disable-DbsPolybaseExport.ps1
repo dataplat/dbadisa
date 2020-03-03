@@ -1,4 +1,4 @@
-function Disable-DbsDbsPolybaseExport {
+function Disable-DbsPolybaseExport {
     <#
     .SYNOPSIS
         Disables non-compliant Allow Polybase Export settings.
