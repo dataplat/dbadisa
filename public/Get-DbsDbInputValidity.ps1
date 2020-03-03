@@ -51,6 +51,7 @@ function Get-DbsDbInputValidity {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
         $constraintsql = "select @@SERVERNAME as SqlInstance, DB_NAME() as [Database], SchemaName, TableView,
                             [Type],
                             ConstraintType,

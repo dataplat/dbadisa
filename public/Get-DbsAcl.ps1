@@ -1,7 +1,7 @@
 function Get-DbsAcl {
     <#
     .SYNOPSIS
-        Gets the permissions required by DISA for SQL Server directories.
+        Gets the permissions required by DISA for SQL Server directories
 
     .DESCRIPTION
         Gets the required permissions for SQL Server directories

@@ -1,10 +1,10 @@
 function Get-DbsDbKeyNotEncryptedByServer {
     <#
     .SYNOPSIS
-       Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key
+       Returns a list of non-compliant Database Master Key that are not encrypted by the Service Master Key
 
     .DESCRIPTION
-       Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key
+       Returns a list of non-compliant Database Master Key that are not encrypted by the Service Master Key
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances.
@@ -34,12 +34,12 @@ function Get-DbsDbKeyNotEncryptedByServer {
     .EXAMPLE
         PS C:\> Get-DbsDbKeyNotEncryptedByServer -SqlInstance sql2017, sql2016, sql2012
 
-       Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key for all databases on sql2017, sql2016 and sql2012
+       Returns a list of non-compliant Database Master Key that are not encrypted by the Service Master Key for all databases on sql2017, sql2016 and sql2012
 
     .EXAMPLE
         PS C:\> Get-DbsDbKeyNotEncryptedByServer -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\access.csv -NoTypeInformation
 
-       Returns a list of (non-compliant) Database Master Key that are not encrypted by the Service Master Key for all databases on sql2017, sql2016 and sql2012 to D:\disa\access.csv
+       Returns a list of non-compliant Database Master Key that are not encrypted by the Service Master Key for all databases on sql2017, sql2016 and sql2012 to D:\disa\access.csv
     #>
     [CmdletBinding()]
     param (
@@ -51,6 +51,7 @@ function Get-DbsDbKeyNotEncryptedByServer {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
         $sql = "SELECT @@SERVERNAME as SqlInstance, name as [Database],
                 is_master_key_encrypted_by_server as MasterKeyEncryptedByServer
                 FROM [master].sys.databases

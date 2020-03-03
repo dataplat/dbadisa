@@ -50,15 +50,11 @@ function Get-DbsAuditOnFailure {
         [switch]$EnableException
     )
     begin {
-        $params = @{
-            SqlCredential   = $SqlCredential
-            EnableException = $EnableException
-            Audit           = $Audit
-        }
+        . "$script:ModuleRoot\private\set-defaults.ps1"
     }
     process {
         foreach ($instance in $SqlInstance) {
-            $stigaudit = Get-DbaInstanceAudit -SqlInstance $instance @params | Where-Object OnFailure -ne 'Shutdown'
+            $stigaudit = Get-DbaInstanceAudit -SqlInstance $instance -Audit $Audit | Where-Object OnFailure -ne 'Shutdown'
             if (-not $stigaudit) {
                 Stop-PSFFunction -Message "Audit $Audit not found on $instance" -Continue
             } else {

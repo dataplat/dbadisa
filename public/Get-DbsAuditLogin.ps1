@@ -1,10 +1,10 @@
 function Get-DbsAuditLogin {
     <#
     .SYNOPSIS
-        Returns a list of (non-compliant) servers that are not auditing logins either by Audits or via "Both failed and successful logins"
+        Returns a list of non-compliant servers that are not auditing logins either by Audits or via "Both failed and successful logins"
 
     .DESCRIPTION
-        Returns a list of (non-compliant) servers that are not auditing logins either by Audits or via "Both failed and successful logins"
+        Returns a list of non-compliant servers that are not auditing logins either by Audits or via "Both failed and successful logins"
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.

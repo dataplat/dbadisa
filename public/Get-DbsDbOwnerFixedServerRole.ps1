@@ -46,31 +46,31 @@ function Get-DbsDbOwnerFixedServerRole {
         [parameter(ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
+        [parameter(ValueFromPipeline)]
+        [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        try {
-            $server = Connect-DbaInstance -SqlInstance $instance -MinimumVersion 11
-        } catch {
-            Stop-PSFFunction -Message "Failure on $($server.Name)" -ErrorRecord $_ -Continue
+        if ($SqlInstance) {
+            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance -MinimumVersion 11 | Get-DbaDatabase
         }
 
-        foreach ($instance in $SqlInstance) {
+        foreach ($db in $InputObject) {
             try {
-                $roles = Get-DbaServerRole -SqlInstance $server | Where-Object IsFixedRole
-                $dbs = Get-DbaDatabase -SqlInstance $server -ExcludeSystem
-                foreach ($db in $dbs) {
-
-                    $fixedrolesmatch = $roles | Where-Object Login -contains $db.Owner
-                    foreach ($match in $fixedrolesmatch) {
-                        [PSCustomObject]@{
-                            SqlInstance = $db.SqlInstance
-                            Database    = $db.Name
-                            Owner       = $db.Owner
-                            FixedRole   = $match.Role
-                            db          = $db
-                        } | Select-DefaultView -Property SqlInstance, Database, Owner, FixedRole
-                    }
+                $server = $db.Parent
+                $roles = $server.Roles | Where-Object IsFixedRole
+                $fixedrolesmatch = $roles | Where-Object Login -contains $db.Owner
+                foreach ($match in $fixedrolesmatch) {
+                    [PSCustomObject]@{
+                        SqlInstance = $db.SqlInstance
+                        Database    = $db.Name
+                        Owner       = $db.Owner
+                        FixedRole   = $match.Role
+                        db          = $db
+                    } | Select-DefaultView -Property SqlInstance, Database, Owner, FixedRole
                 }
             } catch {
                 Stop-PSFFunction -Message "Failure on $($server.Name)" -ErrorRecord $_ -Continue

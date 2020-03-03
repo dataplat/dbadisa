@@ -51,6 +51,7 @@ function Get-DbsDbObjectOwner {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
         $sql = ";with objects_cte as
                 (SELECT
                 o.Name, o.type_desc as Type,

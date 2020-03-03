@@ -51,6 +51,7 @@ function Get-DbsDbTemporalTable {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
         $sql = "SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],
         SCHEMA_NAME(T.schema_id) AS [Schema], T.name AS [Table],
         T.temporal_type_desc as TemporalTypeDescription, SCHEMA_NAME(H.schema_id) as HistorySchema,

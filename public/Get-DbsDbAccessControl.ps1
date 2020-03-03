@@ -51,6 +51,7 @@ function Get-DbsDbAccessControl {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
         $sql = "-- Schemas not owned by the schema or dbo:
                 SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database], 'Schema' as Type,
                 [Name], USER_NAME(principal_id) AS Owner, NULL as Description,

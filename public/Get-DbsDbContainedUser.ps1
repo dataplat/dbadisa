@@ -16,6 +16,9 @@ function Get-DbsDbContainedUser {
 
         For MFA support, please use Connect-DbaInstance.
 
+    .PARAMETER InputObject
+        Allows databases to be piped in from Get-DbaDatabase
+
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
         This avoids overwhelming you with "sea of red" exceptions, but is inconvenient because it basically disables advanced scripting.
@@ -40,14 +43,21 @@ function Get-DbsDbContainedUser {
     #>
     [CmdletBinding()]
     param (
-        [parameter(Mandatory, ValueFromPipeline)]
+        [parameter(ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
+        [parameter(ValueFromPipeline)]
+        [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $dbs = Get-DbaDatabase @PSBoundParameters | Where-Object ContainmentType
-        foreach ($db in $dbs) {
+        if ($SqlInstance) {
+            $InputObject = Get-DbaDatabase @PSBoundParameters | Where-Object ContainmentType
+        }
+        foreach ($db in $InputObject) {
             try {
                 $db.Query("SELECT distinct @@SERVERNAME as SqlInstance, DB_NAME() as [Database], Name as ContainedUser FROM sys.database_principals WHERE type_desc = 'SQL_USER' AND authentication_type_desc = 'DATABASE'")
             } catch {

@@ -1,10 +1,10 @@
 function Get-DbsSaAccount {
     <#
     .SYNOPSIS
-        Gets a list of (non-compliant) logins named 'sa' or 'sa' accounts that are still enabled
+        Gets a list of non-compliant logins named 'sa' or 'sa' accounts that are still enabled
 
     .DESCRIPTION
-        Gets a list of (non-compliant) logins named 'sa' or 'sa' accounts that are still enabled
+        Gets a list of non-compliant logins named 'sa' or 'sa' accounts that are still enabled
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances.

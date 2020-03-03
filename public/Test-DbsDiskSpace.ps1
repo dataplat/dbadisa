@@ -1,10 +1,10 @@
 function Test-DbsDiskSpace {
     <#
     .SYNOPSIS
-        Returns a list of (non-compliant) disks that fall below the threshold (25% by default)
+        Returns a list of non-compliant disks that fall below the threshold (25% by default)
 
     .DESCRIPTION
-        Returns a list of (non-compliant) disks that fall below the threshold (25% by default)
+        Returns a list of non-compliant disks that fall below the threshold (25% by default)
 
     .PARAMETER ComputerName
         The target SQL Server
@@ -33,7 +33,7 @@ function Test-DbsDiskSpace {
     .EXAMPLE
         PS C:\> Test-DbsDiskSpace -ComputerName sql01
 
-        Returns a list of (non-compliant) disks that fall below the threshold (25% by default)
+        Returns a list of non-compliant disks that fall below the threshold (25% by default)
     #>
     [CmdletBinding()]
     param (

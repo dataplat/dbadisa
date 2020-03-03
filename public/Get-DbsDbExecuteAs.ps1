@@ -16,6 +16,9 @@ function Get-DbsDbExecuteAs {
 
         For MFA support, please use Connect-DbaInstance.
 
+    .PARAMETER InputObject
+        Allows databases to be piped in from Get-DbaDatabase
+
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
         This avoids overwhelming you with "sea of red" exceptions, but is inconvenient because it basically disables advanced scripting.
@@ -38,17 +41,23 @@ function Get-DbsDbExecuteAs {
 
         Exports a list of stored procedures and functions that utilize impersonation for all databases on sql2017, sql2016 and sql2012 to D:\disa\contained.csv
     #>
-
     [CmdletBinding()]
     param (
-        [parameter(Mandatory, ValueFromPipeline)]
+        [parameter(ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
+        [parameter(ValueFromPipeline)]
+        [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $databases = Connect-DbaInstance -SqlInstance $SqlInstance -MinimumVersion 12 | Get-DbaDatabase
-        foreach ($db in $databases) {
+        if ($SqlInstance) {
+            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance -MinimumVersion 12 | Get-DbaDatabase
+        }
+        foreach ($db in $InputObject) {
             try {
                 $results = $db.Query("SELECT S.name AS schema_name, O.name AS module_name,
                 USER_NAME(
@@ -117,17 +126,17 @@ function Get-DbsDbExecuteAs {
                 'sysmail_help_status_sp'
                 )
                 ORDER BY schema_name, module_name")
+                foreach ($result in $results) {
+                    [pscustomobject]@{
+                        SqlInstance = $db.Parent.Name
+                        Database    = $db.Name
+                        Name        = $results.module_name
+                        SchemaName  = $results.schema_name
+                        UserName    = $results.execute_as
+                    }
+                }
             } catch {
                 Stop-PSFFunction -Message "Failure for $($db.Name) on $($db.Parent.Name)" -ErrorRecord $_ -Continue
-            }
-            foreach ($result in $results) {
-                [pscustomobject]@{
-                    SqlInstance = $db.Parent.Name
-                    Database    = $db.Name
-                    Name        = $results.module_name
-                    SchemaName  = $results.schema_name
-                    UserName    = $results.execute_as
-                }
             }
         }
     }

@@ -140,7 +140,7 @@
         'Get-DbsAcl',
         'Get-DbsAdminRoleMember',
         'Get-DbsPrivilegedLogin',
-        'Get-DbsExternalProcessAccess',
+        'Get-DbsDbExternalProcessAccess',
         'Move-DbsAuditFile',
         'Get-DbsAuditSpecification',
         'Get-DbsAuditMaxRollover',

@@ -58,9 +58,9 @@ function Get-DbsAuditFilter {
         . "$script:ModuleRoot\private\set-defaults.ps1"
     }
     process {
-        $server = Connect-DbaInstance -SqlInstance $instance
         foreach ($instance in $SqlInstance) {
             try {
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS 'AuditName',
                             predicate AS AuditFilter
                             FROM sys.server_audits

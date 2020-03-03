@@ -16,6 +16,9 @@ function Get-DbsDbProhibitedKeyAlgorithm {
 
         For MFA support, please use Connect-DbaInstance.
 
+    .PARAMETER InputObject
+        Allows databases to be piped in from Get-DbaDatabase
+
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
         This avoids overwhelming you with "sea of red" exceptions, but is inconvenient because it basically disables advanced scripting.
@@ -37,14 +40,21 @@ function Get-DbsDbProhibitedKeyAlgorithm {
 
     [CmdletBinding()]
     param (
-        [parameter(Mandatory, ValueFromPipeline)]
+        [parameter(ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
+        [parameter(ValueFromPipeline)]
+        [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $dbs = Connect-DbaInstance -SqlInstance $SqlInstance | Get-DbaDatabase
-        foreach ($db in $dbs) {
+        if ($SqlInstance) {
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance
+        }
+        foreach ($db in $InputObject) {
             try {
                 Write-PSFMessage -Level Verbose -Message "Processing $($db.Name)"
                 $db.Query("SELECT DISTINCT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],

@@ -16,6 +16,9 @@ function Get-DbsDbRecoveryModel {
 
         For MFA support, please use Connect-DbaInstance.
 
+    .PARAMETER InputObject
+        Allows databases to be piped in from Get-DbaDatabase
+
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
         This avoids overwhelming you with "sea of red" exceptions, but is inconvenient because it basically disables advanced scripting.
@@ -41,13 +44,22 @@ function Get-DbsDbRecoveryModel {
 
     [CmdletBinding()]
     param (
-        [parameter(Mandatory, ValueFromPipeline)]
+        [parameter(ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
+        [parameter(ValueFromPipeline)]
+        [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $rec = Get-DbaDbRecoveryModel @PSBoundParameters -ExcludeDatabase master, msdb, tempdb, model | Where-Object RecoveryModel -ne Full
-        Select-DefaultView -InputObject $rec -Property SqlInstance, 'Name as Database', RecoveryModel
+        if ($SqlInstance) {
+            $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeDatabase master, msdb, tempdb, model
+        }
+
+        $results = $InputObject | Where-Object RecoveryModel -ne Full
+        Select-DefaultView -InputObject $results -Property SqlInstance, 'Name as Database', RecoveryModel
     }
 }
