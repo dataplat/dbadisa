@@ -46,9 +46,12 @@ function Enable-DbsFips {
     }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
+            if (-not (Test-ElevationRequirement -ComputerName $computer)) {
+                return
+            }
             if ($PSCmdlet.ShouldProcess($computer, "Enabling FIPS")) {
                 try {
-                    $null = Invoke-Command2 -ComputerName $computer -ScriptBlock { New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy -name Enabled -value 0 -Force }
+                    $null = Invoke-PSFCommand -ComputerName $computer -ScriptBlock { New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy -name Enabled -value 0 -Force }
                     [pscustomobject]@{
                         ComputerName = $computer
                         FipsEnabled  = $true

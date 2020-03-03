@@ -228,7 +228,7 @@ Function Import-Checklist {
 }
 
 
-function Invoke-Command2 {
+function Invoke-PSFCommand {
     [CmdletBinding()]
     param (
         [string]$ComputerName,
@@ -259,7 +259,7 @@ function Invoke-InstallCheck {
         }
 
         try {
-            $commandresults = Invoke-Command2 -ComputerName $ComputerName -ScriptBlock $scriptblock -ErrorAction Stop | Where-Object { $_ -match $name }
+            $commandresults = Invoke-PSFCommand -ComputerName $ComputerName -ScriptBlock $scriptblock -ErrorAction Stop | Where-Object { $_ -match $name }
 
             if ($commandresults) {
                 foreach ($result in $commandresults) {
@@ -318,7 +318,7 @@ function Invoke-FipsCheck {
     process {
         try {
             $scriptblock = { Get-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy' }
-            $results = Invoke-Command2 -ComputerName $ComputerName -ScriptBlock $scriptblock -ErrorAction Stop
+            $results = Invoke-PSFCommand -ComputerName $ComputerName -ScriptBlock $scriptblock -ErrorAction Stop
             [pscustomobject]@{
                 ComputerName = $ComputerName
                 Enabled      = $results.Enabled
@@ -343,7 +343,7 @@ function Invoke-StrongNameVerification {
     process {
         try {
             $scriptblock = { Get-ItemProperty -Path 'HKLM:\Software\Microsoft\StrongName\Verification' }
-            Invoke-Command2 -ComputerName $ComputerName -ScriptBlock $scriptblock -ErrorAction Stop
+            Invoke-PSFCommand -ComputerName $ComputerName -ScriptBlock $scriptblock -ErrorAction Stop
         } catch {
             Write-Warning "$computername has nothing"
         }
@@ -385,7 +385,7 @@ function Enable-FipsCompliance {
     process {
         try {
             $scriptblock = { Set-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy -name Enabled -value 1 }
-            $results = Invoke-Command2 -ComputerName $ComputerName -ScriptBlock $scriptblock -ErrorAction Stop
+            $results = Invoke-PSFCommand -ComputerName $ComputerName -ScriptBlock $scriptblock -ErrorAction Stop
 
             [pscustomobject]@{
                 ComputerName = $ComputerName

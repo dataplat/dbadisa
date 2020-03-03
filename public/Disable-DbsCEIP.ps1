@@ -51,6 +51,9 @@ function Disable-DbsCEIP {
     }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
+            if (-not (Test-ElevationRequirement -ComputerName $computer)) {
+                return
+            }
             if ((Get-DbsCEIP -Computer $computer).Enabled) {
                 if ($PSCmdlet.ShouldProcess($computer, "Disabling telemetry")) {
                     try {

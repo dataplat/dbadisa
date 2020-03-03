@@ -54,6 +54,9 @@ function Disable-DbsProtocol {
     }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
+            if (-not (Test-ElevationRequirement -ComputerName $computer)) {
+                return
+            }
             $protocols = Get-DbaInstanceProtocol -ComputerName $computer
             foreach ($protocol in $protocols) {
                 if ($protocol.Name -eq 'Tcp') {

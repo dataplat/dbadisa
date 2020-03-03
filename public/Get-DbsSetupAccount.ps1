@@ -23,9 +23,6 @@ function Get-DbsSetupAccount {
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
-    .LINK
-        https://dbadisa.readthedocs.io/en/latest/functions/Get-DbsSetupAccount
-
     .EXAMPLE
         PS C:\> Get-DbsSetupAccount -ComputerName sql2016, sql2017, sql2012
 
@@ -43,28 +40,35 @@ function Get-DbsSetupAccount {
     }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
-            $regroots = Get-DbaRegistryRoot -Computer $computer | Select-Object -ExpandProperty RegistryRoot
-            foreach ($regroot in $regroots) {
-                Invoke-PSFCommand -ErrorAction SilentlyContinue -ComputerName $computer -ArgumentList $regroot, $script:allnumbers -ScriptBlock {
-                    $results = Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\*' -ErrorAction SilentlyContinue | Where-Object PSChildName -in $args[1]
-                    $dirs = $results | Get-ItemProperty -ErrorAction SilentlyContinue | Select-Object -ExpandProperty VerSpecificRootDir
-                    foreach ($dir in $dirs) {
-                        $realdir = "$dir\setup bootstrap\Log"
-                        $files = Get-ChildItem $realdir -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $psitem -ne $null }
+            if (-not (Test-ElevationRequirement -ComputerName $computer)) {
+                return
+            }
+            try {
+                $regroots = Get-DbaRegistryRoot -Computer $computer | Select-Object -ExpandProperty RegistryRoot
+                foreach ($regroot in $regroots) {
+                    Invoke-PSFCommand -ErrorAction SilentlyContinue -ComputerName $computer -ArgumentList $regroot, $script:allnumbers -ScriptBlock {
+                        $results = Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\*' -ErrorAction SilentlyContinue | Where-Object PSChildName -in $args[1]
+                        $dirs = $results | Get-ItemProperty -ErrorAction SilentlyContinue | Select-Object -ExpandProperty VerSpecificRootDir
+                        foreach ($dir in $dirs) {
+                            $realdir = "$dir\setup bootstrap\Log"
+                            $files = Get-ChildItem $realdir -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $psitem -ne $null }
 
-                        $stringmatch = Select-String -ErrorAction SilentlyContinue -Pattern "LogonUser = " -Path $files.FullName
-                        foreach ($string in $stringmatch) {
-                            if ($string -match '(?<Path>.+):(?<Number>\d+):Property\(S\): LogonUser = (?<Username>\w+)') {
-                                $null = $matches.Remove(0)
-                                $null = $matches.Remove("Number")
-                                $null = $matches.Add("ComputerName", $env:ComputerName)
-                                $null = $matches.Add("FullString", $string)
-                                # Add extra properties with $matches.Add($Name, $Value) here
-                                [pscustomobject]$matches
+                            $stringmatch = Select-String -ErrorAction SilentlyContinue -Pattern "LogonUser = " -Path $files.FullName
+                            foreach ($string in $stringmatch) {
+                                if ($string -match '(?<Path>.+):(?<Number>\d+):Property\(S\): LogonUser = (?<Username>\w+)') {
+                                    $null = $matches.Remove(0)
+                                    $null = $matches.Remove("Number")
+                                    $null = $matches.Add("ComputerName", $env:ComputerName)
+                                    $null = $matches.Add("FullString", $string)
+                                    # Add extra properties with $matches.Add($Name, $Value) here
+                                    [pscustomobject]$matches
+                                }
                             }
                         }
-                    }
-                } | Select-Object ComputerName, Username, Path, FullString | Select-DefaultView -Property ComputerName, Username, Path
+                    } | Select-Object ComputerName, Username, Path, FullString | Select-DefaultView -Property ComputerName, Username, Path
+                }
+            } catch {
+                Stop-PSFFunction -Message "Failure on $computer" -Continue
             }
         }
     }

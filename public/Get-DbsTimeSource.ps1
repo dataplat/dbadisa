@@ -30,7 +30,7 @@ function Get-DbsTimeSource {
     #>
     [CmdletBinding()]
     param (
-        [parameter(ValueFromPipeline)]
+        [parameter(ValueFromPipeline, Mandatory)]
         [Alias("cn", "host", "Server")]
         [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,

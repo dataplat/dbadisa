@@ -23,9 +23,6 @@ function Get-DbsFeature {
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
-    .LINK
-        https://dbadisa.readthedocs.io/en/latest/functions/Get-DbsFeature
-
     .EXAMPLE
         PS C:\> Get-DbsFeature -ComputerName sql2016, sql2017, sql2012
 
