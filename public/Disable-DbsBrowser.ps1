@@ -62,7 +62,11 @@ function Disable-DbsBrowser {
             }
 
             foreach ($port in $ports) {
-                Write-PSFMessage -Level Verbose -Message "Found instance with port $($port.Value) on $($env:ComputerName)"
+                if ($port.Value) {
+                    Write-PSFMessage -Level Verbose -Message "Found instance with port $($port.Value) on $($env:ComputerName)"
+                } else {
+                    Write-PSFMessage -Level Verbose -Message "Found instance(s) with dynamic ports on $($env:ComputerName)"
+                }
             }
 
             if ($ports) {
