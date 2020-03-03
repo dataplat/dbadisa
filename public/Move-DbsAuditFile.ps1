@@ -121,10 +121,10 @@ function Move-DbsAuditFile {
                 if ($results) {
                     if ($server -eq $env:COMPUTERNAME) {
                         Get-ChildItem -Path $results.Filename | Sort-Object LastWriteTime -Descending |
-                        Select-Object -Skip 1 | Move-AuditFile -ServerName $servername
+                            Select-Object -Skip 1 | Move-AuditFile -ServerName $servername
                     } else {
                         Get-ChildItem -Path $results.RemoteFilename | Sort-Object LastWriteTime -Descending |
-                        Select-Object -Skip 1 | Move-AuditFile -ServerName $servername
+                            Select-Object -Skip 1 | Move-AuditFile -ServerName $servername
                     }
 
                     Write-Progress -Activity "Moving sqlaudit files from $instance" -Completed

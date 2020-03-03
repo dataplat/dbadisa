@@ -76,13 +76,13 @@ function Get-DbsDbAlterPermission {
     process {
         if ($SqlInstance) {
             $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem |
-            Where-Object ContainmentType -eq $null
+                Where-Object ContainmentType -eq $null
         }
 
         foreach ($db in $InputObject) {
             try {
                 $db.Query($sql) | Select-Object -Property SqlInstance, Database, ObjectName, PrincipalName, PrincipalType, TypeDescription, SecurableName, StateDescription, PermissionName, @{ Name = 'db'; Expression = { $db } } |
-                Select-DefaultView -Property SqlInstance, Database, ObjectName, PrincipalName, PrincipalType, TypeDescription, SecurableName, StateDescription, PermissionName
+                    Select-DefaultView -Property SqlInstance, Database, ObjectName, PrincipalName, PrincipalType, TypeDescription, SecurableName, StateDescription, PermissionName
             } catch {
                 Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
             }

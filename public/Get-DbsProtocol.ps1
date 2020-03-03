@@ -43,7 +43,7 @@ function Get-DbsProtocol {
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             Get-DbaInstanceProtocol -ComputerName $computer |
-            Where-Object { $psitem.Name -ne 'tcp' -and $psitem.IsEnabled }
+                Where-Object { $psitem.Name -ne 'tcp' -and $psitem.IsEnabled }
         }
     }
 }

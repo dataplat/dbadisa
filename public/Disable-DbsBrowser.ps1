@@ -33,7 +33,7 @@ function Disable-DbsBrowser {
         PS C:\> Disable-DbsBrowser -ComputerName sql2016, sql2019
 
         Disables and stops the SQL Server Broswer service on sql2016 and sql2019 if no named instances exist
-#>
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
@@ -53,7 +53,7 @@ function Disable-DbsBrowser {
                     $wmi = New-Object Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer
                     $null = $wmi.Initialize()
                     $wmi.ServerInstances.ServerProtocols.IPAddresses.IPAddressProperties | Where-Object { $PSItem.Name -eq 'TcpPort' -and $PSItem.Value -ne 1433 } |
-                    Select-Object -Unique -Property Value
+                        Select-Object -Unique -Property Value
                 }
             } catch {
                 Stop-PSFFunction -Message "Error setting services on $computer" -ErrorRecord $_

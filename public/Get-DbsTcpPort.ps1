@@ -28,7 +28,7 @@ function Get-DbsTcpPort {
         PS C:\> Get-DbsTcpPort -ComputerName server01, server02
 
         Returns all Tcp Ports in use by SQL Server on server01 and server02
-#>
+    #>
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

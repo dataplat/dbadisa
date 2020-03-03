@@ -30,7 +30,7 @@ function Get-DbsFips {
         PS C:\> Get-DbsFips -ComputerName sql2016, sql2017, sql2012
 
         Gets FIPS disabled state from sql2016, sql2017 and sql2012
-#>
+    #>
 
     [CmdletBinding()]
     param (

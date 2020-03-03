@@ -27,7 +27,7 @@ Function New-DbsDocTemplate {
 
     Creates a DISA documentation template for 2014
 
-#>
+    #>
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]

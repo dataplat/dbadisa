@@ -69,7 +69,7 @@ function Repair-DbsDbOwnerFixedServerRole {
         }
         if ($SqlInstance) {
             $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem |
-            Where-Object ContainmentType -eq $null
+                Where-Object ContainmentType -eq $null
         }
         foreach ($fixedrole in $InputObject) {
             $db = $fixedrole.db

@@ -38,7 +38,7 @@ function Disable-DbsCEIP {
         PS C:\> Disable-DbsCEIP -ComputerName sql2016, sql2017, sql2012 -Credential ad\altdba
 
         Disables all instances of CEIP on sql2016, sql2017 and sql2012 using alternative Windows credentials
-#>
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

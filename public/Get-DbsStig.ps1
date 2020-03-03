@@ -27,7 +27,7 @@ function Get-DbsStig {
 
     Return checklsits for database and instance for SQL Server 2014 only
 
-#>
+    #>
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]

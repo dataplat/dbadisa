@@ -30,7 +30,7 @@ function Get-DbsSetupAccount {
         PS C:\> Get-DbsSetupAccount -ComputerName sql2016, sql2017, sql2012
 
         Returns a list of accounts that have isntalled or modified SQL Server on sql2016, sql2017 and sql2012
-#>
+    #>
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

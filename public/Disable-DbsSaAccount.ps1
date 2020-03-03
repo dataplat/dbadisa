@@ -40,7 +40,7 @@ function Disable-DbsSaAccount {
         PS C:\> Disable-DbsSaAccount -SqlInstance Sql2016 -NewName newsa
 
         Disables and renames sa account
-#>
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

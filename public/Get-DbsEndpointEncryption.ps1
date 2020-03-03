@@ -52,9 +52,9 @@ function Get-DbsEndpointEncryption {
         }
         foreach ($endpoint in $endpoints) {
             $endpoint |
-            Add-Member -MemberType NoteProperty -Name DatabaseMirroringAlgorithm -Value $endpoint.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm -PassThru |
-            Add-Member -MemberType NoteProperty -Name ServiceBrokerAlgorithm -Value $endpoint.Payload.ServiceBroker.EndpointEncryptionAlgorithm -PassThru |
-            Select-DefaultView -Property SqlInstance, Id, Name, DatabaseMirroringAlgorithm, ServiceBrokerAlgorithm, Port, EndpointState, EndpointType, Owner, IsAdminEndpoint, Fqdn, IsSystemObject
+                Add-Member -MemberType NoteProperty -Name DatabaseMirroringAlgorithm -Value $endpoint.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm -PassThru |
+                Add-Member -MemberType NoteProperty -Name ServiceBrokerAlgorithm -Value $endpoint.Payload.ServiceBroker.EndpointEncryptionAlgorithm -PassThru |
+                Select-DefaultView -Property SqlInstance, Id, Name, DatabaseMirroringAlgorithm, ServiceBrokerAlgorithm, Port, EndpointState, EndpointType, Owner, IsAdminEndpoint, Fqdn, IsSystemObject
         }
     }
 }

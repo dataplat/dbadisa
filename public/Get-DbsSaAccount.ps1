@@ -31,7 +31,7 @@ function Get-DbsSaAccount {
         PS C:\> Get-DbsSaAccount -SqlInstance sql2017, sql2016, sql2012
 
         Gets a list of logins named 'sa' or 'sa' accounts that are still enabled from sql2017, sql2016, and sql2012
-#>
+    #>
 
     [CmdletBinding()]
     param (

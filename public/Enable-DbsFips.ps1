@@ -33,7 +33,7 @@ function Enable-DbsFips {
         PS C:\> Enable-DbsFips -ComputerName sql2016, sql2017, sql2012
 
         Enables FIPS on sql2016, sql2017 and sql2012
-#>
+    #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
