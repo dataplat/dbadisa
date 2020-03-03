@@ -13,5 +13,10 @@ Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
             $config = Get-DbaSpConfigure -SqlInstance $env:COMPUTERNAME -Name ContainmentEnabled
             $config.RunningValue | Should -Be 0
         }
+
+        $results = Disable-DbsDbContainment -ComputerName $env:COMPUTERNAME -WhatIf
+        It "should not return any objects when using whatif" {
+            $results | Should -Be $null
+        }
     }
 }

@@ -12,5 +12,10 @@ Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
                 $service.StartType | Should -Be "Disabled"
             }
         }
+
+        $results = Disable-DbsCEIP -ComputerName $env:COMPUTERNAME -WhatIf
+        It "should not return any objects when using whatif" {
+            $results | Should -Be $null
+        }
     }
 }
