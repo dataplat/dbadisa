@@ -37,7 +37,7 @@ function Get-DbsDbProhibitedKeyAlgorithm {
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
         [parameter(ValueFromPipeline)]
-        [Microsoft.SqlServer.Managemens.Smo.Database[]]$InputObject,
+        [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
         [switch]$EnableException
     )
     begin {
