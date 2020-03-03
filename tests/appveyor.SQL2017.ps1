@@ -1,8 +1,6 @@
 $indent = '...'
 Write-Host -Object "Running $PSCommandpath" -ForegroundColor DarkGreen
 Import-Module dbatools
-Start-Sleep 5
-# This script spins up the 2016 instance and the relative setup
 
 $sqlinstance = "localhost\SQL2017"
 $instance = "SQL2017"
@@ -10,7 +8,6 @@ $port = "1433"
 
 Write-Host -Object "$indent Setting up AppVeyor Services" -ForegroundColor DarkGreen
 Set-Service -Name SQLBrowser -StartupType Automatic -WarningAction SilentlyContinue
-# Start-Service "MSSQL`$$instance" -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
 Set-Service -Name "SQLAgent`$$instance" -StartupType Automatic -WarningAction SilentlyContinue
 Start-Service SQLBrowser -ErrorAction SilentlyContinue -WarningAction SilentlyContinue
 
@@ -39,15 +36,6 @@ do {
     Start-Sleep 3
 }
 while ((Get-Service "SQLAgent`$$instance").Status -ne 'Running' -and $z++ -lt 10)
-
-$server = Connect-DbaInstance -SqlInstance $sqlinstance
-$computername = $server.NetName
-$servicename = $server.ServiceName
-if ($servicename -eq 'MSSQLSERVER') {
-    $instancename = "$computername"
-} else {
-    $instancename = "$computername\$servicename"
-}
 
 $server = Connect-DbaInstance -SqlInstance $sqlinstance
 $server.Query("IF NOT EXISTS (select * from sys.symmetric_keys where name like '%DatabaseMasterKey%') CREATE MASTER KEY ENCRYPTION BY PASSWORD = '<StrongPassword>'")
