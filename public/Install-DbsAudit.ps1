@@ -4,7 +4,7 @@ function Install-DbsAudit {
         Installs the supplemental SQL Server Audit provided by DISA
 
     .DESCRIPTION
-
+        Installs the supplemental SQL Server Audit provided by DISA
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.

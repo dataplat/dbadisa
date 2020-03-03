@@ -19,6 +19,9 @@ function Remove-DbsSystemPermission {
 
         For MFA support, please use Connect-DbaInstance.
 
+    .PARAMETER InputObject
+        Allows piping from Get-DbsSystemPermission
+
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
 

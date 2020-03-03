@@ -22,6 +22,9 @@ function Set-DbsDbFileSize {
     .PARAMETER Growth
         The growth value. 64 by default.
 
+    .PARAMETER InputObject
+        Allows piping from Get-DbaDatabase
+
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
 

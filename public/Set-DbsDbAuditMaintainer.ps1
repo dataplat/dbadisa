@@ -27,6 +27,9 @@ function Set-DbsDbAuditMaintainer {
     .PARAMETER User
         The login or logins that are to be granted permissions. This should be a Windows Group or you may violate another STIG.
 
+    .PARAMETER InputObject
+        Allows piping from Get-DbsDbAuditMaintainer
+
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run.
 
