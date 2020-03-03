@@ -1,13 +1,13 @@
 function Disable-DbsDbContainment {
     <#
     .SYNOPSIS
-        Disables database containment
+        Disables database containment features
 
     .DESCRIPTION
-        Disables database containment. Addresses V-79061.
+        Disables database containment features
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -28,7 +28,7 @@ function Disable-DbsDbContainment {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags:
+        Tags: V-79061
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -37,7 +37,7 @@ function Disable-DbsDbContainment {
     .EXAMPLE
         PS C:\> Disable-DbsDbContainment -SqlInstance sql2017, sql2016, sql2012
 
-        Disables database containment on sql2017, sql2016 and sql2012
+        Disables database containment features on sql2017, sql2016 and sql2012
     #>
 
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]

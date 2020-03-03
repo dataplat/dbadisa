@@ -1,10 +1,10 @@
 function Get-DbsDbContainedUser {
     <#
     .SYNOPSIS
-        Gets contained users for all databases
+        Returns a list of non-compliant users for all contained databases
 
     .DESCRIPTION
-        Gets contained users for all databases
+        Returns a list of non-compliant users for all contained databases
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances.
@@ -22,7 +22,7 @@ function Get-DbsDbContainedUser {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79193
+        Tags: V-79193, non-compliant
         Author: Chrissy LeMaire (@cl), netnerds.net
 
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
@@ -31,14 +31,13 @@ function Get-DbsDbContainedUser {
     .EXAMPLE
         PS C:\> Get-DbsDbContainedUser -SqlInstance sql2017, sql2016, sql2012
 
-        Gets contained users for all databases on sql2017, sql2016 and sql2012
+        Returns a list of non-compliant users for all contained databases on sql2017, sql2016 and sql2012
 
     .EXAMPLE
         PS C:\> Get-DbsDbContainedUser -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\contained.csv -NoTypeInformation
 
-        Exports contained users for all databases on sql2017, sql2016 and sql2012 to D:\disa\contained.csv
+        Exports a list of non-compliant users for all contained databases on sql2017, sql2016 and sql2012 to D:\disa\contained.csv
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
