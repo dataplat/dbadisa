@@ -66,7 +66,7 @@ function Disable-DbsBrowser {
             }
 
             if ($ports) {
-                if ($PSCmdlet.ShouldProcess($computer, "No changes required, showing output")) {
+                if ($PSCmdlet.ShouldProcess($computer, "SQL found on multiple ports. SQL Browser required, no changes made")) {
                     [pscustomobject]@{
                         ComputerName    = $computer
                         BrowserDisabled = $false
