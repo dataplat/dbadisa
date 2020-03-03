@@ -55,7 +55,6 @@ function Install-DbsAudit {
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
-
     .EXAMPLE
         PS C:\> Install-DbsAudit -SqlInstance sql2017, sql2016, sql2012
 
