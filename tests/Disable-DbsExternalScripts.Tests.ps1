@@ -1,7 +1,8 @@
 $CommandName = $MyInvocation.MyCommand.Name.Replace(".Tests.ps1", "")
 Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
     BeforeAll {
-        $null = Set-DbaSpConfigure -SqlInstance $env:COMPUTERNAME -Name ExternalScriptsEnabled -Value 1
+        # Feature 'Advanced Analytics Extensions' is not installed.
+        # $null = Set-DbaSpConfigure -SqlInstance $env:COMPUTERNAME -Name ExternalScriptsEnabled -Value 1
     }
     Context "Disables external scripts on localhost" {
         It -Skip "should report that polybase is disabled" {
