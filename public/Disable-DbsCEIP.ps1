@@ -70,7 +70,9 @@ function Disable-DbsCEIP {
                     }
                 }
             }
-            Get-DbsCEIP -Computer $computer
+            if ($PSCmdlet.ShouldProcess($computer, "Confirming results")) {
+                Get-DbsCEIP -Computer $computer
+            }
         }
     }
 }
