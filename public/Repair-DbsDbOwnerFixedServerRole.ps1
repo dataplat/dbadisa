@@ -31,7 +31,6 @@ function Repair-DbsDbOwnerFixedServerRole {
     .NOTES
         Tags: V-79111
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
@@ -69,7 +68,7 @@ function Repair-DbsDbOwnerFixedServerRole {
         }
         if ($SqlInstance) {
             $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem |
-                Where-Object ContainmentType -eq $null
+            Where-Object ContainmentType -eq $null
         }
         foreach ($fixedrole in $InputObject) {
             $db = $fixedrole.db

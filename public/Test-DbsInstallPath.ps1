@@ -21,7 +21,6 @@ function Test-DbsInstallPath {
     .NOTES
         Tags: V-79169
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 

@@ -21,26 +21,23 @@ function Get-DbsDbProhibitedKeyAlgorithm {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags:
+        Tags: V-79113
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsDbProhibitedKeyAlgorithm -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsDbProhibitedKeyAlgorithm -SqlInstance sql2017
 
         Gets a list of prohibited key algorithms for all databases on sql2017, sql2016 and sql2012
-
     #>
-
     [CmdletBinding()]
     param (
         [parameter(ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
         [parameter(ValueFromPipeline)]
-        [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
+        [Microsoft.SqlServer.Managemens.Smd.Database[]]$InputObject,
         [switch]$EnableException
     )
     begin {

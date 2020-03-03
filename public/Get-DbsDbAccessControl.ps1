@@ -23,7 +23,6 @@ function Get-DbsDbAccessControl {
     .NOTES
         Tags: V-79105, V-79235
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
@@ -88,7 +87,7 @@ function Get-DbsDbAccessControl {
         foreach ($db in $InputObject) {
             try {
                 $db.Query($sql) | Select-Object -Property SqlInstance, Database, Type, Name, Owner, Description, StateDescription, PermissionName, @{ Name = 'db'; Expression = { $db } } |
-                    Select-DefaultView -Property SqlInstance, Database, Type, Name, Owner, Description, StateDescription, PermissionName
+                Select-DefaultView -Property SqlInstance, Database, Type, Name, Owner, Description, StateDescription, PermissionName
             } catch {
                 Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
             }

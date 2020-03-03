@@ -40,7 +40,6 @@ function Set-DbsDbAuditMaintainer {
     .NOTES
         Tags: V-79073
         Author: Tracy Boggiano (@TracyBoggiano), databasesuperhero.com
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 

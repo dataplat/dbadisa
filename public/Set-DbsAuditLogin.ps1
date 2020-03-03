@@ -26,7 +26,6 @@ function Set-DbsAuditLogin {
     .NOTES
         Tags: V-79297, V-79287, V-79289
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 

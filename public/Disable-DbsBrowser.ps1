@@ -7,7 +7,7 @@ function Disable-DbsBrowser {
         Disables and stops the SQL Server Broswer service on computers with no named instances
 
     .PARAMETER ComputerName
-        The SQL Server (or server in general) that you're connecting to. This command handles named instances
+        The SQL Server (or server in general) that you're connecting to This command handles named instances
 
     .PARAMETER Credential
         Credential object used to connect to the computer as a different user

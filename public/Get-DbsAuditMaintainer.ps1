@@ -20,7 +20,6 @@ function Get-DbsAuditMaintainer {
     .NOTES
         Tags: V-79135, V-79143, V-79159, V-79161
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 

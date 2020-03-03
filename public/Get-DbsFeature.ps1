@@ -7,7 +7,7 @@ function Get-DbsFeature {
         Returns a list of all features that may be not required and must be documented.
 
     .PARAMETER ComputerName
-        The SQL Server (or server in general) that you're connecting to.
+        The SQL Server (or server in general) that you're connecting to
 
     .PARAMETER Credential
         Credential object used to connect to the computer as a different user.

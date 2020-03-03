@@ -20,7 +20,6 @@ function Get-DbsProtocol {
     .NOTES
         Tags: V-79185, V-79241
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
@@ -43,7 +42,7 @@ function Get-DbsProtocol {
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             Get-DbaInstanceProtocol -ComputerName $computer |
-                Where-Object { $psitem.Name -ne 'tcp' -and $psitem.IsEnabled }
+            Where-Object { $psitem.Name -ne 'tcp' -and $psitem.IsEnabled }
         }
     }
 }

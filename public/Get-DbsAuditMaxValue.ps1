@@ -23,7 +23,6 @@ function Get-DbsAuditMaxValue {
     .NOTES
         Tags: V-79149, V-79227
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 

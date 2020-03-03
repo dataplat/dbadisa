@@ -7,7 +7,7 @@ function Get-DbsSetupAccount {
         Returns a list of accounts that have installed or modified SQL Server.
 
     .PARAMETER ComputerName
-        The SQL Server (or server in general) that you're connecting to.
+        The SQL Server (or server in general) that you're connecting to
 
     .PARAMETER Credential
         Credential object used to connect to the computer as a different user.

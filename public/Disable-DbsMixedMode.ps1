@@ -26,7 +26,6 @@ function Disable-DbsMixedMode {
     .NOTES
         Tags: V-79121, V-79355
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 

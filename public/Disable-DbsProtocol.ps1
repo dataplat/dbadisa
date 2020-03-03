@@ -28,7 +28,6 @@ function Disable-DbsProtocol {
     .NOTES
         Tags: V-79185, V-79241
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
@@ -63,7 +62,7 @@ function Disable-DbsProtocol {
                         if ($return -eq 0) { $results = "False" } else { $results = "True" }
                         $protocol | Add-Member -NotePropertyName Disabled -NotePropertyValue $results
                         $protocol | Add-Member -NotePropertyName Notes -NotePropertyValue "Restart required" -PassThru |
-                            Select-DefaultView -Property ComputerName, DisplayName, InstanceName, Disabled, Notes
+                        Select-DefaultView -Property ComputerName, DisplayName, InstanceName, Disabled, Notes
                     }
                 } else {
                     if ($PSCmdlet.ShouldProcess($computer, "Disabling $($protocol.Name) for $($protocol.InstanceName)")) {
@@ -71,7 +70,7 @@ function Disable-DbsProtocol {
                         if ($return -eq 0) { $results = "True" } else { $results = "False" }
                         $protocol | Add-Member -NotePropertyName Disabled -NotePropertyValue $results
                         $protocol | Add-Member -NotePropertyName Notes -NotePropertyValue "Restart required" -PassThru |
-                            Select-DefaultView -Property ComputerName, DisplayName, InstanceName, Disabled, Notes
+                        Select-DefaultView -Property ComputerName, DisplayName, InstanceName, Disabled, Notes
                     }
                 }
             }

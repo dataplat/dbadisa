@@ -20,7 +20,6 @@ function Get-DbsAuditSpecification {
     .NOTES
         Tags: V-79239, V-79259, V-79261, V-79263, V-79265, V-79275, V-79277, V-79291, V-79293, V-79295
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
