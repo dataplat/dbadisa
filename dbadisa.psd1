@@ -88,7 +88,7 @@
         'Get-DbsIFI',
         'Get-DbsAuditStartupState',
         'Set-DbsAuditStartupState',
-        'Get-DbsModuleAccess',
+        'Get-DbsDbModuleAccess',
         'Get-DbsSystemPermission',
         'Remove-DbsSystsemPermission',
         'Get-DbsDbInputValidity',

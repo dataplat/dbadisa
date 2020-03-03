@@ -33,7 +33,6 @@ function Get-DbsMixedMode {
 
         Returns a list of any server that has mixed mode enabled
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
@@ -41,14 +40,21 @@ function Get-DbsMixedMode {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $server = Connect-DbaInstance -SqlInstance $instance -DisableException:$($EnableException -eq $false)
         foreach ($instance in $SqlInstance) {
-            if ($server.Settings.LoginMode -ne 'Integrated') {
-                [pscustomobject]@{
-                    SqlInstance = $server.Name
-                    LoginMode   = $server.Settings.LoginMode
+            try {
+                $server = Connect-DbaInstance -SqlInstance $instance
+                if ($server.Settings.LoginMode -ne 'Integrated') {
+                    [pscustomobject]@{
+                        SqlInstance = $server.Name
+                        LoginMode   = $server.Settings.LoginMode
+                    }
                 }
+            } catch {
+                Stop-PSFFunction -Message "Failure on $computer" -ErrorRecord $_
             }
         }
     }

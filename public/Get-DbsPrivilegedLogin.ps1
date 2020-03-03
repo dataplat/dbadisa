@@ -1,10 +1,10 @@
 function Get-DbsPrivilegedLogin {
     <#
     .SYNOPSIS
-        Review server-level securables and built-in role membership to ensure only authorized users have privileged access and the ability to create server-level objects and grant permissions to themselves or others.
+        Review server-level securables and built-in role membership to ensure only authorized users have privileged access and the ability to create server-level objects and grant permissions to themselves or others
 
     .DESCRIPTION
-        Review server-level securables and built-in role membership to ensure only authorized users have privileged access and the ability to create server-level objects and grant permissions to themselves or others.
+        Review server-level securables and built-in role membership to ensure only authorized users have privileged access and the ability to create server-level objects and grant permissions to themselves or others
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances.
@@ -40,13 +40,14 @@ function Get-DbsPrivilegedLogin {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
                 $server = Connect-DbaInstance -SqlInstance $instance
-
-                foreach ($db in $server.Databases) {
-                    $db.Query("SELECT DISTINCT @@SERVERNAME as SqlInstance, DB_NAME() as [Database],
+                $server.Query("SELECT DISTINCT @@SERVERNAME as SqlInstance,
                         CASE
                         WHEN SP.class_desc IS NOT NULL THEN
                         CASE
@@ -90,9 +91,8 @@ function Get-DbsPrivilegedLogin {
                         FULL OUTER JOIN sys.server_principals P
                         ON SP.class_desc = 'SERVER_PRINCIPAL'
                         AND P.principal_id = SP.major_id ")
-                }
             } catch {
-                Stop-PSFFunction -Message "Failure for database $($db.Name) on $($server.Name)" -ErrorRecord $_ -Continue
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

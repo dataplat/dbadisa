@@ -53,28 +53,29 @@ function Get-DbsPermission {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
         $sql = [IO.File]::ReadAllText("$script:ModuleRoot\bin\sql\Instance permissions assignments to logins and roles.sql")
     }
     process {
-        $server = Connect-DbaInstance -SqlInstance $SqlInstance
-
-        try {
-            $results = $server.Query($sql)
-        } catch {
-            Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
-        }
-
-        foreach ($result in $results) {
-            [pscustomobject]@{
-                SqlInstance    = $server.Name
-                SecurableClass = $result.'Securable Class'
-                Securable      = $result.Securable
-                Grantee        = $result.Grantee
-                GranteeType    = $result.'Grantee Type'
-                Permission     = $result.Permission
-                State          = $result.State
-                Grantor        = $result.Grantor
-                GrantorType    = $result.'Grantor Type'
+        foreach ($instance in $SqlInstance) {
+            try {
+                $server = Connect-DbaInstance -SqlInstance $instance
+                $results = $server.Query($sql)
+                foreach ($result in $results) {
+                    [pscustomobject]@{
+                        SqlInstance    = $server.Name
+                        SecurableClass = $result.'Securable Class'
+                        Securable      = $result.Securable
+                        Grantee        = $result.Grantee
+                        GranteeType    = $result.'Grantee Type'
+                        Permission     = $result.Permission
+                        State          = $result.State
+                        Grantor        = $result.Grantor
+                        GrantorType    = $result.'Grantor Type'
+                    }
+                }
+            } catch {
+                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
             }
         }
     }

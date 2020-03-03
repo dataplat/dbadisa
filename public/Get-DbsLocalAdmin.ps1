@@ -37,6 +37,9 @@ function Get-DbsLocalAdmin {
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             try {

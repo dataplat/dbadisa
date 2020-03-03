@@ -1,13 +1,13 @@
-function Get-DbsModuleAccess {
+function Get-DbsDbModuleAccess {
     <#
     .SYNOPSIS
-        Obtains a listing of users and roles who are currently capable of changing stored procedures, functions, and triggers.
+        Obtains a listing of users and roles who are currently capable of changing stored procedures, functions, and triggers
 
     .DESCRIPTION
-        Obtains a listing of users and roles who are currently capable of changing stored procedures, functions, and triggers.
+        Obtains a listing of users and roles who are currently capable of changing stored procedures, functions, and triggers
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -15,6 +15,9 @@ function Get-DbsModuleAccess {
         Windows Authentication, SQL Server Authentication, Active Directory - Password, and Active Directory - Integrated are all supported.
 
         For MFA support, please use Connect-DbaInstance.
+
+    .PARAMETER InputObject
+        Allows databases to be piped in from Get-DbaDatabase
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -29,26 +32,32 @@ function Get-DbsModuleAccess {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsModuleAccess -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsDbModuleAccess -SqlInstance sql2017, sql2016, sql2012
 
         Gets a listing of users and roles who are currently capable of changing stored procedures, functions, and triggers for all databases on sql2017, sql2016 and sql2012
 
     .EXAMPLE
-        PS C:\> Get-DbsModuleAccess -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\modulechanger.csv -NoTypeInformation
+        PS C:\> Get-DbsDbModuleAccess -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\modulechanger.csv -NoTypeInformation
 
         Exports a listing of users and roles who are currently capable of changing stored procedures, functions, and triggers for all databases on sql2017, sql2016 and sql2012 to D:\disa\modulechanger.csv
     #>
-
     [CmdletBinding()]
     param (
-        [parameter(Mandatory, ValueFromPipeline)]
+        [parameter(ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
+        [parameter(ValueFromPipeline)]
+        [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $dbs = Get-DbaDatabase @PSBoundParameters
-        foreach ($db in $dbs) {
+        if ($SqlInstance) {
+            $InputObject = Get-DbaDatabase @PSBoundParameters
+        }
+        foreach ($db in $InputObject) {
             try {
                 $sql = "SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database], NULL as RoleName, P.type_desc AS PrincipalType, P.name AS PrincipalName, O.type_desc AS TypeDescription,
                         CASE class
