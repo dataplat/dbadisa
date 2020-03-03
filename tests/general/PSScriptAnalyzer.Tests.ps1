@@ -15,7 +15,8 @@ $list = New-Object System.Collections.ArrayList
 
 Describe 'Invoking PSScriptAnalyzer against commandbase' {
     $commandFiles = Get-ChildItem -Path $CommandPath -Recurse -Filter "*.ps1"
-    $scriptAnalyzerRules = Get-ScriptAnalyzerRule
+    $scriptAnalyzerRules = Get-ScriptAnalyzerRule |
+    Where-Object RuleName -notin PSUseSingularNouns, PSUseUTF8EncodingForHelpFilem, PSUseBOMForUnicodeEncodedFile, PSUseOutputTypeCorrectly, PSAvoidUsingWriteHost
 
     foreach ($file in $commandFiles) {
         Context "Analyzing $($file.BaseName)" {
