@@ -1,13 +1,13 @@
 function Set-DbsLoginProperty {
     <#
     .SYNOPSIS
-        Sets login properties.
+        Sets login properties
 
     .DESCRIPTION
-        Sets non-compliant login properties.
+        Sets non-compliant login properties
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Set-Credential).
@@ -32,9 +32,7 @@ function Set-DbsLoginProperty {
         PS C:\> Set-DbsLoginProperty -SqlInstance sql2017, sql2016, sql2012
 
         Only returns non-compliant login properties from sql2017, sql2016 and sql2012
-
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

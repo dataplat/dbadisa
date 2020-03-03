@@ -7,7 +7,7 @@ function Get-DbsXpPermission {
         Gets a list of registry extended stored procedure permissions.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -45,10 +45,13 @@ function Get-DbsXpPermission {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $server = Connect-DbaInstance -SqlInstance $instance
         foreach ($instance in $SqlInstance) {
             try {
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $server.Query("SELECT @@SERVERNAME as SqlInstance, OBJECT_NAME(major_id) AS [StoredProcedure]
                             ,dpr.NAME AS [Principal]
                             FROM sys.database_permissions AS dp

@@ -59,6 +59,9 @@ function Repair-DbsDbOwnerFixedServerRole {
         [string]$NewOwner,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         if ($Type -contains "SetOwner" -and -not $NewOwner) {
             Stop-PSFFunction -Message "You must specify -NewOwner when using the SetOwner type"

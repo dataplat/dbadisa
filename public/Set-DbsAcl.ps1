@@ -9,7 +9,7 @@ function Set-DbsAcl {
         By default, it will detect and secure the default Data, Log and Backup directories.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
         This is required to get specific information about the paths to modify. The base computer name is also used to
         perform the actual modifications.
@@ -80,6 +80,9 @@ function Set-DbsAcl {
         [string[]]$Path,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {

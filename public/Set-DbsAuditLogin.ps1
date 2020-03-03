@@ -7,7 +7,7 @@ function Set-DbsAuditLogin {
         Sets "Both failed and successful logins"
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -33,28 +33,33 @@ function Set-DbsAuditLogin {
 
         Sets "Both failed and successful logins" on sql2017, sql2016 and sql2012
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
                 $server = Connect-DbaInstance -SqlInstance $instance
-                $null = $server.Query("EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'AuditLevel', REG_DWORD, 3")
-                $regread = $server.Query("EXEC xp_instance_regread N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'AuditLevel'")
+                if ($PSCmdlet.ShouldProcess($instance, "Setting AuditLevel for $instance using xp_instance_regwrite")) {
+                    $null = $server.Query("EXEC xp_instance_regwrite N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'AuditLevel', REG_DWORD, 3")
+                    $regread = $server.Query("EXEC xp_instance_regread N'HKEY_LOCAL_MACHINE', N'Software\Microsoft\MSSQLServer\MSSQLServer', N'AuditLevel'")
 
-                if ($regread.Data -eq 3) {
-                    [PSCustomObject]@{
-                        SqlInstance   = $server.Name
-                        LoginTracking = $true
+                    if ($regread.Data -eq 3) {
+                        [PSCustomObject]@{
+                            SqlInstance   = $server.Name
+                            LoginTracking = $true
+                        }
                     }
                 }
             } catch {
-                Stop-PSFFunction -Message "Failure for $($server.Name)" -ErrorRecord $_ -Continue
+                Stop-PSFFunction -Message "Failure for $instance" -ErrorRecord $_ -Continue
             }
         }
     }

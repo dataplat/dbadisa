@@ -7,7 +7,7 @@ function Get-DbsDbKeyNotEncryptedByServer {
        Returns a list of non-compliant Database Master Key that are not encrypted by the Service Master Key
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

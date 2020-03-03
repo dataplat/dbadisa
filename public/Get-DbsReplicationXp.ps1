@@ -7,7 +7,7 @@ function Get-DbsReplicationXp {
         Gets non-compliant Replication Xp settings.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

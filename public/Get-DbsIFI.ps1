@@ -33,7 +33,7 @@ function Get-DbsIFI {
     param (
         [parameter(ValueFromPipeline)]
         [Alias("cn", "host", "Server")]
-        [DbaInstanceParameter[]]$ComputerName = $env:COMPUTERNAME,
+        [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,
         [switch]$EnableException
     )

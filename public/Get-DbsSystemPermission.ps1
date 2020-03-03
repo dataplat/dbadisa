@@ -7,7 +7,7 @@ function Get-DbsSystemPermission {
         Gets permissions that were identified as not allowed in the check content
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -50,10 +50,13 @@ function Get-DbsSystemPermission {
         [PsCredential]$SqlCredential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $server = Connect-DbaInstance -SqlInstance $instance
         foreach ($instance in $SqlInstance) {
             try {
+                $server = Connect-DbaInstance -SqlInstance $instance
                 $cluster = $server.Query("SELECT SERVERPROPERTY('IsClustered') as IsClustered, SERVERPROPERTY('IsHadrEnabled') as IsHadrEnabled")
 
                 if ($cluster.IsClustered -and $cluster.IsHadrEnabled) {

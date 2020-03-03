@@ -7,7 +7,7 @@ function Set-DbsTraceFlag {
         Sets trace flag 3625 to hide information from non-sysadmins in error messages.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER Credential
         Login to the target _Windows Server_ instance using alternative credentials. Accepts PowerShell credentials (Set-Credential).

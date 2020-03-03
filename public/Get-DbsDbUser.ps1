@@ -7,7 +7,7 @@ function Get-DbsDbUser {
         Returns a list of all users for a database. These users are presumed to be authorized.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

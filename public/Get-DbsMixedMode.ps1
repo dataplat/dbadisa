@@ -7,7 +7,7 @@ function Get-DbsMixedMode {
         Returns a list of any server that has mixed mode enabled
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

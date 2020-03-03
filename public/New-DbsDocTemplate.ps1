@@ -37,6 +37,9 @@ Function New-DbsDocTemplate {
         [string[]]$Include = @("Description", "FixText", "Check"),
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         $vulns = Get-DbsStig | Where-Object SqlVersion -eq $Version
         Set-Content -Path $FilePath -Value ""

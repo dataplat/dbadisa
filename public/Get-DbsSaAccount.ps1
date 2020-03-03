@@ -7,7 +7,7 @@ function Get-DbsSaAccount {
         Gets a list of non-compliant logins named 'sa' or 'sa' accounts that are still enabled
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

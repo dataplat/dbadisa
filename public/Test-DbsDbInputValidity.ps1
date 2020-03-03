@@ -7,7 +7,7 @@ function Test-DbsDbInputValidity {
         Tests a db to see if it's got contraints
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -45,6 +45,9 @@ function Test-DbsDbInputValidity {
         [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         if ($SqlInstance) {
             $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem

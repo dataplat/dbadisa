@@ -7,7 +7,7 @@ function Get-DbsAuditMaintainer {
         Returns a list of the server roles and individual logins that have permissions which enable the ability to create and maintain audit definitions.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

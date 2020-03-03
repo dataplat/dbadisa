@@ -7,7 +7,7 @@ function Set-DbsEndpointEncryption {
         Sets non-compliant endpoint encryption algorithms for non-compliant endpoints
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

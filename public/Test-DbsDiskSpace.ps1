@@ -46,6 +46,9 @@ function Test-DbsDiskSpace {
         [int]$Threshold = 25,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         if ($ComputerName) {
             $InputObject = Get-DbaDiskSpace -Computer $computername

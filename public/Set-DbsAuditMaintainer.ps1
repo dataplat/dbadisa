@@ -9,7 +9,7 @@ function Set-DbsAuditMaintainer {
         Create the audit maintainer role, sets the permissions for the role, and adds logins.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances. Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -62,6 +62,9 @@ function Set-DbsAuditMaintainer {
         [string[]]$Login,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {

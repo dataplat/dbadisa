@@ -7,7 +7,7 @@ function Get-DbsAuditSpecification {
         Returns a list of missing audit specifications
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

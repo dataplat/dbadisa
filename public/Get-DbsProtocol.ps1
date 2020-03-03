@@ -33,10 +33,13 @@ function Get-DbsProtocol {
     param (
         [parameter(ValueFromPipeline)]
         [Alias("cn", "host", "Server")]
-        [DbaInstanceParameter[]]$ComputerName = $env:COMPUTERNAME,
+        [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             Get-DbaInstanceProtocol -ComputerName $computer |

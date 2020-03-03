@@ -9,7 +9,7 @@ function Set-DbsConnectionLimit {
         "If a mechanism other than a logon trigger is used, verify its correct operation by the appropriate means."
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

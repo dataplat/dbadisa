@@ -35,10 +35,13 @@ function Test-DbsInstallPath {
     param (
         [parameter(ValueFromPipeline)]
         [Alias("cn", "host", "Server")]
-        [DbaInstanceParameter[]]$ComputerName = $env:COMPUTERNAME,
+        [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             $regroots = Get-DbaRegistryRoot -Computer $computer | Select-Object -ExpandProperty RegistryRoot

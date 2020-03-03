@@ -9,7 +9,7 @@ function Get-DbsDbPermission {
         Uses the Database permission assignments to users and roles.sql file provided by DISA.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

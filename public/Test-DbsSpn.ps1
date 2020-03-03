@@ -28,7 +28,6 @@ function Test-DbsSpn {
 
         Gets all instances that do not have an SPN from sql2016, sql2017 and sql2012
 #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

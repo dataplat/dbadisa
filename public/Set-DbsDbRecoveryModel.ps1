@@ -1,13 +1,13 @@
 function Set-DbsDbRecoveryModel {
     <#
     .SYNOPSIS
-        Sets all user databases to the FULL recovery model.
+        Sets all user databases to the FULL recovery model
 
     .DESCRIPTION
-        Sets all user databases to the FULL recovery model.
+        Sets all user databases to the FULL recovery model
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -33,17 +33,23 @@ function Set-DbsDbRecoveryModel {
 
         Sets all user databases to the FULL recovery model on sql2017, sql2016, and sql2012
     #>
-
     [CmdletBinding()]
     param (
-        [parameter(Mandatory, ValueFromPipeline)]
+        [parameter(ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
+        [parameter(ValueFromPipeline)]
+        [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
-        $null = Get-DbaDatabase @PSBoundParameters -ExcludeSystem | Where-Object IsAccessible | Set-DbaDbRecoveryModel -RecoveryModel Full
-        $rec = Get-DbaDatabase @PSBoundParameters -ExcludeSystem
-        Select-DefaultView -InputObject $rec -Property SqlInstance, 'Name as Database', RecoveryModel
+        if ($SqlInstance) {
+            $InputObject = Get-DbaDatabase @PSBoundParameters -ExcludeSystem | Where-Object IsAccessible
+        }
+        $results = $InputObject | Set-DbaDbRecoveryModel -RecoveryModel Full
+        Select-DefaultView -InputObject $results -Property SqlInstance, 'Name as Database', RecoveryModel
     }
 }

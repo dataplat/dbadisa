@@ -1,13 +1,13 @@
 function Get-DbsRemoteDataArchive {
     <#
     .SYNOPSIS
-        Gets non-compliant Remote Data Archive settings.
+        Gets non-compliant Remote Data Archive settings
 
     .DESCRIPTION
-        Gets non-compliant Remote Data Archive settings.
+        Gets non-compliant Remote Data Archive settings
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

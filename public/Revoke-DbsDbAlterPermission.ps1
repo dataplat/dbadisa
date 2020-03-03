@@ -37,6 +37,9 @@ function Revoke-DbsDbAlterPermission {
         [pscustomobject[]]$InputObject,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         if ($SqlInstance) {
             $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem |

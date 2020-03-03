@@ -29,7 +29,6 @@ function Get-DbsTcpPort {
 
         Returns all Tcp Ports in use by SQL Server on server01 and server02
 #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
@@ -37,6 +36,9 @@ function Get-DbsTcpPort {
         [PSCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         Get-DbaTcpPort -SqlInstance $ComputerName -All
     }

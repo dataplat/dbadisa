@@ -7,7 +7,7 @@ function Get-DbsEndpointEncryption {
         Gets a list of non-compliant endpoint encryption algorithms
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

@@ -7,7 +7,7 @@ function Move-DbsAuditFile {
         Moves .sqlaudit files to a central repository using UNC shares
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
         This is required to get specific information about the paths to modify. The base computer name is also used to
         perform the actual modifications.
@@ -57,6 +57,7 @@ function Move-DbsAuditFile {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
         Function Move-AuditFile {
             [cmdletbinding()]
             param (

@@ -1,13 +1,13 @@
 function Get-DbsSqlClr {
     <#
     .SYNOPSIS
-        Gets non-compliant CLR settings.
+        Gets non-compliant CLR settings
 
     .DESCRIPTION
-        Gets non-compliant CLR settings.
+        Gets non-compliant CLR settings
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

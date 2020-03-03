@@ -7,7 +7,7 @@ function Get-DbsAlert {
         Checks both Agent Alerts and Database Mail to ensure SQL Server provides immediate, real-time alerts to appropriate support staff
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target SQL Server instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).

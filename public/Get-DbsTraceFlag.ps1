@@ -7,7 +7,7 @@ function Get-DbsTraceFlag {
         Checks to see if trace flag 3625 to hide system information form non-sysadmins in error messages.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target _SQL Server_ instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -40,6 +40,9 @@ function Get-DbsTraceFlag {
         [PsCredential]$Credential,
         [switch]$EnableException
     )
+    begin {
+        . "$script:ModuleRoot\private\set-defaults.ps1"
+    }
     process {
         foreach ($instance in $SqlInstance) {
             try {
