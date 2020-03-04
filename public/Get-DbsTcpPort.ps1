@@ -1,17 +1,17 @@
 function Get-DbsTcpPort {
     <#
     .SYNOPSIS
-        Returns all Tcp Ports in use by SQL Server.
+        Returns all Tcp Ports in use by SQL Server
 
     .DESCRIPTION
 
-        Returns all Tcp Ports in use by SQL Server. Addresses V-79187.
+        Returns all Tcp Ports in use by SQL Server
 
     .PARAMETER ComputerName
-        The SQL Server (or server in general) that you're connecting to This command handles named instances.
+        The target server or instance.
 
     .PARAMETER Credential
-        Credential object used to connect to the computer as a different user.
+        Login to the target computer using alternative credentials.
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.

@@ -7,10 +7,10 @@ function Get-DbsFips {
         Returns a list of computers that are not FIPS compliant
 
     .PARAMETER ComputerName
-        The SQL Server (or server in general) that you're connecting to
+        The target server or instance
 
     .PARAMETER Credential
-        Credential object used to connect to the computer as a different user.
+        Login to the target computer using alternative credentials.
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -18,7 +18,7 @@ function Get-DbsFips {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-67871, V-79113, V-79197, V-79199, V-79203, V-79305, V-79307, V-79309
+        Tags: V-67871, V-79113, V-79197, V-79199, V-79203, V-79305, V-79307, V-79309, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
@@ -28,7 +28,6 @@ function Get-DbsFips {
 
         Gets FIPS disabled state from sql2016, sql2017 and sql2012
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

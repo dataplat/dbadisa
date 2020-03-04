@@ -1,16 +1,16 @@
 function Disable-DbsBrowser {
     <#
     .SYNOPSIS
-        Disables and stops the SQL Server Broswer service on computers with no named instances
+        Disables and stops the SQL Server Browser service on computers with no named instances
 
     .DESCRIPTION
-        Disables and stops the SQL Server Broswer service on computers with no named instances
+        Disables and stops the SQL Server Browser service on computers with no named instances
 
     .PARAMETER ComputerName
-        The SQL Server (or server in general) that you're connecting to This command handles named instances
+        The target server or instance
 
     .PARAMETER Credential
-        Credential object used to connect to the computer as a different user
+        Login to the target computer using alternative credentials
 
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
@@ -32,7 +32,7 @@ function Disable-DbsBrowser {
     .EXAMPLE
         PS C:\> Disable-DbsBrowser -ComputerName sql2016, sql2019
 
-        Disables and stops the SQL Server Broswer service on sql2016 and sql2019 if no named instances exist
+        Disables and stops the SQL Server Browser service on sql2016 and sql2019 if no named instances exist
     #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (

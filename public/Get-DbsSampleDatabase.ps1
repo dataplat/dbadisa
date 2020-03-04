@@ -1,10 +1,10 @@
 function Get-DbsSampleDatabase {
     <#
     .SYNOPSIS
-        Returns a list of prohibited sample databases.
+        Returns a list of prohibited (non-compliant) sample databases
 
     .DESCRIPTION
-        Returns a list of prohibited sample databases.
+        Returns a list of prohibited (non-compliant) sample databases
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -18,7 +18,7 @@ function Get-DbsSampleDatabase {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79195, V-79171
+        Tags: V-79195, V-79171, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT

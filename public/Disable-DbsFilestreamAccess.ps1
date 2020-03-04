@@ -1,10 +1,10 @@
 function Disable-DbsFilestreamAccess {
     <#
     .SYNOPSIS
-        Disables non-compliant Filestream Access settings.
+        Disables non-compliant filestream access settings
 
     .DESCRIPTION
-        Disables non-compliant Filestream Access settings.
+        Disables non-compliant filestream access settings
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -24,7 +24,7 @@ function Disable-DbsFilestreamAccess {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79329
+        Tags: V-79329, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
@@ -32,7 +32,7 @@ function Disable-DbsFilestreamAccess {
     .EXAMPLE
         PS C:\> Disable-DbsFilestreamAccess -SqlInstance sql2017, sql2016, sql2012
 
-        Disables Filestream Access on sql2017, sql2016 and sql2012
+        Disables filestream access on sql2017, sql2016 and sql2012
 
     .EXAMPLE
         PS C:\> Disable-DbsFilestreamAccess -SqlInstance sql2017, sql2016, sql2012 -WhatIf

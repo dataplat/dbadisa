@@ -10,7 +10,7 @@ function Test-DbsDiskSpace {
         The target SQL Server
 
     .PARAMETER Credential
-        Credential object used to connect to the computer as a different user
+        Login to the target computer using alternative credentials
 
     .PARAMETER Threshold
         The minimum disk space free threshold
@@ -24,7 +24,7 @@ function Test-DbsDiskSpace {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79229
+        Tags: V-79229, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT

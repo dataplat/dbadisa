@@ -1,10 +1,10 @@
 function Disable-DbsReplicationXp {
     <#
     .SYNOPSIS
-        Disables Replication Xps.
+        Disables replication XPs
 
     .DESCRIPTION
-        Disables Replication Xps.
+        Disables replication XPs
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances

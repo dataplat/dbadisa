@@ -7,7 +7,7 @@ function Test-DbsBuild {
         Obtains evidence that software patches are consistently applied to SQL Server within the time frame defined for each patch.
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials

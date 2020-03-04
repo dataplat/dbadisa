@@ -28,7 +28,6 @@ function Get-DbsLogin {
 
         Gets a list of all logins from sql2017, sql2016 and sql2012
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

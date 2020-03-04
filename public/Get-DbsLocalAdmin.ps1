@@ -10,7 +10,7 @@ function Get-DbsLocalAdmin {
         The target SQL Server
 
     .PARAMETER Credential
-        Credential object used to connect to the computer as a different user
+        Login to the target computer using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.

@@ -7,7 +7,7 @@ function Get-DbsAuditLogin {
         Returns a list of non-compliant servers that are not auditing logins either by Audits or via "Both failed and successful logins"
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials
