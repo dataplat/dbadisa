@@ -1,10 +1,10 @@
 function Get-DbsLoginProperty {
     <#
     .SYNOPSIS
-        Gets non-compliant login properties.
+        Gets non-compliant login properties
 
     .DESCRIPTION
-        Gets non-compliant login properties.
+        Gets non-compliant login properties
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -18,7 +18,7 @@ function Get-DbsLoginProperty {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79191
+        Tags: V-79191, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
@@ -27,9 +27,7 @@ function Get-DbsLoginProperty {
         PS C:\> Get-DbsLoginProperty -SqlInstance sql2017, sql2016, sql2012
 
         Only returns non-compliant login properties from sql2017, sql2016 and sql2012
-
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

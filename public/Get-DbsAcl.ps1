@@ -12,10 +12,10 @@ function Get-DbsAcl {
         The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target _SQL Server_ instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
+        Login to the target _SQL Server_ instance using alternative credentials
 
     .PARAMETER Credential
-        Login to the target _Windows_ server using alternative credentials. Accepts PowerShell credentials (Get-Credential).
+        Login to the target _Windows_ instance using alternative credentials
 
     .PARAMETER Owner
         The account that will be set as the folder owner.
@@ -42,18 +42,14 @@ function Get-DbsAcl {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsAcl -SqlInstance sql2017, sql2016, sql2012 -Account "AD\SQL Admins" -Owner "AD\SQL Service"
+        PS C:\> Get-DbsAcl -SqlInstance sql2017, sql2016, sql2012
 
-        Sets permissions for the default data, log and backups on sql2017, sql2016, sql2012.
-
-        Adds appropriate permissions for the "AD\SQL Admins" group as well as the SQL Server service accountsas Full Access.
-
-        Also sets the owner of the folder to "AD\SQL Service"
+        Gets permissions for the default data, log and backups on sql2017, sql2016, sql2012
 
     .EXAMPLE
-        PS C:\> Get-DbaRegServer -SqlInstance sqlcentral | Get-DbsAcl -Account "AD\SQL Admins" -Owner "AD\SQL Service"
+        PS C:\> Get-DbaRegServer -SqlInstance sqlcentral | Get-DbsAcl
 
-        Sets the appropriate permissions for all SQL Servers stored in the sqlcentral registered server.
+        Gets the permissions for all SQL Servers stored in the sqlcentral registered server
     #>
     [CmdletBinding()]
     param (

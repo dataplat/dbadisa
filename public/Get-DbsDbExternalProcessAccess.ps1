@@ -1,10 +1,10 @@
 function Get-DbsDbExternalProcessAccess {
     <#
     .SYNOPSIS
-        Returns a listing of accounts currently configured for use by external processes.
+        Returns a listing of accounts currently configured for use by external processes
 
     .DESCRIPTION
-        Returns a listing of accounts currently configured for use by external processes.
+        Returns a listing of accounts currently configured for use by external processes
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances

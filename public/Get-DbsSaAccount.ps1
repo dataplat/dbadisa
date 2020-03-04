@@ -18,7 +18,7 @@ function Get-DbsSaAccount {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79319, V-79317
+        Tags: V-79319, V-79317, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
@@ -28,7 +28,6 @@ function Get-DbsSaAccount {
 
         Gets a list of logins named 'sa' or 'sa' accounts that are still enabled from sql2017, sql2016, and sql2012
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

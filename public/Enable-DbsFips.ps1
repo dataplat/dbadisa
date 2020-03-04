@@ -7,10 +7,10 @@ function Enable-DbsFips {
         Enables FIPS
 
     .PARAMETER ComputerName
-        The SQL Server (or server in general) that you're connecting to
+        The target server or instance
 
     .PARAMETER Credential
-        Credential object used to connect to the computer as a different user
+        Login to the target computer using alternative credentials
 
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run

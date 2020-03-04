@@ -1,10 +1,10 @@
 function Get-DbsDbComputerUser {
     <#
     .SYNOPSIS
-        Returns a list of all database user accounts that are computers.
+        Returns a list of all database user accounts that are computers
 
     .DESCRIPTION
-        Returns a list of all database user accounts that are computers.
+        Returns a list of all database user accounts that are computers
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances

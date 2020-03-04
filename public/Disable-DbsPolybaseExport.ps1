@@ -1,10 +1,10 @@
 function Disable-DbsPolybaseExport {
     <#
     .SYNOPSIS
-        Disables non-compliant Allow Polybase Export settings.
+        Disables non-compliant Polybase export settings
 
     .DESCRIPTION
-        Disables non-compliant Allow Polybase Export settings.
+        Disables non-compliant Polybase export settings
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -32,7 +32,7 @@ function Disable-DbsPolybaseExport {
     .EXAMPLE
         PS C:\> Disable-DbsPolybaseExport -SqlInstance sql2017, sql2016, sql2012
 
-        Disables Allow Polybase Export on sql2017, sql2016 and sql2012
+        Disables Polybase export on sql2017, sql2016 and sql2012
 
     .EXAMPLE
         PS C:\> Disable-DbsPolybaseExport -SqlInstance sql2017, sql2016, sql2012 -WhatIf

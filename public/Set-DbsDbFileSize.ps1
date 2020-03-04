@@ -13,7 +13,7 @@ function Set-DbsDbFileSize {
         Login to the target instance using alternative credentials
 
     .PARAMETER GrowthType
-        The growth type. Valid values are MB, KB, GB or TB. MB by default.
+        The growth type, MB by default - valid values are MB, KB, GB or TB. MB by default
 
     .PARAMETER Growth
         The growth value. 64 by default.

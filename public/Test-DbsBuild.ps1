@@ -1,13 +1,13 @@
 function Test-DbsBuild {
     <#
     .SYNOPSIS
-        Obtains evidence that software patches are consistently applied to SQL Server within the time frame defined for each patch.
+        Obtains evidence that software patches are consistently applied to SQL Server within the time frame defined for each patch
 
     .DESCRIPTION
-        Obtains evidence that software patches are consistently applied to SQL Server within the time frame defined for each patch.
+        Obtains evidence that software patches are consistently applied to SQL Server within the time frame defined for each patch
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials
@@ -26,7 +26,7 @@ function Test-DbsBuild {
     .EXAMPLE
         PS C:\> Test-DbsBuild -SqlInstance sql2017, sql2016, sql2012
 
-        Obtains evidence that software patches are consistently applied to SQL Server within the time frame defined for each patch.
+        Obtains evidence that software patches are consistently applied to SQL Server within the time frame defined for each patch
     #>
     [CmdletBinding()]
     param (

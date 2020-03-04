@@ -1,12 +1,10 @@
 function Get-DbsDbPermission {
     <#
     .SYNOPSIS
-        Gets a list of database permissions.
+        Gets a list of database permissions using the 'Database permission assignments to users and roles.sql' file provided by DISA
 
     .DESCRIPTION
-        Gets a list of database permissions.
-
-        Uses the Database permission assignments to users and roles.sql file provided by DISA.
+        Gets a list of database permissions using the 'Database permission assignments to users and roles.sql' file provided by DISA
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances

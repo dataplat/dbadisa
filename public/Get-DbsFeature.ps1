@@ -1,16 +1,16 @@
 function Get-DbsFeature {
     <#
     .SYNOPSIS
-        Returns a list of all features that may be not required and must be documented.
+        Returns a list of all features that may be not required and must be documented
 
     .DESCRIPTION
-        Returns a list of all features that may be not required and must be documented.
+        Returns a list of all features that may be not required and must be documented
 
     .PARAMETER ComputerName
-        The SQL Server (or server in general) that you're connecting to
+        The target server or instance
 
     .PARAMETER Credential
-        Credential object used to connect to the computer as a different user.
+        Login to the target computer using alternative credentials.
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -28,7 +28,6 @@ function Get-DbsFeature {
 
         Gets all instances that do not have an SPN from sql2016, sql2017 and sql2012
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

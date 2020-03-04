@@ -1,10 +1,10 @@
 function Get-DbsDbRecoveryModel {
     <#
     .SYNOPSIS
-        Returns a list of all non-compliant (non-full) database recovery models.
+        Returns a list of all non-compliant (non-full) database recovery models
 
     .DESCRIPTION
-        Returns a list of all non-compliant (non-full) database recovery models.
+        Returns a list of all non-compliant (non-full) database recovery models
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -21,7 +21,7 @@ function Get-DbsDbRecoveryModel {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79083
+        Tags: V-79083, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
@@ -36,7 +36,6 @@ function Get-DbsDbRecoveryModel {
 
         Exports all non-compliant (non-full) database recovery models for all databases on sql2017, sql2016 and sql2012 to D:\disa\recovery.csv
     #>
-
     [CmdletBinding()]
     param (
         [parameter(ValueFromPipeline)]

@@ -1,10 +1,10 @@
 function Get-DbsComputerLogin {
     <#
     .SYNOPSIS
-        Returns a list of all server logins that are computers.
+        Returns a list of all server logins that are computers
 
     .DESCRIPTION
-        Returns a list of all server logins that are computers.
+        Returns a list of all server logins that are computers
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances

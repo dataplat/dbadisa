@@ -7,7 +7,7 @@ function Install-DbsAudit {
         Installs the supplemental SQL Server Audit provided by DISA
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials
@@ -64,7 +64,6 @@ function Install-DbsAudit {
 
         Installs disa stig on all servers on the CMS
     #>
-
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline, Position = 0)]

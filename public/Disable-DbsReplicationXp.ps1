@@ -1,10 +1,10 @@
 function Disable-DbsReplicationXp {
     <#
     .SYNOPSIS
-        Disables Replication Xps.
+        Disables replication XPs
 
     .DESCRIPTION
-        Disables Replication Xps.
+        Disables replication XPs
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -32,7 +32,7 @@ function Disable-DbsReplicationXp {
     .EXAMPLE
         PS C:\> Disable-DbsReplicationXp -SqlInstance sql2017, sql2016, sql2012
 
-        Disables replication Xps on sql2017, sql2016 and sql2012
+        Disables replication XPs on sql2017, sql2016 and sql2012
 
     .EXAMPLE
         PS C:\> Disable-DbsReplicationXp -SqlInstance sql2017, sql2016, sql2012 -WhatIf

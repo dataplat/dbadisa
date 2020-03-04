@@ -10,7 +10,7 @@ function Test-DbsInstallPath {
         The target SQL Server
 
     .PARAMETER Credential
-        Credential object used to connect to the computer as a different user
+        Login to the target computer using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -27,7 +27,6 @@ function Test-DbsInstallPath {
         PS C:\> Test-DbsInstallPath -ComputerName sql01
 
         Tests the installation path for all instances on sql01 to ensure they are not part of the Windows directory or in an application folder
-
     #>
     [CmdletBinding()]
     param (

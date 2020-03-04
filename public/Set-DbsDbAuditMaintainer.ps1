@@ -1,27 +1,25 @@
 function Set-DbsDbAuditMaintainer {
     <#
     .SYNOPSIS
-        Creates the database audit maintainer role, sets the permissions for the role, and adds logins.
-
-        NOTE! This command revokes permz.
+        Creates the database audit maintainer role, sets the permissions for the role, adds logins and revokes permissions for other accounts
 
     .DESCRIPTION
-        Creates the database audit maintainer role, sets the permissions for the role, and adds logins.
+        Creates the database audit maintainer role, sets the permissions for the role, adds logins and revokes permissions for other accounts
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials
 
     .PARAMETER Database
-        Allows databases to be piped in from Get-DbaDatabase.
+        Allows databases to be piped in from Get-DbaDatabase
 
     .PARAMETER Role
-        Name to be given the audit maintainer role.
+        Name to be given the audit maintainer role
 
     .PARAMETER User
-        The login or logins that are to be granted permissions. This should be a Windows Group or you may violate another STIG.
+        The login or logins that are to be granted permissions. This should be a Windows Group or you may violate another STIG
 
     .PARAMETER InputObject
         Allows piping from Get-DbsDbAuditMaintainer

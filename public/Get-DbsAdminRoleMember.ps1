@@ -10,7 +10,7 @@ function Get-DbsAdminRoleMember {
         The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target SQL Server instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
+        Login to the target instance using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.

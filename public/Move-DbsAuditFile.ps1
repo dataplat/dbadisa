@@ -10,10 +10,10 @@ function Move-DbsAuditFile {
         The target SQL Server instance or instances
 
         This is required to get specific information about the paths to modify. The base computer name is also used to
-        perform the actual modifications.
+        perform the actual modifications
 
     .PARAMETER SqlCredential
-        Login to the target SQL Server instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
+        Login to the target instance using alternative credentials
 
     .PARAMETER Destination
         Central repo
@@ -121,10 +121,10 @@ function Move-DbsAuditFile {
                 if ($results) {
                     if ($server -eq $env:COMPUTERNAME) {
                         Get-ChildItem -Path $results.Filename | Sort-Object LastWriteTime -Descending |
-                            Select-Object -Skip 1 | Move-AuditFile -ServerName $servername
+                        Select-Object -Skip 1 | Move-AuditFile -ServerName $servername
                     } else {
                         Get-ChildItem -Path $results.RemoteFilename | Sort-Object LastWriteTime -Descending |
-                            Select-Object -Skip 1 | Move-AuditFile -ServerName $servername
+                        Select-Object -Skip 1 | Move-AuditFile -ServerName $servername
                     }
 
                     Write-Progress -Activity "Moving sqlaudit files from $instance" -Completed

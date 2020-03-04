@@ -18,7 +18,7 @@ function Get-DbsSqlClr {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79179, V-79243
+        Tags: V-79179, V-79243, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
@@ -27,9 +27,7 @@ function Get-DbsSqlClr {
         PS C:\> Get-DbsSqlClr -SqlInstance sql2017, sql2016, sql2012
 
         Only returns non-compliant CLR settings from sql2017, sql2016 and sql2012
-
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

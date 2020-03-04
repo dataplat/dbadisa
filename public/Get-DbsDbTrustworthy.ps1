@@ -1,10 +1,10 @@
 function Get-DbsDbTrustworthy {
     <#
     .SYNOPSIS
-        Returns a list trustworthy databases.
+        Returns a list trustworthy databases
 
     .DESCRIPTION
-        Returns a list trustworthy databases.
+        Returns a list trustworthy databases
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -36,7 +36,6 @@ function Get-DbsDbTrustworthy {
 
         Exports all trustworthy databases for all databases on sql2017, sql2016 and sql2012 to D:\disa\trustworthy.csv
     #>
-
     [CmdletBinding()]
     param (
         [parameter(ValueFromPipeline)]

@@ -34,7 +34,7 @@ function Get-DbsDbSchemaOwner {
     .EXAMPLE
         PS C:\> Get-DbsDbSchemaOwner -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\schemaowners.csv -NoTypeInformation
 
-        Exportsa list of all schema owners for all databases on sql2017, sql2016 and sql2012 to D:\disa\schemaowners.csv
+        Exports a list of all schema owners for all databases on sql2017, sql2016 and sql2012 to D:\disa\schemaowners.csv
     #>
     [CmdletBinding()]
     param (

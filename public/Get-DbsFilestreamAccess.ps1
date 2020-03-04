@@ -1,10 +1,10 @@
 function Get-DbsFilestreamAccess {
     <#
     .SYNOPSIS
-        Gets non-compliant Filestream Access settings.
+        Gets non-compliant Filestream Access settings
 
     .DESCRIPTION
-        Gets non-compliant Filestream Access settings.
+        Gets non-compliant Filestream Access settings
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -18,7 +18,7 @@ function Get-DbsFilestreamAccess {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79329
+        Tags: V-79329, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT

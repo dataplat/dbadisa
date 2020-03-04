@@ -7,7 +7,7 @@ function Get-DbsSystemPermission {
         Gets permissions that were identified as not allowed in the check content
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials
@@ -18,7 +18,7 @@ function Get-DbsSystemPermission {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79129
+        Tags: V-79129, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT

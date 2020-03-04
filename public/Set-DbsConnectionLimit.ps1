@@ -1,10 +1,10 @@
 function Set-DbsConnectionLimit {
     <#
     .SYNOPSIS
-        Sets the max number of UserConnections to comply with V-79119.
+        Sets the max number of UserConnections
 
     .DESCRIPTION
-        Sets the max number of UserConnections to comply with V-79119. Note you still need to document this method.
+        Sets the max number of UserConnection
 
         "If a mechanism other than a logon trigger is used, verify its correct operation by the appropriate means."
 

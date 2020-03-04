@@ -36,7 +36,6 @@ function Get-DbsDbUser {
 
         Exports authorized users for all databases on sql2017, sql2016 and sql2012 to D:\disa\authorized.csv
     #>
-
     [CmdletBinding()]
     param (
         [parameter(ValueFromPipeline)]

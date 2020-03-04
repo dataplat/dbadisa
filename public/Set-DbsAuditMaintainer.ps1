@@ -1,24 +1,24 @@
 function Set-DbsAuditMaintainer {
     <#
     .SYNOPSIS
-        Create the audit maintainer role, sets the permissions for the role, and adds logins.
+        Create the audit maintainer role, sets the permissions for the role, and adds logins
 
         NOTE! This command revokes permz.
 
     .DESCRIPTION
-        Create the audit maintainer role, sets the permissions for the role, and adds logins.
+        Create the audit maintainer role, sets the permissions for the role, and adds logins
 
     .PARAMETER SqlInstance
-        The target SQL Server instance or instances Server version must be SQL Server version 2012 or higher.
+        The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
         Login to the target instance using alternative credentials
 
     .PARAMETER Role
-        Name to be given the audit maintainer role.
+        Name to be given the audit maintainer role
 
     .PARAMETER Login
-        The login or logins that are to be granted permissions. This should be a Windows Group or you may violate another STIG.
+        The login or logins that are to be granted permissions. This should be a Windows Group or you may violate another STIG
 
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run

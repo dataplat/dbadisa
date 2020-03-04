@@ -1,10 +1,10 @@
 function Get-DbsC2 {
     <#
     .SYNOPSIS
-        Gets non-compliant Common Criteria Compliance settings.
+        Gets non-compliant Common Criteria Compliance settings
 
     .DESCRIPTION
-        Gets non-compliant Common Criteria Compliance settings.
+        Gets non-compliant Common Criteria Compliance settings
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -18,7 +18,7 @@ function Get-DbsC2 {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79211
+        Tags: V-79211, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT

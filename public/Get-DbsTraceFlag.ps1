@@ -1,16 +1,16 @@
 function Get-DbsTraceFlag {
     <#
     .SYNOPSIS
-        Checks both startup params and trace flags to see if trace flag 3625 is set. Returns non-compliant computers.
+        Checks both startup params and trace flags to see if trace flag 3625 is set
 
     .DESCRIPTION
-        Checks to see if trace flag 3625 to hide system information form non-sysadmins in error messages.
+        Checks to see if trace flag 3625 to hide system information form non-sysadmins in error messages
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target _SQL Server_ instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
+        Login to the target _SQL Server_ instance using alternative credentials
 
     .PARAMETER Credential
          Login to the target _Windows Server_ using alternative credentials. Accepts PowerShell credentials (Get-Credential).
@@ -21,7 +21,7 @@ function Get-DbsTraceFlag {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79097, V-79217
+        Tags: V-79097, V-79217, NonCompliantResults
         Author: Tracy Boggiano (@TracyBoggiano), databasesuperhero.com
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT

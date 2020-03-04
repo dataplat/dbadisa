@@ -31,7 +31,6 @@ function Get-DbsStig {
         Get-DbsStig -Version 2014
 
         Return checklsits for database and instance for SQL Server 2014 only
-
     #>
     [CmdletBinding()]
     param (

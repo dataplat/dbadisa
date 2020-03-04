@@ -1,10 +1,10 @@
 function Disable-DbsRemoteAccess {
     <#
     .SYNOPSIS
-        Disables non-compliant Remote Access settings.
+        Disables non-compliant Remote Access settings
 
     .DESCRIPTION
-        Disables non-compliant Remote Access settings.
+        Disables non-compliant Remote Access settings
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -24,7 +24,7 @@ function Disable-DbsRemoteAccess {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79337
+        Tags: V-79337, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT

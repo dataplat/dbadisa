@@ -1,10 +1,10 @@
 function Disable-DbsOleAutomation {
     <#
     .SYNOPSIS
-        Disables non-compliant Ole Automation Procedures settings.
+        Disables non-compliant OLE automation procedures settings
 
     .DESCRIPTION
-        Disables non-compliant Ole Automation Procedures settings.
+        Disables non-compliant OLE automation procedures settings
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -32,7 +32,7 @@ function Disable-DbsOleAutomation {
     .EXAMPLE
         PS C:\> Disable-DbsOleAutomation -SqlInstance sql2017, sql2016, sql2012
 
-        Disables Ole Automation Procedures on sql2017, sql2016 and sql2012
+        Disables OLE automation procedures on sql2017, sql2016 and sql2012
 
     .EXAMPLE
         PS C:\> Disable-DbsOleAutomation -SqlInstance sql2017, sql2016, sql2012 -WhatIf
