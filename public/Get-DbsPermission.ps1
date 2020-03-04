@@ -1,12 +1,10 @@
 function Get-DbsPermission {
     <#
     .SYNOPSIS
-        Gets a list of instance permissions.
+        Gets a list of instance permissions using the 'Instance permissions assignments to logins and roles.sql' file provided by DISA
 
     .DESCRIPTION
-        Gets a list of instance permissions.
-
-        Uses the Instance permissions assignments to logins and roles.sql file provided by DISA.
+        Gets a list of instance permissions using the 'Instance permissions assignments to logins and roles.sql' file provided by DISA
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances

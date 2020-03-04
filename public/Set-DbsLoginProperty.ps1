@@ -1,10 +1,10 @@
 function Set-DbsLoginProperty {
     <#
     .SYNOPSIS
-        Sets login properties
+        Sets login properties, PasswordExpirationEnabled and PasswordPolicyEnforced, to true
 
     .DESCRIPTION
-        Sets non-compliant login properties
+        Sets login properties, PasswordExpirationEnabled and PasswordPolicyEnforced, to true
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances

@@ -7,10 +7,10 @@ function Get-DbsBrowser {
         Gets non-compliant SQL Browser service states (Running)
 
     .PARAMETER ComputerName
-        The target server or instance.
+        The target server or instance
 
     .PARAMETER Credential
-        Login to the target computer using alternative credentials.
+        Login to the target computer using alternative credentials
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.

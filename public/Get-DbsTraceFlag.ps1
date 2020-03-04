@@ -10,7 +10,7 @@ function Get-DbsTraceFlag {
         The target SQL Server instance or instances
 
     .PARAMETER SqlCredential
-        Login to the target _SQL Server_ instance using alternative credentials. Accepts PowerShell credentials (Get-Credential).
+        Login to the target _SQL Server_ instance using alternative credentials
 
     .PARAMETER Credential
          Login to the target _Windows Server_ using alternative credentials. Accepts PowerShell credentials (Get-Credential).

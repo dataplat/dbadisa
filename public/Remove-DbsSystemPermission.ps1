@@ -7,7 +7,7 @@ function Remove-DbsSystemPermission {
        Removes non-compliant audit states
 
        If you remove permissions for 'NT AUTHORITY\SYSTEM' using this command and they continue to persist, check to ensure
-       that the permissions are not granted by a role such as sysadmin.
+       that the permissions are not granted by a role such as sysadmin
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances

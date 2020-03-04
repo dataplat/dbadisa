@@ -64,7 +64,6 @@ function Install-DbsAudit {
 
         Installs disa stig on all servers on the CMS
     #>
-
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(Mandatory, ValueFromPipeline, Position = 0)]

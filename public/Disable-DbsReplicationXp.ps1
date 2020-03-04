@@ -32,7 +32,7 @@ function Disable-DbsReplicationXp {
     .EXAMPLE
         PS C:\> Disable-DbsReplicationXp -SqlInstance sql2017, sql2016, sql2012
 
-        Disables replication Xps on sql2017, sql2016 and sql2012
+        Disables replication XPs on sql2017, sql2016 and sql2012
 
     .EXAMPLE
         PS C:\> Disable-DbsReplicationXp -SqlInstance sql2017, sql2016, sql2012 -WhatIf

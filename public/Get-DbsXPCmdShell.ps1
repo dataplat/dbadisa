@@ -1,10 +1,10 @@
 function Get-DbsXPCmdShell {
     <#
     .SYNOPSIS
-        Gets non-compliant xp_cmdshell settings.
+        Gets non-compliant xp_cmdshell settings
 
     .DESCRIPTION
-        Gets non-compliant xp_cmdshell settings.
+        Gets non-compliant xp_cmdshell settings
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -28,9 +28,7 @@ function Get-DbsXPCmdShell {
         PS C:\> Get-DbsXPCmdShell -SqlInstance sql2017, sql2016, sql2012
 
         Only returns non-compliant xp_cmdshell settings from sql2017, sql2016 and sql2012
-
     #>
-
     [CmdletBinding()]
     param (
         [parameter(Mandatory, ValueFromPipeline)]

@@ -1,10 +1,10 @@
 function Get-DbsUserOptions {
     <#
     .SYNOPSIS
-        Gets non-compliant User Options settings.
+        Gets non-compliant User Options settings
 
     .DESCRIPTION
-        Gets non-compliant User Options settings.
+        Gets non-compliant User Options settings
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances

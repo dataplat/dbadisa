@@ -1,10 +1,10 @@
 function Get-DbsXpPermission {
     <#
     .SYNOPSIS
-        Gets a list of registry extended stored procedure permissions.
+        Gets a list of registry extended stored procedure permissions
 
     .DESCRIPTION
-        Gets a list of registry extended stored procedure permissions.
+        Gets a list of registry extended stored procedure permissions
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances

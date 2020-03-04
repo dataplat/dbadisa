@@ -1,10 +1,10 @@
 function Disable-DbsHadoopConnectivity {
     <#
     .SYNOPSIS
-        Disables non-compliant Allow Polybase Export settings
+        Disables non-compliant Hadoop connectivity settings
 
     .DESCRIPTION
-        Disables non-compliant Allow Polybase Export settings
+        Disables non-compliant Hadoop connectivity settings
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -32,7 +32,7 @@ function Disable-DbsHadoopConnectivity {
     .EXAMPLE
         PS C:\> Disable-DbsHadoopConnectivity -SqlInstance sql2017, sql2016, sql2012
 
-        Disables Allow Polybase Export on sql2017, sql2016 and sql2012
+        Disables Hadoop connectivity on sql2017, sql2016 and sql2012
 
     .EXAMPLE
         PS C:\> Disable-DbsHadoopConnectivity -SqlInstance sql2017, sql2016, sql2012 -WhatIf

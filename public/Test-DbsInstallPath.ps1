@@ -27,7 +27,6 @@ function Test-DbsInstallPath {
         PS C:\> Test-DbsInstallPath -ComputerName sql01
 
         Tests the installation path for all instances on sql01 to ensure they are not part of the Windows directory or in an application folder
-
     #>
     [CmdletBinding()]
     param (

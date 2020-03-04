@@ -18,7 +18,7 @@ function Get-DbsAuditLogin {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79297, V-79287, V-79289
+        Tags: V-79297, V-79287, V-79289, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
@@ -26,7 +26,7 @@ function Get-DbsAuditLogin {
     .EXAMPLE
         PS C:\> Get-DbsAuditLogin -SqlInstance sql2017, sql2016, sql2012
 
-        Gets a list of SQL Server must generate audit records when concurrent logons/connections by the same user from different workstations occur.
+        Returns a list of non-compliant servers that are not auditing logins either by Audits or via "Both failed and successful logins"
     #>
     [CmdletBinding()]
     param (

@@ -1,10 +1,10 @@
 function Set-DbsAuditStartupState {
     <#
     .SYNOPSIS
-        Sets startup state for compliance audit to ON.
+        Sets startup state for compliance audit to ON
 
     .DESCRIPTION
-        Sets startup state for compliance audit to ON.
+        Sets startup state for compliance audit to ON
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -13,7 +13,7 @@ function Set-DbsAuditStartupState {
         Login to the target instance using alternative credentials
 
     .PARAMETER Audit
-       The name of the DISA Audit.
+       The name of the DISA Audit
 
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
@@ -35,17 +35,7 @@ function Set-DbsAuditStartupState {
     .EXAMPLE
         PS C:\> Set-DbsAuditStartupState -SqlInstance sql2017, sql2016, sql2012
 
-        Gets a list of non-compliant audit states on sql2017, sql2016 and sql2012
-
-    .EXAMPLE
-        PS C:\> Set-DbsAuditStartupState -SqlInstance sql2017, sql2016, sql2012
-
-        Gets a list of non-compliant audit states on sql2017, sql2016 and sql2012
-
-    .EXAMPLE
-        PS C:\> Set-DbsAuditStartupState -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\auditstartup.csv -NoTypeInformation
-
-        Gets a list of non-compliant audit startup states sql2017, sql2016 and sql2012 to D:\disa\auditstartup.csv
+       Sets startup state for compliance audit to ON on sql2017, sql2016 and sql2012
     #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
