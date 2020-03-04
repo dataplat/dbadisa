@@ -20,7 +20,6 @@ function Test-DbsServiceAccount {
     .NOTES
         Tags: V-79245
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
@@ -48,7 +47,7 @@ function Test-DbsServiceAccount {
                 $accounts = $services | Where-Object StartName -eq $service.StartName
                 if ($accounts.Count -gt 1) {
                     $service | Add-Member -NotePropertyName DuplicateCount -NotePropertyValue $accounts.Count -Passthru |
-                        Select-DefaultView -Property ComputerName, ServiceName, ServiceType, InstanceName, DisplayName, StartName, State, StartMode, DuplicateCount
+                    Select-DefaultView -Property ComputerName, ServiceName, ServiceType, InstanceName, DisplayName, StartName, State, StartMode, DuplicateCount
                 }
             }
         }

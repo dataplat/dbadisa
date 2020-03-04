@@ -26,7 +26,6 @@ function Disable-DbsUserOptions {
     .NOTES
         Tags: V-79335
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 

@@ -15,5 +15,10 @@ Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
             $server = Connect-DbaInstance -SqlInstance $env:COMPUTERNAME
             $server.Settings.LoginMode | Should -Be Integrated
         }
+
+        $results = Disable-DbsMixedMode -SqlInstance $env:COMPUTERNAME -WhatIf -WarningAction SilentlyContinue
+        It "should not return any objects when using whatif" {
+            $results | Should -Be $null
+        }
     }
 }

@@ -23,7 +23,6 @@ function Get-DbsDbInputValidity {
     .NOTES
         Tags: V-79095
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 

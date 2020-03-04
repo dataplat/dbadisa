@@ -7,10 +7,10 @@ function Disable-DbsCEIP {
         Disables all instances of CEIP on a server via both services and the registry (x64 and x86)
 
     .PARAMETER ComputerName
-        The SQL Server (or server in general) that you're connecting to.
+        The SQL Server (or server in general) that you're connecting to
 
     .PARAMETER Credential
-        Credential object used to connect to the computer as a different user.
+        Credential object used to connect to the computer as a different user
 
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
@@ -51,6 +51,9 @@ function Disable-DbsCEIP {
     }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
+            if (-not (Test-ElevationRequirement -ComputerName $computer)) {
+                return
+            }
             if ((Get-DbsCEIP -Computer $computer).Enabled) {
                 if ($PSCmdlet.ShouldProcess($computer, "Disabling telemetry")) {
                     try {
@@ -70,7 +73,9 @@ function Disable-DbsCEIP {
                     }
                 }
             }
-            Get-DbsCEIP -Computer $computer
+            if ($PSCmdlet.ShouldProcess($computer, "Confirming results")) {
+                Get-DbsCEIP -Computer $computer
+            }
         }
     }
 }

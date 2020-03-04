@@ -20,7 +20,6 @@ function Get-DbsTimeSource {
     .NOTES
         Tags: V-79233
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
@@ -31,7 +30,7 @@ function Get-DbsTimeSource {
     #>
     [CmdletBinding()]
     param (
-        [parameter(ValueFromPipeline)]
+        [parameter(ValueFromPipeline, Mandatory)]
         [Alias("cn", "host", "Server")]
         [DbaInstanceParameter[]]$ComputerName,
         [PSCredential]$Credential,

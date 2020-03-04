@@ -20,6 +20,11 @@ Function New-DbsDocTemplate {
         This avoids overwhelming you with "sea of red" exceptions, but is inconvenient because it basically disables advanced scripting.
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
+    .NOTES
+        Author: Chrissy LeMaire (@cl), netnerds.net
+        Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
+        License: MIT https://opensource.org/licenses/MIT
+
     .EXAMPLE
         New-DbsDocTemplate -FilePath C:\temp\sql2016.md
 

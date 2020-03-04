@@ -23,7 +23,6 @@ function Get-DbsDbTemporalTable {
     .NOTES
         Tags: V-79069
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
@@ -64,7 +63,7 @@ function Get-DbsDbTemporalTable {
         foreach ($db in $InputObject) {
             try {
                 $db.Query($sql) | Select-Object -Property SqlInstance, Database, Schema, Table, TemporalTypeDescription, HistorySchema, HistoryTable, @{ Name = 'db'; Expression = { $db } } |
-                    Select-DefaultView -Property SqlInstance, Database, Schema, Table, TemporalTypeDescription, HistorySchema, HistoryTable
+                Select-DefaultView -Property SqlInstance, Database, Schema, Table, TemporalTypeDescription, HistorySchema, HistoryTable
             } catch {
                 Stop-PSFFunction -Message "Failure on $($db.Parent.Name) for database $($db.Name)" -ErrorRecord $_ -Continue
             }

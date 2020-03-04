@@ -7,7 +7,7 @@ function Disable-DbsBrowser {
         Disables and stops the SQL Server Broswer service on computers with no named instances
 
     .PARAMETER ComputerName
-        The SQL Server (or server in general) that you're connecting to. This command handles named instances
+        The SQL Server (or server in general) that you're connecting to This command handles named instances
 
     .PARAMETER Credential
         Credential object used to connect to the computer as a different user
@@ -47,13 +47,15 @@ function Disable-DbsBrowser {
     process {
         foreach ($computer in $ComputerName.ComputerName) {
             try {
-                $null = Test-ElevationRequirement -ComputerName $computer
+                if (-not (Test-ElevationRequirement -ComputerName $computer)) {
+                    return
+                }
                 $ports = Invoke-PSFCommand -Computer $computer -ScriptBlock {
                     [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SqlWmiManagement')
                     $wmi = New-Object Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer
                     $null = $wmi.Initialize()
                     $wmi.ServerInstances.ServerProtocols.IPAddresses.IPAddressProperties | Where-Object { $PSItem.Name -eq 'TcpPort' -and $PSItem.Value -ne 1433 } |
-                        Select-Object -Unique -Property Value
+                    Select-Object -Unique -Property Value
                 }
             } catch {
                 Stop-PSFFunction -Message "Error setting services on $computer" -ErrorRecord $_

@@ -26,7 +26,6 @@ function Set-DbsTraceFlag {
     .NOTES
         Tags: V-79097, V-79217
         Author: Tracy Boggiano (@TracyBoggiano), databasesuperhero.com
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 

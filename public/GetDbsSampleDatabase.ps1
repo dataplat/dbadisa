@@ -20,7 +20,6 @@ function Get-DbsSampleDatabase {
     .NOTES
         Tags: V-79195, V-79171
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 

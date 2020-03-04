@@ -5,9 +5,13 @@ Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
         It -Skip "should report that browser is disabled" {
             $results.BrowserDisabled | Should -Be $true
         }
-        $service = Get-Service *SQLBrowser*  -ComputerName $env:COMPUTERNAME
+        $service = Get-Service *SQLBrowser* -ComputerName $env:COMPUTERNAME
         It -Skip "should actually be disabled" {
             $service.StartType | Should -Be 'Disabled'
+        }
+        $results = Disable-DbsBrowser -ComputerName $env:COMPUTERNAME -WhatIf -WarningAction SilentlyContinue
+        It "should not return any objects when using whatif" {
+            $results | Should -Be $null
         }
     }
 }

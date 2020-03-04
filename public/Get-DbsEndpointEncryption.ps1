@@ -20,7 +20,6 @@ function Get-DbsEndpointEncryption {
     .NOTES
         Tags: V-79323, V-79325
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
@@ -48,9 +47,9 @@ function Get-DbsEndpointEncryption {
         }
         foreach ($endpoint in $endpoints) {
             $endpoint |
-                Add-Member -MemberType NoteProperty -Name DatabaseMirroringAlgorithm -Value $endpoint.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm -PassThru |
-                Add-Member -MemberType NoteProperty -Name ServiceBrokerAlgorithm -Value $endpoint.Payload.ServiceBroker.EndpointEncryptionAlgorithm -PassThru |
-                Select-DefaultView -Property SqlInstance, Id, Name, DatabaseMirroringAlgorithm, ServiceBrokerAlgorithm, Port, EndpointState, EndpointType, Owner, IsAdminEndpoint, Fqdn, IsSystemObject
+            Add-Member -MemberType NoteProperty -Name DatabaseMirroringAlgorithm -Value $endpoint.Payload.DatabaseMirroring.EndpointEncryptionAlgorithm -PassThru |
+            Add-Member -MemberType NoteProperty -Name ServiceBrokerAlgorithm -Value $endpoint.Payload.ServiceBroker.EndpointEncryptionAlgorithm -PassThru |
+            Select-DefaultView -Property SqlInstance, Id, Name, DatabaseMirroringAlgorithm, ServiceBrokerAlgorithm, Port, EndpointState, EndpointType, Owner, IsAdminEndpoint, Fqdn, IsSystemObject
         }
     }
 }

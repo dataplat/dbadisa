@@ -7,7 +7,7 @@ function Get-DbsFips {
         Returns a list of computers that are not FIPS compliant
 
     .PARAMETER ComputerName
-        The SQL Server (or server in general) that you're connecting to.
+        The SQL Server (or server in general) that you're connecting to
 
     .PARAMETER Credential
         Credential object used to connect to the computer as a different user.
@@ -22,9 +22,6 @@ function Get-DbsFips {
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
-
-    .LINK
-        https://dbadisa.readthedocs.io/en/latest/functions/Get-DbsFips
 
     .EXAMPLE
         PS C:\> Get-DbsFips -ComputerName sql2016, sql2017, sql2012
@@ -44,10 +41,13 @@ function Get-DbsFips {
     }
     process {
         foreach ($computer in $ComputerName.ComputerName) {
+            if (-not (Test-ElevationRequirement -ComputerName $computer)) {
+                return
+            }
             try {
-                $enabled = Invoke-Command2 -ComputerName $computer -ScriptBlock {
+                $enabled = Invoke-PSFCommand -ComputerName $computer -ScriptBlock {
                     Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy | Select-Object -ExpandProperty Enabled
-                } -Raw
+                }
                 if ($enabled) {
                     [pscustomobject]@{
                         ComputerName = $computer

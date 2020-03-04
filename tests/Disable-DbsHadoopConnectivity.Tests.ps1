@@ -13,5 +13,10 @@ Describe "$commandname Integration Tests" -Tags "IntegrationTests" {
             $config = Get-DbaSpConfigure -SqlInstance $env:COMPUTERNAME -Name HadoopConnectivity
             $config.RunningValue | Should -Be 0
         }
+
+        $results = Disable-DbsHadoopConnectivity -SqlInstance $env:COMPUTERNAME -WhatIf -WarningAction SilentlyContinue
+        It "should not return any objects when using whatif" {
+            $results | Should -Be $null
+        }
     }
 }

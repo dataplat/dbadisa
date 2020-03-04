@@ -23,7 +23,6 @@ function Revoke-DbsDbAlterPermission {
     .NOTES
         Tags: V-79109, V-79075, V-79081
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
@@ -49,7 +48,7 @@ function Revoke-DbsDbAlterPermission {
     process {
         if ($SqlInstance) {
             $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem |
-                Where-Object ContainmentType -eq $null
+            Where-Object ContainmentType -eq $null
         }
 
         foreach ($permission in $InputObject) {

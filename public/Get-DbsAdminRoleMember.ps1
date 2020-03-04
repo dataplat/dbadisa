@@ -20,7 +20,6 @@ function Get-DbsAdminRoleMember {
     .NOTES
         Tags: V-79217, V-79219, V-79235
         Author: Chrissy LeMaire (@cl), netnerds.net
-
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
