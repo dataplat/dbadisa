@@ -1,4 +1,4 @@
-function Get-DbsC2Disabled {
+function Get-DbsC2 {
     <#
     .SYNOPSIS
         Gets non-compliant Common Criteria Compliance settings.
