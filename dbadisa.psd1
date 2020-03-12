@@ -154,11 +154,12 @@
         'Test-DbsDiskSpace',
         'Test-DbsInstallPath',
         'Test-DbsServiceAccount',
-        'Test-DbsSpn'
+        'Test-DbsSpn',
+        'Find-DbsCommand'
     )
 
     CmdletsToExport   = @( )
-    AliasesToExport   = @( )
+    AliasesToExport   = @('findc')
 
     PrivateData       = @{
         # PSData is module packaging and gallery metadata embedded in PrivateData
