@@ -45,7 +45,7 @@ function Get-DbsCEIP {
             }
             # thanks to https://blog.dbi-services.com/sql-server-tips-deactivate-the-customer-experience-improvement-program-ceip/
             try {
-                Invoke-PSFCommand -ErrorAction SilentlyContinue -ComputerName $computer -ScriptBlock {
+                Invoke-PSFCommand -ErrorAction Stop -ComputerName $computer -ScriptBlock {
                     $enabled = $false
                     $services = Get-Service | Where-Object Name -Like "*TELEMETRY*"
 

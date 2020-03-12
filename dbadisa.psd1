@@ -154,7 +154,8 @@
         'Test-DbsDiskSpace',
         'Test-DbsInstallPath',
         'Test-DbsServiceAccount',
-        'Test-DbsSpn'
+        'Test-DbsSpn',
+        'Find-DbsCommand'
     )
 
     CmdletsToExport   = @( )
