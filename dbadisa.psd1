@@ -159,7 +159,7 @@
     )
 
     CmdletsToExport   = @( )
-    AliasesToExport   = @( )
+    AliasesToExport   = @('findc')
 
     PrivateData       = @{
         # PSData is module packaging and gallery metadata embedded in PrivateData
