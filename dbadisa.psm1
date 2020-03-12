@@ -55,20 +55,16 @@ Register-PSFTeppScriptblock -Name Version -ScriptBlock { "2008", "2012", "2014",
 Register-PSFTeppArgumentCompleter -Command Get-DbsStig -Parameter Version -Name Version
 
 # some configs to help with autocompletes and other module level stuff
-$defaultRepo = "$script:ModuleRoot\checks"
-Set-PSFConfig -Module dbadisa -Name app.checkrepos -Value @($defaultRepo) -Initialize -Description "Where Pester tests/checks are stored"
-Set-PSFConfig -Module dbadisa -Name app.sqlinstance -Value $null -Initialize -Description "List of SQL Server instances that SQL-based tests will run against"
-Set-PSFConfig -Module dbadisa -Name app.computername -Value $null -Initialize -Description "List of Windows Servers that Windows-based tests will run against"
-Set-PSFConfig -Module dbadisa -Name app.sqlcredential -Value $null -Initialize -Description "The universal SQL credential if Trusted/Windows Authentication is not used"
-Set-PSFConfig -Module dbadisa -Name app.wincredential -Value $null -Initialize -Description "The universal Windows if default Windows Authentication is not used"
 if ($IsLinux) {
     Set-PSFConfig -Module dbadisa -Name app.localapp -Value "$home\dbadisa" -Initialize -Description "Persisted files live here"
     Set-PSFConfig -Module dbadisa -Name app.maildirectory -Value "$home\dbadisa\dbadisa.mail" -Initialize -Description "Files for mail are stored here"
-
+    Set-PSFConfig -Module dbadisa -Name path.export -Value "$home\dbadisa\exports" -Initialize -Description "Default location of exports"
 } else {
     Set-PSFConfig -Module dbadisa -Name app.localapp -Value "$env:localappdata\dbadisa" -Initialize -Description "Persisted files live here"
     Set-PSFConfig -Module dbadisa -Name app.maildirectory -Value "$env:localappdata\dbadisa\dbadisa.mail" -Initialize -Description "Files for mail are stored here"
+    Set-PSFConfig -Module dbadisa -Name path.export -Value "$home\Documents\dbadisa\exports" -Initialize -Description "Default location of exports"
 }
+
 
 Set-PSFConfig -Module dbadisa -Name app.auditname -Value "DISA_STIG" -Initialize -Description "The standardized name of your DISA STIG Audit. Defaults to DISA_STIG."
 
