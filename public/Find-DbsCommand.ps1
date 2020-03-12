@@ -46,9 +46,9 @@ function Find-DbsCommand {
         For lazy typers: finds all commands searching the entire help for V-79355
 
     .EXAMPLE
-        PS C:\> Find-DbsCommand -Pattern V-79355
+        PS C:\> Find-DbsCommand -Pattern audit
 
-        For rigorous typers: finds all commands searching the entire help for V-79355
+        For rigorous typers: finds all commands searching the entire help for the word audit
 
     .EXAMPLE
         PS C:\> Find-DbsCommand -Tag V-79355
