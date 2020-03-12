@@ -142,7 +142,8 @@ function Find-DbsCommand {
             }
 
             ## fetch Parameters
-            $parameters = $thishelp.parameters.parameter
+            $parameters = $thishelp.parameters.parameter | Where-Object Name -notin 'SqlCredential', 'Credential', 'EnableException', 'WhatIf', 'Confirm'
+
             $command = Get-Command $commandName
             $params = @()
             foreach ($p in $parameters) {
