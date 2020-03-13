@@ -41,6 +41,7 @@ function Get-DbsTraceFlag {
     )
     begin {
         . "$script:ModuleRoot\private\Set-Defaults.ps1"
+        $PSDefaultParameterValues['*:WarningAction'] = 'SilentlyContinue'
     }
     process {
         foreach ($instance in $SqlInstance) {

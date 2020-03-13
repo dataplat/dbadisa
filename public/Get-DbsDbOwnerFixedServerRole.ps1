@@ -50,7 +50,7 @@ function Get-DbsDbOwnerFixedServerRole {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance -MinimumVersion 11 | Get-DbaDatabase
+            $InputObject = Get-DbaDatabase
         }
 
         foreach ($db in $InputObject) {

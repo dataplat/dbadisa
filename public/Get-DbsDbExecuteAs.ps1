@@ -50,7 +50,7 @@ function Get-DbsDbExecuteAs {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance -MinimumVersion 12 | Get-DbaDatabase
+            $InputObject = Get-DbaDatabase
         }
         foreach ($db in $InputObject) {
             try {

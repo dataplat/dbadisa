@@ -52,6 +52,8 @@ function Get-DbsDbUser {
         if ($SqlInstance) {
             $InputObject = Get-DbaDatabase @PSBoundParameters -ExcludeDatabase msdb
         }
-        $InputObject | Get-DbaDbUser | Select-Object SqlInstance, Database, Name, Login, LoginType, AuthenticationType, HasDbAccess, DefaultSchema
+        foreach ($db in $InputObject) {
+            Get-DbaDbUser -SqlInstance $db.parent -Database $db.Name | Select-Object SqlInstance, Database, Name, Login, LoginType, AuthenticationType, HasDbAccess, DefaultSchema
+        }
     }
 }

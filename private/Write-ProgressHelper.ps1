@@ -14,29 +14,8 @@ function Write-ProgressHelper {
 
     if (-not $Activity) {
         $Activity = switch ($caller) {
-            "Export-DbaInstance" {
+            "Export-DbsInstance" {
                 "Performing Instance Export for $instance"
-            }
-            "Install-DbaSqlWatch" {
-                "Installing SQLWatch"
-            }
-            "Invoke-DbaDbLogShipRecovery" {
-                "Performing log shipping recovery"
-            }
-            "Invoke-DbaDbLogShipRecovery" {
-                "Performing log shipping recovery"
-            }
-            "Invoke-DbaDbMirroring" {
-                "Setting up mirroring"
-            }
-            "New-DbaAvailabilityGroup" {
-                "Adding new availability group"
-            }
-            "Sync-DbaAvailabilityGroup" {
-                "Syncing availability group"
-            }
-            "Sync-DbaAvailabilityGroup" {
-                "Syncing availability group"
             }
             default {
                 "Executing $caller"

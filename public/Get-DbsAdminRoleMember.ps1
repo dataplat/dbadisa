@@ -41,6 +41,16 @@ function Get-DbsAdminRoleMember {
         [switch]$EnableException
     )
     process {
-        Get-DbaServerRoleMember @PSBoundParameters | Where-Object Role -in sysadmin, securityadmin
+        # Get-DbaServerRoleMember kept throwing an "object isn't a reference to an object" issue, no idea why
+        $roles = Get-DbaServerRole @PSBoundParameters | Where-Object Role -in sysadmin, securityadmin
+        foreach ($role in $roles) {
+            foreach ($login in $role.Login) {
+                [pscustomobject]@{
+                    SqlInstance = $role.Sqlinstance
+                    Role = $role.Role
+                    Login = $login
+                }
+            }
+        }
     }
 }

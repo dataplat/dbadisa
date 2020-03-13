@@ -54,7 +54,7 @@ function Get-DbsDbComputerUser {
         }
 
         foreach ($db in $InputObject) {
-            $users = $db | Get-DbaDbUser | Where-Object Name -like '*$' | Sort-Object -Unique SqlInstance, Database, Login
+            $users = Get-DbaDbUser -SqlInstance $db.parent -Database $db.Name | Where-Object Name -like '*$' | Sort-Object -Unique SqlInstance, Database, Login
             foreach ($user in $users) {
                 try {
                     # parse ad\user
