@@ -56,7 +56,7 @@ function Get-DbsAuditFilter {
         foreach ($instance in $SqlInstance) {
             try {
                 $server = Connect-DbaInstance -SqlInstance $instance
-                $server.Query("SELECT @@SERVERNAME as SqlInstance, a.name AS AuditName,
+                $server.Query("SELECT @@SERVERNAME as SqlInstance, Name AS AuditName,
                             predicate AS AuditFilter
                             FROM sys.server_audits
                             WHERE predicate IS NOT NULL")
