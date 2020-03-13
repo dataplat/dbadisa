@@ -21,7 +21,7 @@ function Get-DbsDbTrustworthy {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79071
+        Tags: V-79071, NonCompliantResults
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
@@ -63,7 +63,7 @@ function Get-DbsDbTrustworthy {
                 LEFT JOIN sys.server_role_members rm ON login.principal_id = rm.member_principal_id
                 LEFT JOIN sys.server_principals role ON rm.role_principal_id = role.principal_id
                 LEFT JOIN sys.server_permissions permission ON login.principal_id = permission.grantee_principal_id
-                WHERE d.name = DB_NAME()"
+                WHERE d.name = DB_NAME() and d.is_trustworthy_on = 1"
     }
     process {
         if ($SqlInstance) {

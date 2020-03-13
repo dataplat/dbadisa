@@ -79,7 +79,7 @@ function Export-DbsInstance {
     begin {
         . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $null = Test-ExportDirectory -Path $Path
-        $commands = Get-Command -module dbadisa | Where-Object Verb -in 'Get', 'Test' | Select-Object -ExpandProperty Name
+        $commands = Get-Command -module dbadisa | Where-Object { $PSItem.Verb -in 'Get', 'Test' -and $PSItem.Name -match 'Dbs' -and $PSItem.Name -notin 'Get-DbsStig' } | Select-Object -ExpandProperty Name
         $noncompliant = Find-DbsCommand -Tag NonCompliantResults | Select-Object -ExpandProperty CommandName
 
     }
@@ -124,8 +124,13 @@ function Export-DbsInstance {
                     $filename = "$exportPath\$filename.xml"
                     Write-PSFMessage -Level Verbose -Message "Exporting $partname to $filename"
                     Write-ProgressHelper -StepNumber ($stepCounter++) -TotalSteps $commands.Count -Message "Exporting $partname to $filename"
-                    Invoke-Expression -Command $command | Select-Object -Property * -ExcludeProperty Parent, ParentCollection, db, server | Export-CliXml -Path $filename -Depth 2
-                    Get-ChildItem -Path $filename -ErrorAction Ignore # -WarningAction SilentlyContinue
+                    $results = Invoke-Expression -Command $command 3>$null |
+                        Select-Object -Property * -ExcludeProperty Parent, ParentCollection, db, server, Properties
+
+                    if ($results) {
+                        $results | Export-CliXml -Path $filename -Depth 2
+                        Get-ChildItem -Path $filename -ErrorAction Ignore
+                    }
                 }
             }
 
