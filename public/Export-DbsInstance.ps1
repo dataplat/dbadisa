@@ -25,17 +25,10 @@ function Export-DbsInstance {
         If this switch is used, databases will be left in the No Recovery state to enable further backups to be added.
 
     .PARAMETER Exclude
-        Exclude one or more objects to export
+        Exclude one or more exports
 
-        Databases
-        Logins
-        AgentServer
-
-    .PARAMETER Append
-        Append to the target file instead of overwriting.
-
-    .PARAMETER Append
-        Specifies if it is a baseline
+    .PARAMETER Baseline
+        Specifies if it is a baseline, which basiscally names the folder differently
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
@@ -72,7 +65,6 @@ function Export-DbsInstance {
         [Alias("FilePath")]
         [string]$Path = (Get-PSFConfigValue -FullName dbadisa.path.export),
         [string[]]$Exclude,
-        [switch]$Append,
         [switch]$Baseline,
         [switch]$EnableException
     )
