@@ -69,6 +69,8 @@ function Get-DbsDbTrustworthy {
         if ($SqlInstance) {
             $InputObject = Get-DbaDatabase @PSBoundParameters -ExcludeDatabase msdb
         }
-        $InputObject | Invoke-DbaQuery -Query $sql
+        foreach ($db in $InputObject) {
+            $db.Query($sql)
+        }
     }
 }

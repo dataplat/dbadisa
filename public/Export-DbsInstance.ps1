@@ -79,46 +79,6 @@ function Export-DbsInstance {
     begin {
         . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $null = Test-ExportDirectory -Path $Path
-        <#
-        Get-DbsAlert
-        Get-DbsAuditDisabled
-        Get-DbsAuditFilter
-        Get-DbsAuditLogin
-        Get-DbsAuditMaxValue
-        Get-DbsAuditOnFailure
-        Get-DbsAuditStartupState
-        Get-DbsBrowser
-        Get-DbsC2
-        Get-DbsDbAlterPermission
-        Get-DbsDbContainedUser
-        Get-DbsDbKeyEncryptedByPassword
-        Get-DbsDbKeyNotEncryptedByServer
-        Get-DbsDbProhibitedKeyAlgorithm
-        Get-DbsDbRecoveryModel
-        Get-DbsDbTde
-        Get-DbsEndpointEncryption
-        Get-DbsExternalScripts
-        Get-DbsFilestreamAccess
-        Get-DbsFips
-        Get-DbsHadoopConnectivity
-        Get-DbsIFI
-        Get-DbsLoginProperty
-        Get-DbsOleAutomation
-        Get-DbsPolybaseExport
-        Get-DbsProtocol
-        Get-DbsRemoteAccess
-        Get-DbsRemoteDataArchive
-        Get-DbsReplicationXp
-        Get-DbsSaAccount
-        Get-DbsSampleDatabase
-        Get-DbsSqlClr
-        Get-DbsSystemPermission
-        Get-DbsTimeSource
-        Get-DbsTraceFlag
-        Get-DbsUserOptions
-        Get-DbsXPCmdShell
-        Test-DbsDiskSpace
-        #>
         $commands = Get-Command -module dbadisa | Where-Object Verb -in 'Get', 'Test' | Select-Object -ExpandProperty Name
         $noncompliant = Find-DbsCommand -Tag NonCompliantResults | Select-Object -ExpandProperty CommandName
 
@@ -164,7 +124,7 @@ function Export-DbsInstance {
                     $filename = "$exportPath\$filename.xml"
                     Write-PSFMessage -Level Verbose -Message "Exporting $partname to $filename"
                     Write-ProgressHelper -StepNumber ($stepCounter++) -TotalSteps $commands.Count -Message "Exporting $partname to $filename"
-                    Invoke-Expression -Command $command | Select-Object -Property * -ExcludeProperty Parent | Export-CliXml -Path $filename -Depth 2
+                    Invoke-Expression -Command $command | Select-Object -Property * -ExcludeProperty Parent, ParentCollection, db, server | Export-CliXml -Path $filename -Depth 2
                     Get-ChildItem -Path $filename -ErrorAction Ignore # -WarningAction SilentlyContinue
                 }
             }

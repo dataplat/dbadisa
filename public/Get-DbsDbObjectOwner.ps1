@@ -68,7 +68,7 @@ function Get-DbsDbObjectOwner {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Connect-DbaInstance -SqlInstance $SqlInstance | Where-Object VersionMajor -gt 11 | Get-DbaDatabase
+            $InputObject = Get-DbaDatabase
         }
 
         foreach ($db in $InputObject) {
