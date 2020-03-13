@@ -51,7 +51,8 @@ function Get-DbsDbKeyEncryptedByPassword {
                 FROM sys.symmetric_keys s, sys.key_encryptions k
                 WHERE s.name = '##MS_DatabaseMasterKey##'
                 AND s.symmetric_key_id = k.key_id
-                AND k.crypt_type = 'ESKP'"
+                AND k.crypt_type = 'ESKP'
+                GROUP BY Name"
     }
     process {
         if ($SqlInstance) {
