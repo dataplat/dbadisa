@@ -71,6 +71,6 @@ Set-PSFConfig -Module dbadisa -Name app.auditname -Value "DISA_STIG" -Initialize
 $script:allnumbers = @(90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200)
 
 New-Alias -Name findc -Value Find-DbsCommand -ErrorAction SilentlyContinue
-Export-Alias findc
+Export-ModuleMember -Alias findc
 
 # $partname = $command.Replace("Get-Dbs","").Replace("Test-Dbs","")
