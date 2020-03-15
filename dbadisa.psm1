@@ -62,7 +62,7 @@ if ($IsLinux) {
 } else {
     Set-PSFConfig -Module dbadisa -Name app.localapp -Value "$env:localappdata\dbadisa" -Initialize -Description "Persisted files live here"
     Set-PSFConfig -Module dbadisa -Name app.maildirectory -Value "$env:localappdata\dbadisa\dbadisa.mail" -Initialize -Description "Files for mail are stored here"
-    Set-PSFConfig -Module dbadisa -Name path.export -Value "$home\Documents\dbadisa\exports" -Initialize -Description "Default location of exports"
+    Set-PSFConfig -Module dbadisa -Name path.export -Value "$home\Documents\dbadisa" -Initialize -Description "Default location of exports"
 }
 
 
@@ -70,6 +70,10 @@ Set-PSFConfig -Module dbadisa -Name app.auditname -Value "DISA_STIG" -Initialize
 
 $script:allnumbers = @(90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200)
 
-#New-Alias -Name findc -Value Find-DbsCommand -ErrorAction SilentlyContinue
-#Export-ModuleMember -Alias findc
-# $partname = $command.Replace("Get-Dbs","").Replace("Test-Dbs","")
+
+Register-PSFTeppScriptblock -Name ExportExclude -ScriptBlock {
+    $command = Get-Command -module dbadisa | Where-Object { $PSItem.Verb -in 'Get', 'Test' -and $PSItem.Name -match 'Dbs' -and $PSItem.Name -notin 'Get-DbsStig' } | Select-Object -ExpandProperty Name
+    $command.Replace("Get-Dbs", "").Replace("Test-Dbs", "")
+}
+
+Register-PSFTeppArgumentCompleter -Command Export-DbsInstance -Parameter Exclude -Name ExportExclude

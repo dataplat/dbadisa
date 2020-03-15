@@ -27,6 +27,10 @@
     # Minimum version of the Windows PowerShell engine required by this module
     PowerShellVersion = '3.0'
 
+    # Format files (xml) to be loaded when importing this module
+    # "xml\dbatools.Format.ps1xml"
+    FormatsToProcess       = @("bin\xml\dbadisa.Format.ps1xml")
+
     # Modules that must be imported into the global environment prior to importing this module
     # @{ ModuleName = 'dbachecks'; ModuleVersion = '1.2.15' }
     RequiredModules   = @(
@@ -156,7 +160,8 @@
         'Test-DbsServiceAccount',
         'Test-DbsSpn',
         'Find-DbsCommand',
-        'Export-DbsInstance'
+        'Export-DbsInstance',
+        'Get-DbsNonCompliance'
     )
 
     CmdletsToExport   = @( )

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Configuration>
+    <ViewDefinitions>
+                <!-- dbadisa.NonCompliant -->
+        <View>
+            <Name>dbadisa.NonCompliant</Name>
+            <ViewSelectedBy>
+                <TypeName>dbadisa.NonCompliant</TypeName>
+            </ViewSelectedBy>
+            <TableControl>
+                <AutoSize/>
+                <TableHeaders>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                    <TableColumnHeader/>
+                </TableHeaders>
+                <TableRowEntries>
+                    <TableRowEntry>
+                        <TableColumnItems>
+                            <TableColumnItem>
+                                <PropertyName>SqlInstance</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>NonCompliant</PropertyName>
+                            </TableColumnItem>
+                            <TableColumnItem>
+                                <PropertyName>Id</PropertyName>
+                            </TableColumnItem>
+                        </TableColumnItems>
+                    </TableRowEntry>
+                </TableRowEntries>
+            </TableControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>
