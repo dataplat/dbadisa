@@ -37,10 +37,15 @@ function Get-DbsNonCompliance {
         [switch]$EnableException
     )
     begin {
+        . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $files = @()
     }
     process {
-        $files += Get-ChildItem -Path $Path -Recurse | Where-Object Name -match noncompliant
+        try {
+            $files += Get-ChildItem -Path $Path -Recurse -ErrorAction Stop | Where-Object Name -match noncompliant
+        } catch {
+            Stop-Function -Message "Failure processing $Path" -ErrorRecord $_
+        }
     }
     end {
         $commands = Get-Command -Module dbadisa
@@ -58,7 +63,7 @@ function Get-DbsNonCompliance {
             [pscustomobject]@{
                 SqlInstance = $instance
                 NonCompliant = $noncompliant
-                ID = $tags.Trim()
+                ID = $tags.Trim().Split(",")
             } | Select-DefaultView -Property SqlInstance, NonCompliant, ID -Type NonCompliant
         }
     }
