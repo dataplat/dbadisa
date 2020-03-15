@@ -18,17 +18,11 @@ function Export-DbsInstance {
     .PARAMETER Path
         Specifies the directory where the file or files will be exported.
 
-    .PARAMETER WithReplace
-        If this switch is used, databases are restored from backup using WITH REPLACE. This is useful if you want to stage some complex file paths.
-
-    .PARAMETER NoRecovery
-        If this switch is used, databases will be left in the No Recovery state to enable further backups to be added.
-
     .PARAMETER Exclude
-        Exclude one or more exports
+        Exclude one or more exports. This is autopopulated so just tab whatever you'd like
 
     .PARAMETER Baseline
-        Specifies if it is a baseline, which basiscally names the folder differently
+        Specifies if it is a baseline, which basically names the folder differently
 
     .PARAMETER EnableException
         By default, when something goes wrong we try to catch it, interpret it and give you a friendly warning message.
