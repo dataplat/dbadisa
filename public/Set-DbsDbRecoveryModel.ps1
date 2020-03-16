@@ -51,7 +51,7 @@ function Set-DbsDbRecoveryModel {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase @PSBoundParameters -ExcludeSystem | Where-Object IsAccessible
+            $InputObject = Get-DbaDatabase -SqlInstance $sqlinstance -SqlCredential $sqlcredential -EnableException:$EnableException -ExcludeSystem | Where-Object IsAccessible
         }
         $results = $InputObject | Set-DbaDbRecoveryModel -RecoveryModel Full
         Select-DefaultView -InputObject $results -Property SqlInstance, 'Name as Database', RecoveryModel

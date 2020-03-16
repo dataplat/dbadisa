@@ -62,7 +62,7 @@ function Start-DbsStig {
 
         Exports everything to C:\servers but scripts do not include prefix information.
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
@@ -78,10 +78,9 @@ function Start-DbsStig {
         [switch]$EnableException
     )
     begin {
-        $ConfirmPreference = "Low"
         . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $verbs = 'Set', 'Disable', 'Enable', 'Repair', 'Remove', 'Revoke'
-        $commands = Get-Command -module dbadisa | Where-Object { $PSItem.Verb -in $verbs -and $PSItem.Name -match 'Dbs' } | Select-Object -ExpandProperty Name
+        $commands = Get-Command -module dbadisa | Where-Object { $PSItem.Verb -in $verbs -and $PSItem.Name -match 'Dbs' -and $PSItem.Name -ne'Set-DbsDbFileSize' } | Select-Object -ExpandProperty Name
 
         # This requires some extra elbow grease
         if ($PSboundparameters.Confirm) {
@@ -125,32 +124,33 @@ function Start-DbsStig {
                         $tags = $tagsrex.Match($as).Groups[1].Value | Where-Object { $PSItem -match 'V-' }
                         $tags = $tags.Replace(", NonCompliantResults", "").Trim().Split(",")
 
+                        Write-PSFMessage -Level Verbose -Message "Stigging $instance"
+                        Write-ProgressHelper -StepNumber ($stepCounter++) -TotalSteps $commands.Count -Message "Running $command" -Activity "Stigging $instance"
+
                         switch ($command) {
                             "Set-DbsAcl" {
-                                $results = Invoke-Expression -Command $command -Owner $AclOwner -Account $AclAccount 3>$warn
+                                # so finallly heres whats up, it needs to be arguments
+                                $results = Set-DbsAcl -Owner $AclOwner -Account $AclAccount 3>$warn
                             }
                             "Set-DbsDbSchemaOwner" {
-                                $results = Invoke-Expression -Command $command -Owner $SchemaOwner 3>$warn
+                                $results = Set-DbsDbSchemaOwner -Owner $SchemaOwner 3>$warn
                             }
                             "Set-DbsAuditMaintainer" {
-                                $results = Invoke-Expression -Command $command -Login $AuditMaintainer 3>$warn
+                                $results = Set-DbsAuditMaintainer -Login $AuditMaintainer 3>$warn
                             }
                             "Set-DbsDbAuditMaintainer" {
-                                $results = Invoke-Expression -Command $command -User $DbAuditMaintainer 3>$warn
+                                $results = Set-DbsDbAuditMaintainer -User $DbAuditMaintainer 3>$warn
                             }
                             "Set-DbsConnectionLimit" {
-                                $results = Invoke-Expression -Command $command -Value $ConnectionLimit 3>$warn
+                                $results = Set-DbsConnectionLimit -Value $ConnectionLimit 3>$warn
+                            }
+                            "Set-DbsEndpointEncryption" {
+                                $results = Get-DbsEndpointEncryption | Set-DbsEndpointEncryption 3>$warn
                             }
                             default {
                                 $results = Invoke-Expression -Command $command 3>$warn
                             }
                         }
-                        if ($command -eq 'Set-DbsAcl') {
-
-                        } else {
-                            $results = Invoke-Expression -Command $command 3>$warn
-                        }
-
 
                         if ($warn) {
                             Write-PSFMessage -Level Verbose -Message "$warn"
@@ -159,16 +159,18 @@ function Start-DbsStig {
                         [pscustomobject]@{
                             SqlInstance = $instance
                             Command     = $command
-                            Tags = $tags
-                            Result      = $results
-                        }
+                            Tags        = $tags
+                            Result      = "Success"
+                            Results     = $results
+                        } | Select-DefaultView -Property SqlInstance, Command, Result, Tags
                     } catch {
                         [pscustomobject]@{
                             SqlInstance = $instance
                             Command     = $command
                             Tags        = $tags
                             Result      = "Failure: $_"
-                        }
+                            Results     = $results
+                        } | Select-DefaultView -Property SqlInstance, Command, Result, Tags
                         Stop-PSFFunction -Message "Failure" -ErrorRecord $_ -Continue
                     }
                 }

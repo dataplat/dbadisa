@@ -78,7 +78,7 @@ Register-PSFTeppArgumentCompleter -Command Export-DbsInstance -Parameter Exclude
 
 Register-PSFTeppScriptblock -Name StigExclude -ScriptBlock {
     $verbs = 'Set', 'Disable', 'Enable', 'Repair', 'Remove', 'Revoke'
-    $commands = Get-Command -module dbadisa | Where-Object { $PSItem.Verb -in $verbs -and $PSItem.Name -match 'Dbs' } | Select-Object -ExpandProperty Name
+    $commands = Get-Command -module dbadisa | Where-Object { $PSItem.Verb -in $verbs -and $PSItem.Name -match 'Dbs' -and $PSItem.Name -ne 'Set-DbsDbFileSize' } | Select-Object -ExpandProperty Name
     $commands -Replace ".*-Dbs", ""
 }
 

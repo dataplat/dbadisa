@@ -46,7 +46,7 @@ function Set-DbsLoginProperty {
         [switch]$EnableException
     )
     process {
-        $noncompliant = Get-DbsLoginProperty @PSBoundParameters
+        $noncompliant = Get-DbsLoginProperty -SqlInstance $sqlinstance -SqlCredential $sqlcredential -EnableException:$EnableException
         foreach ($login in $noncompliant) {
             if ($PSCmdlet.ShouldProcess($login.Parent.name, "Changing properties for $($login.Name)")) {
                 $null = $login.PasswordExpirationEnabled = $true
