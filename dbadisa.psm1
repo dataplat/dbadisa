@@ -65,15 +65,21 @@ if ($IsLinux) {
     Set-PSFConfig -Module dbadisa -Name path.export -Value "$home\Documents\dbadisa" -Initialize -Description "Default location of exports"
 }
 
-
 Set-PSFConfig -Module dbadisa -Name app.auditname -Value "DISA_STIG" -Initialize -Description "The standardized name of your DISA STIG Audit. Defaults to DISA_STIG."
 
 $script:allnumbers = @(90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200)
 
-
 Register-PSFTeppScriptblock -Name ExportExclude -ScriptBlock {
-    $command = Get-Command -module dbadisa | Where-Object { $PSItem.Verb -in 'Get', 'Test' -and $PSItem.Name -match 'Dbs' -and $PSItem.Name -notin 'Get-DbsStig' } | Select-Object -ExpandProperty Name
-    $command.Replace("Get-Dbs", "").Replace("Test-Dbs", "")
+    $commands = Get-Command -module dbadisa | Where-Object { $PSItem.Verb -in 'Get', 'Test' -and $PSItem.Name -match 'Dbs' -and $PSItem.Name -notin 'Get-DbsStig' } | Select-Object -ExpandProperty Name
+    $commands -Replace ".*-Dbs", ""
 }
 
 Register-PSFTeppArgumentCompleter -Command Export-DbsInstance -Parameter Exclude -Name ExportExclude
+
+Register-PSFTeppScriptblock -Name StigExclude -ScriptBlock {
+    $verbs = 'Set', 'Disable', 'Enable', 'Repair', 'Remove', 'Revoke'
+    $commands = Get-Command -module dbadisa | Where-Object { $PSItem.Verb -in $verbs -and $PSItem.Name -match 'Dbs' } | Select-Object -ExpandProperty Name
+    $commands -Replace ".*-Dbs", ""
+}
+
+Register-PSFTeppArgumentCompleter -Command Start-DbsStig -Parameter Exclude -Name StigExclude

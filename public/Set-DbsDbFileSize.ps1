@@ -53,7 +53,6 @@ function Set-DbsDbFileSize {
 
         Shows what would happen if the command were executed
     #>
-
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
     param (
         [parameter(ValueFromPipeline)]
