@@ -53,7 +53,7 @@ function Start-DbsStig {
 
         Exports everything to C:\servers but scripts do not include prefix information.
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
@@ -63,17 +63,23 @@ function Start-DbsStig {
         [switch]$EnableException
     )
     begin {
+        $ConfirmPreference = "High"
         . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $verbs = 'Set', 'Disable', 'Enable', 'Repair', 'Remove', 'Revoke'
         $commands = Get-Command -module dbadisa | Where-Object { $PSItem.Verb -in $verbs -and $PSItem.Name -match 'Dbs' } | Select-Object -ExpandProperty Name
         $commands = Get-Command -Module dbadisa
     }
     process {
+        return $PSCmdlet.ShouldProcess
         foreach ($instance in $SqlInstance) {
             $stepCounter = 0
             $PSDefaultParameterValues['*Dba*:SqlInstance'] = $instance
             $PSDefaultParameterValues['*Dbs*:SqlInstance'] = $instance
             $PSDefaultParameterValues['*Dbs*:ComputerName'] = $instance.ComputerName
+
+            if (-not (Test-ElevationRequirement -ComputerName $instance.ComputerName)) {
+                return
+            }
 
             foreach ($command in $commands) {
                 $partname = $command -Replace ".*-Dbs", ""

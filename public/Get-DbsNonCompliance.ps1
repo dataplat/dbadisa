@@ -29,7 +29,7 @@ function Get-DbsNonCompliance {
 
         Easily see non-compliant server info
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Medium")]
+    [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
         [Alias("FilePath")]
