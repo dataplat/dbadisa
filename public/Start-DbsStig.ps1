@@ -21,6 +21,15 @@ function Start-DbsStig {
     .PARAMETER Exclude
         Exclude one or more exports. This is autopopulated so just tab whatever you'd like
 
+    .PARAMETER AclOwner
+        Set the owner for Set-DbsAcl
+
+    .PARAMETER AclAccount
+        Set the account for Set-DbsAcl
+
+    .PARAMETER SchemaOwner
+        Set the owner for Set-DbsDbSchemaOwner, this can be dangeroo
+
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
@@ -62,7 +71,10 @@ function Start-DbsStig {
         [string[]]$Exclude,
         [string]$AclOwner,
         [string[]]$AclAccount,
+        [string[]]$AuditMaintainer,
+        [string[]]$DbAuditMaintainer,
         [string]$SchemaOwner,
+        [int]$ConnectionLimit,
         [switch]$EnableException
     )
     begin {
@@ -84,9 +96,14 @@ function Start-DbsStig {
         }
     }
     process {
-        if (($Exclude -contains 'Acl' -or $Exclude -notcontains 'DbSchemaOwner') -and -not $Owner) {
-            #Stop-PSFFunction -Message "You must specify an Owner if you don't exclude Acl or DbSchemaOwner"
-            #return
+        if ($Exclude -notcontains 'Acl' -and -not $AclAccount -and -not $AclOwner) {
+            Stop-PSFFunction -Message "You must specify an AclAccount and AclOwner if you don't -Exclude Acl"
+            return
+        }
+
+        if ($Exclude -notcontains 'DbSchemaOwner' -and -not $SchemaOwner) {
+            Stop-PSFFunction -Message "You must specify SchemaOwner if you didn't -Exclude DbSchemaOwner"
+            return
         }
 
         foreach ($instance in $SqlInstance) {
@@ -110,11 +127,19 @@ function Start-DbsStig {
 
                         switch ($command) {
                             "Set-DbsAcl" {
-                                write-warning Set-dbsAcl
                                 $results = Invoke-Expression -Command $command -Owner $AclOwner -Account $AclAccount 3>$warn
                             }
                             "Set-DbsDbSchemaOwner" {
                                 $results = Invoke-Expression -Command $command -Owner $SchemaOwner 3>$warn
+                            }
+                            "Set-DbsAuditMaintainer" {
+                                $results = Invoke-Expression -Command $command -Login $AuditMaintainer 3>$warn
+                            }
+                            "Set-DbsDbAuditMaintainer" {
+                                $results = Invoke-Expression -Command $command -User $DbAuditMaintainer 3>$warn
+                            }
+                            "Set-DbsConnectionLimit" {
+                                $results = Invoke-Expression -Command $command -Value $ConnectionLimit 3>$warn
                             }
                             default {
                                 $results = Invoke-Expression -Command $command 3>$warn
