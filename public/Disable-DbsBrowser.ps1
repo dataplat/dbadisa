@@ -54,7 +54,7 @@ function Disable-DbsBrowser {
                     [void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SqlWmiManagement')
                     $wmi = New-Object Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer
                     $null = $wmi.Initialize()
-                    $wmi.ServerInstances.ServerProtocols.IPAddresses.IPAddressProperties | Where-Object { $PSItem.Name -eq 'TcpPort' -and $PSItem.Value -ne 1433 } -ErrorAction Stop |
+                    $wmi.ServerInstances.ServerProtocols.IPAddresses.IPAddressProperties | Where-Object { $PSItem.Name -eq 'TcpPort' -and $PSItem.Value -ne 1433 } |
                     Select-Object -Unique -Property Value
                 }
             } catch {
