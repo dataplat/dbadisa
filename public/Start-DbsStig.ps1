@@ -60,17 +60,35 @@ function Start-DbsStig {
         [PSCredential]$SqlCredential,
         [PSCredential]$Credential,
         [string[]]$Exclude,
+        [string]$AclOwner,
+        [string[]]$AclAccount,
+        [string]$SchemaOwner,
         [switch]$EnableException
     )
     begin {
-        $ConfirmPreference = "High"
+        $ConfirmPreference = "Low"
         . "$script:ModuleRoot\private\Set-Defaults.ps1"
         $verbs = 'Set', 'Disable', 'Enable', 'Repair', 'Remove', 'Revoke'
         $commands = Get-Command -module dbadisa | Where-Object { $PSItem.Verb -in $verbs -and $PSItem.Name -match 'Dbs' } | Select-Object -ExpandProperty Name
-        $commands = Get-Command -Module dbadisa
+
+        # This requires some extra elbow grease
+        if ($PSboundparameters.Confirm) {
+            $PSDefaultParameterValues['*Dbs*:Confirm'] = $true
+        } else {
+            $PSDefaultParameterValues['*Dbs*:Confirm'] = $false
+        }
+        if ($PSboundparameters.WhatIf) {
+            $PSDefaultParameterValues['*Dbs*:WhatIf'] = $true
+        } else {
+            $PSDefaultParameterValues['*Dbs*:WhatIf'] = $false
+        }
     }
     process {
-        return $PSCmdlet.ShouldProcess
+        if (($Exclude -contains 'Acl' -or $Exclude -notcontains 'DbSchemaOwner') -and -not $Owner) {
+            #Stop-PSFFunction -Message "You must specify an Owner if you don't exclude Acl or DbSchemaOwner"
+            #return
+        }
+
         foreach ($instance in $SqlInstance) {
             $stepCounter = 0
             $PSDefaultParameterValues['*Dba*:SqlInstance'] = $instance
@@ -90,7 +108,24 @@ function Start-DbsStig {
                         $tags = $tagsrex.Match($as).Groups[1].Value | Where-Object { $PSItem -match 'V-' }
                         $tags = $tags.Replace(", NonCompliantResults", "").Trim().Split(",")
 
-                        $results = Invoke-Expression -Command $command 3>$warn
+                        switch ($command) {
+                            "Set-DbsAcl" {
+                                write-warning Set-dbsAcl
+                                $results = Invoke-Expression -Command $command -Owner $AclOwner -Account $AclAccount 3>$warn
+                            }
+                            "Set-DbsDbSchemaOwner" {
+                                $results = Invoke-Expression -Command $command -Owner $SchemaOwner 3>$warn
+                            }
+                            default {
+                                $results = Invoke-Expression -Command $command 3>$warn
+                            }
+                        }
+                        if ($command -eq 'Set-DbsAcl') {
+
+                        } else {
+                            $results = Invoke-Expression -Command $command 3>$warn
+                        }
+
 
                         if ($warn) {
                             Write-PSFMessage -Level Verbose -Message "$warn"
