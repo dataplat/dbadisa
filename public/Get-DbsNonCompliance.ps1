@@ -44,7 +44,7 @@ function Get-DbsNonCompliance {
         try {
             $files += Get-ChildItem -Path $Path -Recurse -ErrorAction Stop | Where-Object Name -match noncompliant
         } catch {
-            Stop-Function -Message "Failure processing $Path" -ErrorRecord $_
+            Stop-PSFFunction -Message "Failure processing $Path" -ErrorRecord $_ -Continue
         }
     }
     end {
@@ -59,11 +59,11 @@ function Get-DbsNonCompliance {
             $tagsRex = ([regex]'(?m)^[\s]{0,15}Tags:(.*)$')
             $as = $thishelp.AlertSet | Out-String -Width 600
             $tags = $tagsrex.Match($as).Groups[1].Value | Where-Object { $PSItem -match 'V-' }
-            $tags = $tags.Replace(", NonCompliantResults", "")
+            $tags = $tags.Replace(", NonCompliantResults", "").Trim().Split(",")
             [pscustomobject]@{
                 SqlInstance = $instance
                 NonCompliant = $noncompliant
-                ID = $tags.Trim().Split(",")
+                ID = $tags
             } | Select-DefaultView -Property SqlInstance, NonCompliant, ID -Type NonCompliant
         }
     }

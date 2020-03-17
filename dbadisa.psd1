@@ -161,7 +161,8 @@
         'Test-DbsSpn',
         'Find-DbsCommand',
         'Export-DbsInstance',
-        'Get-DbsNonCompliance'
+        'Get-DbsNonCompliance',
+        'Start-DbsStig'
     )
 
     CmdletsToExport   = @( )

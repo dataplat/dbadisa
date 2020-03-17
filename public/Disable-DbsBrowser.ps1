@@ -82,7 +82,7 @@ function Disable-DbsBrowser {
                     try {
                         $browser = Get-DbaService -ComputerName $computer -Type Browser
                         $null = $browser | Stop-DbaService
-                        $null = $browser | Set-Service -StartupType Disabled
+                        $null = $browser | Set-Service -StartupType Disabled -ErrorAction Stop
                         [pscustomobject]@{
                             ComputerName    = $computer
                             BrowserDisabled = $true

@@ -102,7 +102,7 @@ function Export-DbsInstance {
             }
 
             foreach ($command in $commands) {
-                $partname = $filename = $command.Replace("Get-Dbs","").Replace("Test-Dbs","")
+                $partname = $filename = $command -Replace ".*-Dbs", ""
                 if ($Exclude -notcontains $partname) {
                     if ($command -in $noncompliant) {
                         $filename = "$partname-noncompliant"
@@ -119,7 +119,6 @@ function Export-DbsInstance {
                     }
                 }
             }
-
             Write-Progress -Activity "Performing Instance Export for $instance" -Completed
         }
     }
