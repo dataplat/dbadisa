@@ -22,10 +22,19 @@ function Start-DbsStig {
         Exclude one or more exports. This is autopopulated so just tab whatever you'd like
 
     .PARAMETER AclOwner
-        Set the owner for Set-DbsAcl
+        The account that will be set as the folder owner
 
     .PARAMETER AclAccount
-        Set the account for Set-DbsAcl
+        The account name or names that are to be granted permissions along with the service accounts
+
+    .PARAMETER AuditMaintainer
+        Set the owner for Set-DbsDbSchemaOwner, this can be dangeroo
+
+    .PARAMETER ConnectionLimit
+        The max number of connections that can connect to the SQL Server
+
+    .PARAMETER DbAuditMaintainer
+        The login or logins that are to be granted permissions. This should be a Windows Group or you may violate another STI
 
     .PARAMETER SchemaOwner
         Set the owner for Set-DbsDbSchemaOwner, this can be dangeroo
@@ -53,14 +62,18 @@ function Start-DbsStig {
         sqlserver\instance to an automatically generated folder name in Documents.
 
     .EXAMPLE
-        PS C:\> Start-DbsStig -SqlInstance sqlcluster -Exclude Databases, Logins -Path C:\dr\sqlcluster
+        PS C:\> $params = @{
+            SqlInstance = "sql2017"
+            AclOwner = "ad\dba"
+            AclAccount = "ad\dba"
+            Exclude = "DbSchemaOwner", "AuditMaintainer"
+            ConnectionLimit = 3000
+            DbAuditMaintainer = "ad\auditors"
+            SchemaOwner = "ad\bob"
+        }
+        PS C:\> Start-DbsStig @params
 
-        Exports everything but logins and database restore scripts to C:\dr\sqlcluster
-
-    .EXAMPLE
-        PS C:\> Start-DbsStig -SqlInstance sqlcluster -Path C:\servers\ -NoPrefix
-
-        Exports everything to C:\servers but scripts do not include prefix information.
+        Stigs dat
     #>
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
     param (
@@ -102,6 +115,21 @@ function Start-DbsStig {
 
         if ($Exclude -notcontains 'DbSchemaOwner' -and -not $SchemaOwner) {
             Stop-PSFFunction -Message "You must specify SchemaOwner if you didn't -Exclude DbSchemaOwner"
+            return
+        }
+
+        if ($Exclude -notcontains 'AuditMaintainer' -and -not $AuditMaintainer) {
+            Stop-PSFFunction -Message "You must specify AuditMaintainer if you didn't -Exclude AuditMaintainer"
+            return
+        }
+
+        if ($Exclude -notcontains 'DbAuditMaintainer' -and -not $DbAuditMaintainer) {
+            Stop-PSFFunction -Message "You must specify DbAuditMaintainer if you didn't -Exclude DbAuditMaintainer"
+            return
+        }
+
+        if ($Exclude -notcontains 'ConnectionLimit' -and -not $ConnectionLimit) {
+            Stop-PSFFunction -Message "You must specify ConnectionLimit if you didn't -Exclude ConnectionLimit"
             return
         }
 
