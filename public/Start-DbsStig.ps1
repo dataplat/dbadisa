@@ -71,11 +71,25 @@ function Start-DbsStig {
             DbAuditMaintainer = "ad\auditors"
             SchemaOwner = "ad\bob"
         }
-        PS C:\> Start-DbsStig @params
+        PS C:\> Start-DbsStig @params -Confirm:$false
+
+        Stigs dat
+
+    .EXAMPLE
+        PS C:\> $params = @{
+            SqlInstance = "sql2017"
+            AclOwner = "ad\dba"
+            AclAccount = "ad\dba"
+            Exclude = "DbSchemaOwner", "AuditMaintainer"
+            ConnectionLimit = 3000
+            DbAuditMaintainer = "ad\auditors"
+            SchemaOwner = "ad\bob"
+        }
+        PS C:\> Start-DbsStig @params -Confirm:$false
 
         Stigs dat
     #>
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "Low")]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = "High")]
     param (
         [parameter(Mandatory, ValueFromPipeline)]
         [DbaInstanceParameter[]]$SqlInstance,
