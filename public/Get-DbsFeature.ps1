@@ -36,6 +36,6 @@ function Get-DbsFeature {
         [switch]$EnableException
     )
     process {
-        Get-DbaFeature @PSBoundParameters | Where-Object Feature -ne 'Database Engine Services'
+        Get-DbaFeature @PSBoundParameters 3>$null | Where-Object Feature -ne 'Database Engine Services'
     }
 }

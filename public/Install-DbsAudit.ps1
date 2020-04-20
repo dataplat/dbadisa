@@ -69,7 +69,7 @@ function Install-DbsAudit {
         [parameter(Mandatory, ValueFromPipeline, Position = 0)]
         [DbaInstanceParameter[]]$SqlInstance,
         [PsCredential]$SqlCredential,
-        [string]$Name = "DISA_STIG",
+        [string]$Name = (Get-PSFConfigValue -FullName dbadisa.app.auditname),
         [string]$Path,
         [string]$MaxSize = "10 MB",
         [string]$MaxFiles = "50",
@@ -123,20 +123,22 @@ function Install-DbsAudit {
                 $sql = $sql -replace '--AUDITONFAILURE--', $OnFailure
                 $sql = $sql -replace '<server audit spec name>', "$Name"
 
-                #return $sql
-                $batches = $sql -split "\bGO\b"
-
-
                 if ($PSCmdlet.ShouldProcess($instance, "Installing $sqlfile on $instance to $Path")) {
-                    foreach ($batch in $batches) {
-                        $server.Query($batch)
+                    try {
+                        Invoke-DbaQuery -SqlInstance $server -Query $sql -EnableException
+                    } catch {
+                        $batches = $sql -split "\bGO\b"
+                        foreach ($batch in $batches) {
+                            Write-PSFMessage -Level Verbose -Message $batch
+                            $server.Query($batch)
+                        }
                     }
 
                     [PSCustomObject]@{
                         ComputerName = $server.ComputerName
                         InstanceName = $server.ServiceName
                         SqlInstance  = $server.DomainInstanceName
-                        Name         = "DISA STIG"
+                        Name         = "DISA_STIG"
                         Status       = "Success"
                         Path         = $Path
                     }
