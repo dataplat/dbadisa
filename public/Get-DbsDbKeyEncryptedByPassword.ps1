@@ -21,7 +21,7 @@ function Get-DbsDbKeyEncryptedByPassword {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79085, NonCompliantResults
+        Tags: V-79085
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
@@ -47,7 +47,7 @@ function Get-DbsDbKeyEncryptedByPassword {
     )
     begin {
         . "$script:ModuleRoot\private\Set-Defaults.ps1"
-        $sql = "SELECT @@SERVERNAME as SqlInstance, name as [Database], COUNT(name) as Count
+        $sql = "SELECT @@SERVERNAME as SqlInstance, DB_NAME() as [Database]
                 FROM sys.symmetric_keys s, sys.key_encryptions k
                 WHERE s.name = '##MS_DatabaseMasterKey##'
                 AND s.symmetric_key_id = k.key_id
