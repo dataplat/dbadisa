@@ -114,7 +114,7 @@ function Set-DbsAuditMaintainer {
                         }
                     }
 
-                    $sql = "ALTER ROLE [$($Role)] ADD MEMBER $serverlogin"
+                    $sql = "ALTER SERVER ROLE [$($Role)] ADD MEMBER $serverlogin"
                     if ($PSCmdlet.ShouldProcess($instance, "Adding $loginname to $role")) {
                         Write-PSFMessage -Level Verbose -Message $sql
                         $server.Refresh()
