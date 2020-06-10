@@ -24,6 +24,9 @@ function Set-DbsDbAuditMaintainer {
     .PARAMETER InputObject
         Allows piping from Get-DbsDbAuditMaintainer
 
+    .PARAMETER NoRevoke
+        Skips all revokes
+
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
@@ -61,6 +64,7 @@ function Set-DbsDbAuditMaintainer {
         [string[]]$User,
         [parameter(ValueFromPipeline)]
         [Microsoft.SqlServer.Management.Smo.Database[]]$InputObject,
+        [switch]$NoRevoke,
         [switch]$EnableException
     )
 
@@ -86,17 +90,19 @@ function Set-DbsDbAuditMaintainer {
                     $db.Query($sql)
                 }
 
-                foreach ($databaseuser in ($db.Users | Where-Object Name -notlike '##MS_*')) {
-                    $sql = "REVOKE ALTER ANY DATABASE AUDIT FROM [$($databaseuser.Name)]"
-                    Write-PSFMessage -Level Verbose -Message $sql
-                    if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Revoking ALTER ANY DATABASE AUDIT from role $Role")) {
-                        $db.Query($sql)
-                    }
+                if (-not $NoRevoke) {
+                    foreach ($databaseuser in ($db.Users | Where-Object Name -notlike '##MS_*')) {
+                        $sql = "REVOKE ALTER ANY DATABASE AUDIT FROM [$($databaseuser.Name)]"
+                        Write-PSFMessage -Level Verbose -Message $sql
+                        if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Revoking ALTER ANY DATABASE AUDIT from role $Role")) {
+                            $db.Query($sql)
+                        }
 
-                    $sql = "REVOKE CONTROL FROM [$($databaseuser.Name)]"
-                    Write-PSFMessage -Level Verbose -Message $sql
-                    if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Revoking CONTROL from role $Role")) {
-                        $db.Query($sql)
+                        $sql = "REVOKE CONTROL FROM [$($databaseuser.Name)]"
+                        Write-PSFMessage -Level Verbose -Message $sql
+                        if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Revoking CONTROL from role $Role")) {
+                            $db.Query($sql)
+                        }
                     }
                 }
 

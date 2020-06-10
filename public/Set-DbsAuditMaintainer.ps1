@@ -20,6 +20,9 @@ function Set-DbsAuditMaintainer {
     .PARAMETER Login
         The login or logins that are to be granted permissions. This should be a Windows Group or you may violate another STIG
 
+    .PARAMETER NoRevoke
+        Skips all revokes
+
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
 
@@ -55,6 +58,7 @@ function Set-DbsAuditMaintainer {
         [string]$Role = "SERVER_AUDIT_MAINTAINERS",
         [parameter(Mandatory)]
         [string[]]$Login,
+        [switch]$NoRevoke,
         [switch]$EnableException
     )
     begin {
@@ -77,23 +81,25 @@ function Set-DbsAuditMaintainer {
                     $server.Query($sql)
                 }
 
-                foreach ($serverlogin in ($server.Logins | Where-Object Name -notlike '##MS_*')) {
-                    # Not so sure about this!
-                    # CONTROL SERVER, ALTER ANY DATABASE and CREATE ANY DATABASE
-                    $sql = "REVOKE ALTER ANY DATABASE FROM [$($serverlogin.Name)]"
-                    if ($PSCmdlet.ShouldProcess($instance, "WARNING: Revoking ALTER ANY DATABASE from $serverlogin")) {
-                        Write-PSFMessage -Level Verbose -Message $sql
-                        $server.Query($sql)
-                    }
-                    $sql = "REVOKE CONTROL SERVER FROM [$($serverlogin.Name)]"
-                    if ($PSCmdlet.ShouldProcess($instance, "WARNING: Revoking CONTROL SERVER from $serverlogin")) {
-                        Write-PSFMessage -Level Verbose -Message $sql
-                        $server.Query($sql)
-                    }
-                    $sql = "REVOKE CREATE ANY DATABASE FROM [$($serverlogin.Name)]"
-                    if ($PSCmdlet.ShouldProcess($instance, "WARNING: Revoking CREATE ANY DATABASE from $serverlogin")) {
-                        Write-PSFMessage -Level Verbose -Message $sql
-                        $server.Query($sql)
+                if (-not $NoRevoke) {
+                    foreach ($serverlogin in ($server.Logins | Where-Object Name -notlike '##MS_*')) {
+                        # Not so sure about this!
+                        # CONTROL SERVER, ALTER ANY DATABASE and CREATE ANY DATABASE
+                        $sql = "REVOKE ALTER ANY DATABASE FROM [$($serverlogin.Name)]"
+                        if ($PSCmdlet.ShouldProcess($instance, "WARNING: Revoking ALTER ANY DATABASE from $serverlogin")) {
+                            Write-PSFMessage -Level Verbose -Message $sql
+                            $server.Query($sql)
+                        }
+                        $sql = "REVOKE CONTROL SERVER FROM [$($serverlogin.Name)]"
+                        if ($PSCmdlet.ShouldProcess($instance, "WARNING: Revoking CONTROL SERVER from $serverlogin")) {
+                            Write-PSFMessage -Level Verbose -Message $sql
+                            $server.Query($sql)
+                        }
+                        $sql = "REVOKE CREATE ANY DATABASE FROM [$($serverlogin.Name)]"
+                        if ($PSCmdlet.ShouldProcess($instance, "WARNING: Revoking CREATE ANY DATABASE from $serverlogin")) {
+                            Write-PSFMessage -Level Verbose -Message $sql
+                            $server.Query($sql)
+                        }
                     }
                 }
 
