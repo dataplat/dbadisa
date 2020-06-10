@@ -47,6 +47,8 @@ function Set-DbsTraceFlag {
         [switch]$EnableException
     )
     process {
-        Set-DbaStartupParameter @PSBoundParameters -TraceFlag 3625 | Select-Object SqlInstance, TraceFlags
+        foreach ($instance in $SqlInstance) {
+            Set-DbaStartupParameter -SqlInstance $instance -Credential $Credential -TraceFlag 3625 | Select-Object SqlInstance, TraceFlags
+        }
     }
 }
