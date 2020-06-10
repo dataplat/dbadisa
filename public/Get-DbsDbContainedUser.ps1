@@ -50,7 +50,7 @@ function Get-DbsDbContainedUser {
     }
     process {
         if ($SqlInstance) {
-            $InputObject = Get-DbaDatabase @PSBoundParameters | Where-Object ContainmentType
+            $InputObject = Get-DbaDatabase @PSBoundParameters | Where-Object ContainmentType -notin $null, 'None'
         }
         foreach ($db in $InputObject) {
             try {

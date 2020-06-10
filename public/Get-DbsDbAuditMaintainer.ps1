@@ -46,7 +46,7 @@ function Get-DbsDbAuditMaintainer {
     process {
         if ($SqlInstance) {
             $InputObject = Get-DbaDatabase -SqlInstance $SqlInstance -ExcludeSystem |
-            Where-Object ContainmentType -eq $null
+            Where-Object ContainmentType -in $null, 'None'
         }
 
         foreach ($db in $InputObject) {
