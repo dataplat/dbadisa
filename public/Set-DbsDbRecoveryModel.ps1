@@ -53,7 +53,10 @@ function Set-DbsDbRecoveryModel {
         if ($SqlInstance) {
             $InputObject = Get-DbaDatabase -SqlInstance $sqlinstance -SqlCredential $sqlcredential -EnableException:$EnableException -ExcludeSystem | Where-Object IsAccessible
         }
-        $results = $InputObject | Set-DbaDbRecoveryModel -RecoveryModel Full
-        Select-DefaultView -InputObject $results -Property SqlInstance, 'Name as Database', RecoveryModel
+        foreach ($db in $InputObject) {
+        $null = Set-DbaDbRecoveryModel -SqlInstance $db.Parent -Database $db.Name -RecoveryModel Full -WarningAction SilentlyContinue
+        $db.Refresh()
+        Select-DefaultView -InputObject $db -Property SqlInstance, 'Name as Database', RecoveryModel
+        }
     }
 }
