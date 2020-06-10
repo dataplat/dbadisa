@@ -65,7 +65,7 @@ function Set-DbsAuditMaintainer {
             try {
                 $server = Connect-DbaInstance -SqlInstance $instance
 
-                $sql = "IF NOT EXISTS(SELECT name FROM sys.server_principals WHERE type = 'R' AND name='[$Role]') CREATE SERVER ROLE [$($Role)]" # CREATE  ROLE SERVER_AUDIT_MAINTAINERS;
+                $sql = "IF NOT EXISTS(SELECT name FROM sys.server_principals WHERE type = 'R' AND name='$Role') CREATE SERVER ROLE [$($Role)]" # CREATE  ROLE SERVER_AUDIT_MAINTAINERS;
                 Write-PSFMessage -Level Verbose -Message $sql
                 if ($PSCmdlet.ShouldProcess($instance, "Create role $role")) {
                     $server.Query($sql)
@@ -77,7 +77,7 @@ function Set-DbsAuditMaintainer {
                     $server.Query($sql)
                 }
 
-                foreach ($serverlogin in $server.Logins) {
+                foreach ($serverlogin in ($server.Logins | Where-Object Name -notlike '##MS_*')) {
                     # Not so sure about this!
                     # CONTROL SERVER, ALTER ANY DATABASE and CREATE ANY DATABASE
                     $sql = "REVOKE ALTER ANY DATABASE FROM [$($serverlogin.Name)]"

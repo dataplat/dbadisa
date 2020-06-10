@@ -86,7 +86,7 @@ function Set-DbsDbAuditMaintainer {
                     $db.Query($sql)
                 }
 
-                foreach ($databaseuser in $db.Users) {
+                foreach ($databaseuser in ($db.Users | Where-Object Name -notlike '##MS_*')) {
                     $sql = "REVOKE ALTER ANY DATABASE AUDIT FROM [$($databaseuser.Name)]"
                     Write-PSFMessage -Level Verbose -Message $sql
                     if ($PSCmdlet.ShouldProcess($db.Parent.Name, "Revoking ALTER ANY DATABASE AUDIT from role $Role")) {
