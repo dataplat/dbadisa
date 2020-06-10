@@ -96,7 +96,7 @@
         'Get-DbsDbPermission',
         'Get-DbsDbProhibitedKeyAlgorithm',
         'Get-DbsDbRecoveryModel',
-        'Get-DbsDbSchemaOwner',
+        'Get-DbsDbSchema',
         'Get-DbsDbTde',
         'Get-DbsDbTemporalTable',
         'Get-DbsDbTrustworthy',

@@ -1,10 +1,10 @@
-function Get-DbsDbSchemaOwner {
+function Get-DbsDbSchema {
     <#
     .SYNOPSIS
-        Returns a list of all schema owners
+        Returns a list of all schemas and their owners
 
     .DESCRIPTION
-        Returns a list of all schema owners
+        Returns a list of all schemas and their owners
 
     .PARAMETER SqlInstance
         The target SQL Server instance or instances
@@ -21,18 +21,18 @@ function Get-DbsDbSchemaOwner {
         Using this switch turns this "nice by default" feature off and enables you to catch exceptions with your own try/catch.
 
     .NOTES
-        Tags: V-79077
+        Tags: V-79077, V-79091
         Author: Chrissy LeMaire (@cl), netnerds.net
         Copyright: (c) 2020 by Chrissy LeMaire, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsDbSchemaOwner -SqlInstance sql2017, sql2016, sql2012
+        PS C:\> Get-DbsDbSchema -SqlInstance sql2017, sql2016, sql2012
 
         Returns a list of all schema owners
 
     .EXAMPLE
-        PS C:\> Get-DbsDbSchemaOwner -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\schemaowners.csv -NoTypeInformation
+        PS C:\> Get-DbsDbSchema -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\DISA\schemaowners.csv -NoTypeInformation
 
         Exports a list of all schema owners for all databases on sql2017, sql2016 and sql2012 to D:\disa\schemaowners.csv
     #>

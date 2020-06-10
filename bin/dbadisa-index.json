@@ -1526,7 +1526,7 @@
     "Description": "Returns a list of all schema owners",
     "Alias": "",
     "Author": "Chrissy LeMaire (@cl), netnerds.net",
-    "Examples": "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\>Get-DbsDbSchemaOwner -SqlInstance sql2017, sql2016, sql2012\nReturns a list of all schema owners\n-------------------------- EXAMPLE 2 --------------------------\nPS C:\\>Get-DbsDbSchemaOwner -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\\DISA\\schemaowners.csv -NoTypeInformation\nExports a list of all schema owners for all databases on sql2017, sql2016 and sql2012 to D:\\disa\\schemaowners.csv",
+    "Examples": "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\>Get-DbsDbSchema -SqlInstance sql2017, sql2016, sql2012\nReturns a list of all schema owners\n-------------------------- EXAMPLE 2 --------------------------\nPS C:\\>Get-DbsDbSchema -SqlInstance sql2017, sql2016, sql2012 | Export-Csv -Path D:\\DISA\\schemaowners.csv -NoTypeInformation\nExports a list of all schema owners for all databases on sql2017, sql2016 and sql2012 to D:\\disa\\schemaowners.csv",
     "Params": [
       [
         "SqlInstance",
@@ -1548,9 +1548,9 @@
     "Synopsis": "Returns a list of all schema owners",
     "Availability": "Windows, Linux, macOS",
     "Links": null,
-    "Name": "Get-DbsDbSchemaOwner",
-    "Syntax": "Get-DbsDbSchemaOwner [[-SqlInstance] <DbaInstanceParameter[]>] [[-SqlCredential] <PSCredential>] [[-InputObject] <Database[]>] [-EnableException] [<CommonParameters>]",
-    "CommandName": "Get-DbsDbSchemaOwner",
+    "Name": "Get-DbsDbSchema",
+    "Syntax": "Get-DbsDbSchema [[-SqlInstance] <DbaInstanceParameter[]>] [[-SqlCredential] <PSCredential>] [[-InputObject] <Database[]>] [-EnableException] [<CommonParameters>]",
+    "CommandName": "Get-DbsDbSchema",
     "Tags": "V-79077"
   },
   {
@@ -3131,11 +3131,11 @@
     "Description": "Sets a schema owner\n\nBasically performs ALTER AUTHORIZATION ON SCHEMA::[<Schema Name>] TO [<Principal Name>]",
     "Alias": "",
     "Author": "Chrissy LeMaire (@cl), netnerds.net",
-    "Examples": "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\>Get-DbsDbSchemaOwner -SqlInstance sql2017, sql2016, sql2012 | Set-DbsDbSchemaOwner\nSets a schema owner for schemas per db on sql2017, sql2016, sql2012\n-------------------------- EXAMPLE 2 --------------------------\nPS C:\\>Get-DbsDbSchemaOwner -SqlInstance sql2017, sql2016, sql2012 | Out-GridView -Passthru | Set-DbsDbSchemaOwner -Owner ad\\dbschemaowner -Confirm:$false\nSets a schema owner for _selected_ schemas on sql2017, sql2016, sql2012, does not prompt",
+    "Examples": "-------------------------- EXAMPLE 1 --------------------------\nPS C:\\>Get-DbsDbSchema -SqlInstance sql2017, sql2016, sql2012 | Set-DbsDbSchemaOwner\nSets a schema owner for schemas per db on sql2017, sql2016, sql2012\n-------------------------- EXAMPLE 2 --------------------------\nPS C:\\>Get-DbsDbSchema -SqlInstance sql2017, sql2016, sql2012 | Out-GridView -Passthru | Set-DbsDbSchemaOwner -Owner ad\\dbschemaowner -Confirm:$false\nSets a schema owner for _selected_ schemas on sql2017, sql2016, sql2012, does not prompt",
     "Params": [
       [
         "InputObject",
-        "Allows databases to be piped in from Get-DbsDbSchemaOwner",
+        "Allows databases to be piped in from Get-DbsDbSchema",
         "",
         false,
         "true (ByValue)",

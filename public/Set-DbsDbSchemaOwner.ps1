@@ -12,7 +12,7 @@ function Set-DbsDbSchemaOwner {
         Sets the new owner
 
     .PARAMETER InputObject
-        Allows databases to be piped in from Get-DbsDbSchemaOwner
+        Allows databases to be piped in from Get-DbsDbSchema
 
     .PARAMETER WhatIf
         If this switch is enabled, no actions are performed but informational messages will be displayed that explain what would happen if the command were to run
@@ -32,12 +32,12 @@ function Set-DbsDbSchemaOwner {
         License: MIT https://opensource.org/licenses/MIT
 
     .EXAMPLE
-        PS C:\> Get-DbsDbSchemaOwner -SqlInstance sql2017, sql2016, sql2012 | Set-DbsDbSchemaOwner
+        PS C:\> Get-DbsDbSchema -SqlInstance sql2017, sql2016, sql2012 | Set-DbsDbSchemaOwner
 
         Sets a schema owner for schemas per db on sql2017, sql2016, sql2012
 
     .EXAMPLE
-        PS C:\> Get-DbsDbSchemaOwner -SqlInstance sql2017, sql2016, sql2012 | Out-GridView -Passthru | Set-DbsDbSchemaOwner -Owner ad\dbschemaowner -Confirm:$false
+        PS C:\> Get-DbsDbSchema -SqlInstance sql2017, sql2016, sql2012 | Out-GridView -Passthru | Set-DbsDbSchemaOwner -Owner ad\dbschemaowner -Confirm:$false
 
         Sets a schema owner for _selected_ schemas on sql2017, sql2016, sql2012, does not prompt
     #>
