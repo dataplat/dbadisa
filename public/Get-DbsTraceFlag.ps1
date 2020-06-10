@@ -46,9 +46,9 @@ function Get-DbsTraceFlag {
     process {
         foreach ($instance in $SqlInstance) {
             try {
-                $startupflags = (Get-DbaStartupParameter -SqlInstance $instance -EnableException).TraceFlags.Split(",")
+                $startupflags = (Get-DbaStartupParameter -SqlInstance $instance -SqlCredential $SqlCredential -Credential $Credential -EnableException).TraceFlags.Split(",")
                 $startupflag = $startupflags -contains 3625
-                $traceflags = Get-DbaTraceFlag -TraceFlag 3625 -SqlInstance $instance -EnableException *>$null
+                $traceflags = Get-DbaTraceFlag -TraceFlag 3625 -SqlInstance $instance -SqlCredential $SqlCredential -Credential $Credential -EnableException *>$null
 
                 if ($startupflag -and -not $traceflags) {
                     Write-PSFMessage -Level Warning -Message "Startup parameter for trace flag 3625 has already been set in $instance, but the SQL service needs to be restarted for it to take effect"
